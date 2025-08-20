@@ -3,7 +3,7 @@ export default function Home() {
   return (
     <div className="m-auto bg-background-default">
       <Image
-        src="/Logo.png"
+        src="/Logo.webp"
         width={312}
         height={240}
         alt="Logo Crediza"
