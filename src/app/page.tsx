@@ -10,9 +10,9 @@ export default function Home() {
         className='m-auto mt-8'
       />
 
-      <p className="h-1 mt-8 text-6xl font-bold text-center">  🚧 Sitio en Construcción 🚧  </p>
+      <p className="h-1 mt-8 text-2xl font-bold text-center xl:text-6xl :">  🚧 Sitio en Construcción 🚧  </p>
       <div className='p-4 mt-12'>
-        <p className='text-4xl text-center '> Muy pronto tendremos novedades para vos </p>
+        <p className='text-xl text-center xl:text-4xl '> Muy pronto tendremos novedades para vos </p>
       </div>
       <div className='flex justify-center m-auto mt-12 space-x-4'>
         <a
