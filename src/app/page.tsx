@@ -4,17 +4,17 @@ export default function Home() {
     <div className="m-auto bg-background-default">
       <Image
         src="/Logo.png"
-        width={212}
-        height={140}
+        width={312}
+        height={240}
         alt="Logo Crediza"
         className='m-auto mt-8'
       />
 
-      <p className="h-1 mt-16 text-6xl font-bold text-center">  🚧 Sitio en Construcción 🚧  </p>
-      <div className='p-4 mt-16'>
-        <p className='mt-12 text-4xl text-center'> Muy pronto tendremos novedades para vos </p>
+      <p className="h-1 mt-8 text-6xl font-bold text-center">  🚧 Sitio en Construcción 🚧  </p>
+      <div className='p-4 mt-12'>
+        <p className='text-4xl text-center '> Muy pronto tendremos novedades para vos </p>
       </div>
-      <div className='flex justify-center m-auto mt-8 space-x-4'>
+      <div className='flex justify-center m-auto mt-12 space-x-4'>
         <a
           href="https://facebook.com/credizza"
           target="_blank"
@@ -34,7 +34,7 @@ export default function Home() {
         </a>
 
       </div>
-      <p className='mt-8 text-center'> © 2025 Credizza </p>
+      <p className='mt-24 text-center text-gray-400'> © 2025 Credizza </p>
     </div>
   );
 }
