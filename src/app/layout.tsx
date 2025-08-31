@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   description:
     "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
   icons: { icon: "/favicon.ico" },
+  alternates: {
+    canonical: "https://credizza.com.ar/",
+  },
   openGraph: {
     type: "website",
     locale: "es_AR",
