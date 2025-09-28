@@ -4,7 +4,7 @@ type ButtonProps = {
     type?: string;
     disabled?: boolean;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    ariaLabel?: string
+    ariaLabel?: string;
 };
 
 export function Button({ text, className, onClick, disabled, ariaLabel }: ButtonProps) {

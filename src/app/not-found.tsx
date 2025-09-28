@@ -1,5 +1,6 @@
 'use client'
 import { Button } from '@/components/buttons';
+import { trackWhatsApp } from '@/utils/ga';
 import Image from 'next/image';
 import { useRouter } from "next/navigation";
 
@@ -17,7 +18,15 @@ function NotFound() {
                     <Button
                         text='Consultar'
                         className=' bg-boton-primario text-texto-botones lg:hover:bg-hover-primario'
-                        onClick={() => window.open("https://wa.me/541162108715?text=Hola,%20entre%20a%20una%20pagina%20que%20no%20encontre%20y%20necesito%20ayuda", "_blank")}
+                        onClick={() => {
+                            trackWhatsApp("404");
+                            setTimeout(() => {
+                                window.open(
+                                    "https://wa.me/541162108715?text=Hola,%20entre%20a%20una%20pagina%20que%20no%20encontre%20y%20necesito%20ayuda",
+                                    "_blank"
+                                );
+                            }, 120);
+                        }}
                         ariaLabel="Consultar por WhatsApp"
                     />
 
