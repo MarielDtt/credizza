@@ -5,6 +5,10 @@ import AppProviders from "./providers";
 import Footer from "@/components/layout/Footer";
 import { Poppins } from 'next/font/google';
 import CrispWidget from "@/components/layout/CrispWidget";
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
+import Script from "next/script"
+
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -54,12 +58,29 @@ export default function RootLayout({
 }>) {
   return (
     <html className="bg-background-default" lang="es-AR">
+       <head>
+        {/* GA4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-6BB0GMJZKV"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-6BB0GMJZKV');
+          `}
+        </Script>
+      </head>
       <body className={poppins.className}>
         <AppProviders>
           <Navbar />
           {children}
           <Footer />
         </AppProviders>
+        <SpeedInsights />
+        <Analytics/>
         <CrispWidget />
       </body>
     </html>
