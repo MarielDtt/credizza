@@ -34,5 +34,24 @@ a {
 @layer utilities {
 
 }
+html, body {
+  height: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+/* Defensa por si algún estilo global afecta el widget */
+#crisp-chatbox {
+  position: fixed !important;
+  right: 16px !important;
+  bottom: 16px !important;
+  z-index: 2147483647 !important; /* por encima de todo */
+}
+
+/* Limitar tamaño máximo del widget (evita ocupar toda la pantalla) */
+#crisp-chatbox > div {
+  max-width: 380px !important;
+  max-height: calc(100vh - 32px) !important;
+}
 
 
