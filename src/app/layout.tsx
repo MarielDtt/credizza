@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
-import { Lato, Merriweather } from "next/font/google";
-
 import "./globals.css";
+import Navbar from "@/components/layout/Navbar";
+import AppProviders from "./providers";
+import Footer from "@/components/layout/Footer";
+import { Poppins } from 'next/font/google';
+import CrispWidget from "@/components/layout/CrispWidget";
 
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-lato",
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
 });
 
-const merriweather = Merriweather({
-  subsets: ["latin"],
-  weight: ["700"],
-  variable: "--font-merriweather",
-});
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://credizza.com.ar"),
   title: "Credizza | Sitio en construcción 🚧",
@@ -43,7 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Credizza | Sitio en construcción 🚧",
-    description:"Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
+    description: "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
     images: ["/og-construccion.webp"],
   },
 };
@@ -55,11 +53,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es-AR">
-      <body
-        className={`${lato.variable} ${merriweather.variable} antialiased`}
-      >
-        {children}
+    <html className="bg-background-default" lang="es-AR">
+      <body className={poppins.className}>
+        <AppProviders>
+          <Navbar />
+          {children}
+          <Footer />
+        </AppProviders>
+        <CrispWidget />
       </body>
     </html>
   );
