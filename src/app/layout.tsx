@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Credizza",
+    title: "Credizza | Sitio en construcción 🚧",
     description: "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
     images: ["/og-construccion.webp"],
   },
