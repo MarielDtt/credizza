@@ -1,6 +1,7 @@
 'use client'
 import { Button } from '@/components/buttons';
-import { trackWhatsApp } from '@/utils/ga';
+import { trackChatOpen } from '@/utils/ga';
+
 import Image from 'next/image';
 import { useRouter } from "next/navigation";
 
@@ -14,12 +15,12 @@ function NotFound() {
                 <p className="text-3xl sm:text-4xl lg:text-5xl text-display text-texto-principal"><span className="whitespace-nowrap">No encontramos</span> la página que buscás</p>
                 <p className="pt-4 pl-2 text-body text-texto-secundario">Escribinos por WhatsApp y lo resolvemos en minutos.</p>
                 <div className='flex flex-col items-center gap-3 mt-6 lg:flex-row lg:justify-start'>
-
+{/* 
                     <Button
                         text='Consultar'
                         className=' bg-boton-primario text-texto-botones lg:hover:bg-hover-primario'
                         onClick={() => {
-                            trackWhatsApp("404");
+                            trackChatOpen('not_found')
                             setTimeout(() => {
                                 window.open(
                                     "https://wa.me/541162108715?text=Hola,%20entre%20a%20una%20pagina%20que%20no%20encontre%20y%20necesito%20ayuda",
@@ -35,7 +36,7 @@ function NotFound() {
                         className=' bg-boton-neutral text-texto-botones lg:hover:bg-boton-neutral/90'
                         ariaLabel="Volver al inicio"
                         onClick={() => router.push('/')}
-                    />
+                    /> */}
 
                 </div>
 

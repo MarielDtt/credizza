@@ -52,20 +52,7 @@ export default function AlertDialogSlide() {
                     <span>Esta página está en construcción</span>
                     <WarningAmberIcon fontSize="large" aria-hidden className='text-boton-secundario' />
                 </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-slide-description " className='text-justify '>
-                        Estamos ajustando los últimos detalles. Podés escribirnos por WhatsApp o seguir navegando.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions className='space-x-8'>
-                    <Button
-                        text='Consultar'
-                        className=' bg-boton-primario text-texto-botones lg:hover:bg-hover-primario'
-                        onClick={() => window.open("https://wa.me/541162108715?text=Hola,%20me%20interesa%20información%20para%20optener%20un%20crédito", "_blank")}
-                        ariaLabel="Consultar por WhatsApp"
-                    />
-                    <Button text='Seguir Navegando' onClick={handleClose} className='bg-boton-neutral text-texto-botones lg:hover:bg-boton-neutral/90' />
-                </DialogActions>
+ 
             </Dialog>
         </React.Fragment>
     );

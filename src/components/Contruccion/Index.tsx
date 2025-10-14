@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import { Button } from '../buttons';
 import { useRouter } from "next/navigation";
-import { trackWhatsApp } from '@/utils/ga';
 
 export function Contruccion() {
     const router = useRouter();
@@ -21,7 +20,7 @@ export function Contruccion() {
             <p className='mb-4 text-center lg:text-bodyBoldMobile'>Escribinos por WhatsApp y te respondemos en minutos</p>
 
             <div className='flex flex-col items-center gap-3 mt-6 lg:flex-row lg:justify-center'>
-                <Button
+                {/* <Button
                     text='Consultar'
                     className=' bg-boton-primario text-texto-botones lg:hover:bg-hover-primario'
                     onClick={() => {
@@ -32,7 +31,7 @@ export function Contruccion() {
                     }}
 
                 ariaLabel="Consultar por WhatsApp"
-                />
+                /> */}
 
                 <Button
                     text='Inicio'

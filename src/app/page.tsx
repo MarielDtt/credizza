@@ -6,9 +6,10 @@ import Marquee from "@/components/home/Marquee";
 
 
 
+
 export default function Home() {
   return (
-    <div className="space-y-6 text-display">
+    <div className="space-y-8 text-display">
       <Marquee />
       <Hero />
       <ConstructionDialog />
