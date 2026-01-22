@@ -15,8 +15,8 @@ export function Button({ text, className, onClick, disabled, ariaLabel }: Button
                 aria-label={ariaLabel ?? text}
                 className={` 
                     ${!disabled
-                        ? "mt-4  w-36 h-12 rounded-lg text-button"
-                        : "mt-4 bg-sistema-uno w-36 h-12 rounded-lg text-sistema-texto cursor-not-allowed"
+                        ? " w-36 h-12 rounded-lg text-button"
+                        : "bg-sistema-uno w-36 h-12 rounded-lg text-sistema-texto cursor-not-allowed"
                     } 
                     ${className}`}
                 onClick={(event) => {
