@@ -8,7 +8,13 @@ import CrispWidget from "@/components/layout/CrispWidget";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
+import ButtonChat from "@/components/buttons/ButtonChat";
 
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -82,6 +88,7 @@ export default function RootLayout({
         <SpeedInsights />
         <Analytics/>
         <CrispWidget />
+        <ButtonChat />
       </body>
     </html>
   );

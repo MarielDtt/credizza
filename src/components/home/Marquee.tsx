@@ -39,7 +39,7 @@ export default function CredizzaMarquee() {
 
   return (
     <div
-      className="relative w-full h-10 my-2 overflow-hidden bg-background-seccion"
+      className="relative w-full h-10 overflow-hidden bg-background-seccion"
       aria-label="Marquee Credizza"
     >
       <div
@@ -49,7 +49,7 @@ export default function CredizzaMarquee() {
         {items.concat(items).map((key, i) => (
           <span
             key={key + i}
-            className="text-heading2 tracking-[4px] px-4"
+            className="text-heading2 tracking-[4px] mr-4"
           >
             CREDIZZA
           </span>

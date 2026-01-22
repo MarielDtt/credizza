@@ -19,10 +19,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window?: () => Window;
 }
 
@@ -56,7 +52,7 @@ export default function Navbar(props: Props) {
 
       </Box>
 
-      <List><Divider sx={{ width: '90%', mx: 'auto', borderTop: '1px solid #6C6C6C' }} />
+      <List><Divider sx={{ width: '90%', mx: 'auto', borderTop: '4px solid #6C6C6C' }} />
         {navItems.map((item, index) => (
           <React.Fragment key={item.label}>
             <ListItem disablePadding>
@@ -76,7 +72,7 @@ export default function Navbar(props: Props) {
               </ListItemButton>
             </ListItem>
             {index < navItems.length - 1 && (
-            <Divider sx={{ width: '75%', mx: 'auto', borderTop: '1px solid #6C6C6C' }} />
+              <Divider sx={{ width: '75%', mx: 'auto', borderTop: '1px solid #6C6C6C' }} />
 
             )}
           </React.Fragment>
@@ -93,10 +89,20 @@ export default function Navbar(props: Props) {
       <AppBar
         id="navbar"
         component="nav"
+        position="static"
         elevation={0}
         sx={{ bgcolor: '#1B1B1B', color: '#FAFAFA' }}
       >
-        <Toolbar className="font-sans">
+        <Toolbar
+          className="font-sans"
+          sx={{
+            minHeight: 48,
+            px: 2,
+            py: 0.75,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
           <Box
             sx={{ flexGrow: 1 }}
           >
@@ -162,16 +168,16 @@ export default function Navbar(props: Props) {
           sx={{
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': {
-              width: 280,                             // ajustá al ancho que te guste
+              width: 280,                             // ajustá al ancho que quiera
               boxSizing: 'border-box',
               bgcolor: '#FFF9F0',
               color: 'var(--color-texto-principal)',
-              borderRadius: 3,
+              borderRadius: '16px',
               m: 1,
               height: 526,
-              boxShadow: 'none',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
               border: '1px solid #6C6C6C',
-              opacity: 0.9,
+              opacity: 0.8,
             },
 
 
@@ -192,10 +198,10 @@ export default function Navbar(props: Props) {
           {drawer}
         </Drawer>
       </nav>
-      <Box component="main" sx={{ p: 1}}>
+      {/* <Box component="main" sx={{ p: 0 }}>
         <Toolbar />
 
-      </Box>
+      </Box> */}
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "credizza",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -20,7 +20,8 @@
     "next": "15.4.6",
     "next-sitemap": "^4.2.3",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "swiper": "^12.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

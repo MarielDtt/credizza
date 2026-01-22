@@ -34,3 +34,38 @@ a {
 @layer utilities {
 
 }
+:root{
+  --swiper-navigation-color:#1C1B1F;
+  --swiper-navigation-size:60px;
+}
+
+.mySwiper .swiper-button-prev,
+.mySwiper .swiper-button-next{
+  width:20px !important;
+  height:20px !important;
+  top:65% !important;
+  transform:translateY(-50%) !important;
+}
+
+.mySwiper .swiper-button-prev{ left:-4px !important; }
+.mySwiper .swiper-button-next{ right:-4px !important; }
+.mySwiper .swiper-slide {
+  box-shadow: none !important;
+  filter: none !important;
+}
+/* Fix Crisp mobile */
+#crisp-chatbox,
+.crisp-client {
+  z-index: 9999 !important;
+}
+
+html,
+body {
+  overflow-x: visible !important;
+}
+/* Ocultar launcher Crisp */
+.crisp-client [class*="launcher"],
+.crisp-client .crisp-1rjpbb7,
+.crisp-client .crisp-1us5f5j {
+  display: none !important;
+}
