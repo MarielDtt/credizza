@@ -10,7 +10,7 @@ const Terminos = () => {
     return (
         <div className="mx-4 text-center sm:max-w-[82ch] sm:text-left sm:mx-auto sm:px-6">
             <div className="">
-                <h1 className=" text-heading2">Términos y Condiciones</h1>
+                <h1 className="mt-6 text-heading2">Términos y Condiciones</h1>
             </div>
 
             <h2 className="mt-4 text-left text-bodyBoldMobile">1. Aceptación de los Términos</h2>
