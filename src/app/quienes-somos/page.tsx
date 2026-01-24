@@ -40,7 +40,7 @@ const QuienesSomos = () => {
 
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography className="!text-smallMobile text-texto-secundario space-y-2 lg:!text-body">
+                        <div className="!text-smallMobile text-texto-secundario space-y-2 lg:!text-body">
                             <p className="leading-relaxed text-justify">
                                 Credizza nació de un grupo de emprendedores con más de 15 años de experiencia en el rubro de créditos para jubilados nacionales.
                             </p>
@@ -50,7 +50,7 @@ const QuienesSomos = () => {
                             <p className="leading-relaxed text-justify">
                                 Así fue como empezamos a implementar productos 100% remotos, que permiten gestionar todo sin salir de casa.
                             </p>
-                        </Typography>
+                        </div>
                     </AccordionDetails>
                 </Accordion>
 
@@ -64,14 +64,14 @@ const QuienesSomos = () => {
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography className="!text-smallMobile text-texto-secundario space-y-2 lg:!text-body">
+                        <div className="!text-smallMobile text-texto-secundario space-y-2 lg:!text-body">
                             <p className="leading-relaxed text-justify">
                                 Somos una empresa que brinda soluciones financieras para todos, de forma ágil, rápida y simple.
                             </p>
                             <p className="leading-relaxed text-justify">
                                 Lo hacemos a través de productos crediticios pensados para adaptarse a las necesidades reales de cada persona.
                             </p>
-                        </Typography>
+                        </div>
                     </AccordionDetails>
                 </Accordion>
 
@@ -85,11 +85,11 @@ const QuienesSomos = () => {
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography className="!text-smallMobile text-texto-secundario space-y-2 lg:!text-body">
+                        <div className="!text-smallMobile text-texto-secundario space-y-2 lg:!text-body">
                             <p className="leading-relaxed text-justify">
                                 Ser la empresa comercializadora líder en el mercado de los préstamos personales, destacándonos por ofrecer soluciones financieras simples, humanas y accesibles.
                             </p>
-                        </Typography>
+                        </div>
                     </AccordionDetails>
                 </Accordion>
 
@@ -103,7 +103,7 @@ const QuienesSomos = () => {
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Typography className="!text-smallMobile text-texto-secundario lg:!text-body">
+                        <div className="!text-smallMobile text-texto-secundario lg:!text-body">
                             <ul className="pl-4 space-y-1 list-disc">
                                 <li > <span className="font-semibold">Asesoramiento permanente</span>
                                 <p className="leading-relaxed text-justify"> Acompañamos a cada persona en todo momento, brindando respuestas claras y apoyo continuo.</p>
@@ -121,7 +121,7 @@ const QuienesSomos = () => {
                                 <p className="leading-relaxed text-justify">Estamos presentes de principio a fin, cumpliendo con responsabilidad y cercanía.</p>
                                 </li>
                             </ul>
-                        </Typography>
+                        </div>
                     </AccordionDetails>
                 </Accordion>
 
