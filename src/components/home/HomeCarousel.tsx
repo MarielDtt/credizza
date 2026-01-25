@@ -23,11 +23,13 @@ export default function HomeCarousel() {
     { src: '/Jubilados.webp', alt: 'Imagen de jubilados' },
     { src: '/Privados.webp', alt: 'Imagen de empleados privados' },
     { src: '/Estatales.webp', alt: 'Imagen de empleados estatales' },
-    { src: '/Boton-2.webp', alt: 'Imagen con botón de contáctanos' }, // última con CTA
+    { src: '/YMas.webp', alt: 'Imagen con texto mas servicios de creditos' },
+    { src: '/Boton.webp', alt: 'Imagen con botón de contáctanos' },
   ];
 
   const handleCtaClick = () => {
     if (window.$crisp) {
+      window.$crisp.push(['do', 'chat:show']);
       window.$crisp.push(['do', 'chat:open']);
     }
   };
@@ -41,17 +43,17 @@ export default function HomeCarousel() {
           isDesktop
             ? false
             : {
-                delay: 3000,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-              }
+              delay: 3000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }
         }
         navigation={
           isDesktop
             ? {
-                nextEl: '.swiper-next',
-                prevEl: '.swiper-prev',
-              }
+              nextEl: '.swiper-next',
+              prevEl: '.swiper-prev',
+            }
             : false
         }
         slidesPerView={1}
@@ -105,7 +107,7 @@ export default function HomeCarousel() {
                         fontSize: 14,
                         lineHeight: '16px',
                         color: '#FFFFFF',
-                        background: '#7CFF6B',
+                        background: '#1B1B1B',
                         boxShadow: '0 8px 18px rgba(0,0,0,0.18)',
                       }}
                     >

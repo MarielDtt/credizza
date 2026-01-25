@@ -49,7 +49,7 @@ export default function Hero() {
             </ul>
 
             <Button
-              text="Inicar Consulta"
+              text="Iniciar Consulta"
               ariaLabel="Abrir WhatsApp"
               onClick={handleWhatsApp}
               className="mt-4 bg-boton-primario text-texto-botones text-button lg:hover:bg-hover-primario"

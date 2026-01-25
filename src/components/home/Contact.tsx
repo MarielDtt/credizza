@@ -28,7 +28,7 @@ export default function Contact() {
 
           {/* Marco */}
           <Image
-            src="/Marcos-Cards.svg"
+            src="/Marcos-Cards.webp"
             alt="Marco tarjeta verde"
             fill
             className="object-cover"
@@ -76,7 +76,7 @@ export default function Contact() {
 
           {/* Marco */}
           <Image
-            src="/Marcos-Cards.svg"
+            src="/Marcos-Cards.webp"
             alt="Marco tarjeta verde"
             fill
             className="object-cover"
@@ -121,7 +121,7 @@ export default function Contact() {
 
           {/* Marco */}
           <Image
-            src="/Marcos-Cards.svg"
+            src="/Marcos-Cards.webp"
             alt="Marco tarjeta verde"
             fill
             className="object-cover"

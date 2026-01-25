@@ -133,7 +133,7 @@ export default function Navbar(props: Props) {
                 component={Link}
                 href={item.path}
                 sx={{
-                  color: pathname === item.path ? '#57E94A' : '#FFF9F0',
+                  color: pathname === item.path ? '#60A052' : '#FFF9F0',
                   textTransform: 'none',
                   fontWeight: pathname === item.path ? 600 : 400,
                   '&:hover': {
@@ -168,7 +168,7 @@ export default function Navbar(props: Props) {
           sx={{
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': {
-              width: 280,                             // ajustá al ancho que quiera
+              width: 280,                          
               boxSizing: 'border-box',
               bgcolor: '#FFF9F0',
               color: 'var(--color-texto-principal)',

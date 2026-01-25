@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function ThreeSteps() {
     return (
         <section id="pasos" className="w-full max-w-6xl px-4 mx-auto lg:py-8 ">
-            <div className="relative  pt-12 pb-8 rounded-lg bg-background-seccion lg:max-w-4xl lg:m-auto">
+            <div className="relative pt-12 pb-8 rounded-lg bg-background-seccion lg:max-w-4xl lg:m-auto">
 
                 {/* Título */}
                 <h2

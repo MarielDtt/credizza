@@ -33,11 +33,11 @@ module.exports = {
         'texto-secundario': '#6C6C6C',
         'texto-botones': '#FAFAFA',
 
-        'boton-primario': '#6EFF5B',
+        'boton-primario': '#60A052',
         'boton-secundario': '#F76C5E',
         'boton-neutral': '#1B1B1B',
 
-        'hover-primario': '#57E94A',
+        'hover-primario': '#4E8A43',
         'hover-secundario': '#E85D50',
 
         'sistema-uno': '#D3D3D3',
