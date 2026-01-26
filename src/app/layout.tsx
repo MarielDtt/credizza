@@ -4,11 +4,9 @@ import Navbar from "@/components/layout/Navbar";
 import AppProviders from "./providers";
 import Footer from "@/components/layout/Footer";
 import { Poppins } from 'next/font/google';
-import CrispWidget from "@/components/layout/CrispWidget";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
-import ButtonChat from "@/components/buttons/ButtonChat";
 
 
 export const viewport = {
@@ -87,8 +85,7 @@ export default function RootLayout({
         </AppProviders>
         <SpeedInsights />
         <Analytics/>
-        <CrispWidget />
-        <ButtonChat />
+   
       </body>
     </html>
   );

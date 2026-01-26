@@ -10,9 +10,10 @@ export default function CrispWidget() {
         window.CRISP_WEBSITE_ID = "a5d583e4-c94f-4e90-95c0-e5c9d3486fb8";
 
         window.CRISP_RUNTIME_CONFIG = {
-          lockFullview: true,
+          lockFullview: false,
           lockMaximized: false,
         };
+
         (function () {
           var d = document;
           var s = d.createElement("script");
@@ -23,11 +24,22 @@ export default function CrispWidget() {
             // Oculta el launcher original
             window.$crisp.push(["do", "chat:hide"]);
 
-            // Si se cierra el chat, vuelve a ocultarlo
+            // Cuando se abre el chat
+            window.$crisp.push([
+              "on",
+              "chat:opened",
+              function () {
+                document.body.classList.add("crisp-open");
+                window.$crisp.push(["do", "chat:hide"]);
+              }
+            ]);
+
+            // Cuando se cierra el chat
             window.$crisp.push([
               "on",
               "chat:closed",
               function () {
+                document.body.classList.remove("crisp-open");
                 window.$crisp.push(["do", "chat:hide"]);
               }
             ]);

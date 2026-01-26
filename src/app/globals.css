@@ -72,17 +72,3 @@ body {
   filter: none !important;
 }
 
-/* =========================
-   Crisp Chat – FIXES seguros
-   ========================= */
-
-/* Mantener el chat por encima de todo */
-#crisp-chatbox,
-.crisp-client {
-  z-index: 9999 !important;
-}
-
-/* Ocultar launcher original de Crisp (si usás tu botón propio) */
-.crisp-client [class*="launcher"] {
-  display: none !important;
-}
