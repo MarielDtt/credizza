@@ -3,6 +3,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import { Button } from "../buttons";
 import { Email } from "@mui/icons-material";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import ContactForm from "../forms/ContactForm";
 
 
 export default function Contact() {
@@ -163,6 +164,9 @@ export default function Contact() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="mx-2 lg:w-full lg:mt-8 lg:ml-8">
+        <ContactForm />
       </div>
     </section>
   );
