@@ -6,7 +6,7 @@ const theme = createTheme({
   palette: {
     // 🎨 Botones
     primary: {
-      main: '#6EFF5B',     // --color-boton-primario
+      main: '#60A052',     // --color-boton-primario
     },
     secondary: {
       main: '#F76C5E',     // --color-boton-secundario

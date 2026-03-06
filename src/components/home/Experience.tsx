@@ -46,6 +46,14 @@ export default function Experience() {
       rating: 5,
       testimonial: "“Muy recomendable.Excelente atención muy confiable 👏”",
       avatar: "/FabianaP.webp"
+    },
+      {
+      id: 5 ,
+      name: "Jorge Z.",
+      age: 78,
+      rating: 5,
+      testimonial: "“Realmente muy seguro y eficaz,en media hora me depositaron”",
+      avatar: "/JorgeZ.webp"
     }
   ];
 
