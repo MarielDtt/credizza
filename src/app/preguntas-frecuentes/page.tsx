@@ -1,12 +1,13 @@
-import { Contruccion } from "@/components/Contruccion/Index";
+
+import Faq from "@/components/faq/Faq";
 
 
 const Preguntas = () => {
 
     return (
-   <div>
-           <Contruccion/>
-   </div>
+        <div>
+            <Faq />
+        </div>
     )
 }
 
