@@ -1,11 +1,12 @@
-import { Contruccion } from "@/components/Contruccion/Index";
+
+import LineasCredito from "@/components/lineas/LineasCredito";
 
 
 const Prestamos = () => {
 
     return (
         <div>
-            <Contruccion />
+            <LineasCredito />
         </div>
     )
 }
