@@ -201,7 +201,7 @@ export default function LineasCredito() {
     return (
         <section className="w-full py-8 bg-background-default">
             <div className="max-w-[1200px] mx-auto px-4">
-                <h1 className="mb-6 text-center text-heading1 text-texto-principal">
+                <h1 className="mt-6 text-center text-heading1 lg:text-display">
                     Prestamos
                 </h1>
 

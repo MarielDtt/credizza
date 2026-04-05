@@ -18,7 +18,7 @@ export default function Contact() {
         <p className="flex items-center justify-center h-full text-center text-bodyBoldMobile">
           Horarios de atención:
           <span className="ml-1 text-body">
-            Lunes a viernes de 10:00 a 20:00 Hs. – Sábados: de 9:00 a 13:00 Hs.
+            Lunes a viernes de 08:00 a 20:00 Hs. – Sábados: de 9:00 a 13:00 Hs.
           </span>
         </p>
       </div>
