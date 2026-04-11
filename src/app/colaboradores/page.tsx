@@ -21,14 +21,14 @@ const colaboradores = [
   },
   {
     name: "Coordinar",
-    src: "/coordinar.webp",
+    src: "/Coordinar.webp",
     alt: "Logo de Coordinar",
     width: 180,
     height: 90,
   },
   {
     name: "Argenpesos",
-    src: "/argenpesos.webp",
+    src: "/Argenpesos.webp",
     alt: "Logo de Argenpesos",
     width: 190,
     height: 90,
