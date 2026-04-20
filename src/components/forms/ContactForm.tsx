@@ -160,7 +160,7 @@ const ContactForm = () => {
 
                 </form>
 
-                <div className="hidden pr-16 lg:block lg:w-1/2 lg:pl-8">
+                <div className="hidden pr-16 steps-contacto lg:block lg:w-1/2 lg:pl-8">
 
                     <div className="p-6 rounded-lg bg-background-secondary">
                         <h3 className="mb-4 text-base font-semibold">
