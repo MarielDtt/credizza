@@ -1,32 +1,44 @@
 type ButtonProps = {
-    text: string; // Texto que se mostrará en el botón
-    className?: string; // Clases adicionales opcionales
-    type?: string;
+    text: string;
+    className?: string;
+    type?: "button" | "submit" | "reset";
     disabled?: boolean;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
     ariaLabel?: string;
+    startIcon?: React.ReactNode;
 };
 
-export function Button({ text, className, onClick, disabled, ariaLabel }: ButtonProps) {
-
+export function Button({
+    text,
+    className,
+    onClick,
+    disabled,
+    ariaLabel,
+    type = "button",
+    startIcon,
+}: ButtonProps) {
     return (
         <div className="flex justify-center">
             <button
+                type={type}
                 aria-label={ariaLabel ?? text}
-                className={` 
+                disabled={disabled}
+                className={`
+                    flex items-center justify-center
                     ${!disabled
-                        ? " w-36 h-12 rounded-lg text-button"
+                        ? "w-36 h-12 rounded-lg text-button"
                         : "bg-sistema-uno w-36 h-12 rounded-lg text-sistema-texto cursor-not-allowed"
-                    } 
-                    ${className}`}
+                    }
+                    ${className}
+                `}
                 onClick={(event) => {
                     if (onClick) {
                         onClick(event);
                     }
                 }}
             >
-                {text}
+                {startIcon ? startIcon : text}
             </button>
         </div>
-    )
+    );
 }
