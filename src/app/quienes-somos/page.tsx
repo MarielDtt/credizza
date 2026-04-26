@@ -182,13 +182,13 @@ const QuienesSomos = () => {
                             <div className="flex items-center gap-2">
                                 <AccessTimeIcon sx={{ fontSize: 18 }} />
                                 <Typography className="!text-smallMobile lg:!text-body">
-                                    Lunes a Viernes de 10:00 a 20:00 hs.
+                                    Lunes a Viernes de 08:00 a 20:00 hs.
                                 </Typography>
                             </div>
                             <div className="flex items-center gap-2">
                                 <EventIcon sx={{ fontSize: 18 }} />
                                 <Typography className="!text-smallMobile lg:!text-body">
-                                    Sábados de 09:00 a 13:00 hs.
+                                    Sábados de 09:30 a 13:00 hs.
                                 </Typography>
                             </div>
                         </div>
