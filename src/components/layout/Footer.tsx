@@ -120,9 +120,14 @@ const Footer = () => {
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
+<<<<<<< HEAD
                     Estamos armando nuestro Instagram 🚧
                     <br />
                     ¡Seguinos y acompañanos en el proceso!
+=======
+                    “Estamos armando nuestro Instagram 🚧
+                    ¡Seguinos y acompañanos en el proceso!”
+>>>>>>> df75395eaaa5434a18f9c28e2f5adb8f8dc8ce45
                 </Alert>
             </Snackbar>
         </footer>
