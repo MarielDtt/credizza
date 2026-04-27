@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import CloseIcon from "@mui/icons-material/Close";
@@ -38,6 +39,7 @@ const mediosContacto = [
     { title: "Teléfono", href: "tel:+541126289448", icon: PhoneOutlinedIcon },
     { title: "Whatsapp", href: "https://wa.me/541166669143", icon: WhatsAppIcon },
     { title: "Facebook", href: "https://www.facebook.com/credizza", icon: FacebookIcon },
+    { title: "Instagram", href: "https://www.instagram.com/credizza", icon: InstagramIcon },
 ];
 
 const ubicaciones = [
@@ -181,7 +183,7 @@ const Contactos = () => {
                             <a
                                 key={title}
                                 href={href}
-                                target={title === "Facebook" || title === "Whatsapp" ? "_blank" : "_self"}
+                                target={["Facebook", "Whatsapp", "Instagram"].includes(title) ? "_blank" : "_self"}
                                 rel="noreferrer"
                                 aria-label={title}
                                 className="flex w-[72px] flex-col items-center gap-2 text-center transition-transform duration-200 hover:scale-105 lg:w-auto lg:gap-3"
