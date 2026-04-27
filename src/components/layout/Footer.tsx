@@ -43,9 +43,11 @@ const Footer = () => {
                 <p className='space-y-2 leading-relaxed'>  La aprobación, el monto, el plazo, la <span className='font-bold'>TNA</span> y el <span className='font-bold'>CFT</span> son definidos por la entidad otorgante y siempre se informan previamente, conforme a la normativa del BCRA. Las solicitudes están sujetas a verificación de identidad, historial y capacidad de pago. <span className='font-bold'>Credizza no garantiza la aprobación</span> ni se responsabiliza por las decisiones de terceros.</p>
                 <p className='space-y-2 leading-relaxed'>Al contactarnos por WhatsApp aceptás la <span className='font-bold'>Política de Privacidad</span>  y autorizás el uso de tus datos para evaluar tu solicitud.</p>
                 <p className='space-y-2 leading-relaxed'>  Derechos Ley 25.326 (ARCO): podés solicitar acceso, rectificación o supresión escribiendo a credizza@gmail.com o WhatsApp +54 11 6210-8715.
-                Órgano de control:s= <span className='font-bold'>AAIP</span>  – www.argentina.gob.ar/aaip</p>
-                <p className='space-y-2 text-sm italic leading-relaxed'><span className='font-bold '>Última actualización:</span> 28/09/2025 – v1.0</p>
-                <p className='space-y-2 font-bold leading-relaxed'>👉 Este servicio es gratuito para el usuario: no cobramos comisiones.</p>         
+                    Órgano de control:s= <span className='font-bold'>AAIP</span>  – www.argentina.gob.ar/aaip</p>
+                <p className='space-y-2 text-sm italic leading-relaxed'>
+                    <span className='font-bold'>Última actualización:</span> 26/04/2026 – v1.1
+                </p>
+                <p className='space-y-2 font-bold leading-relaxed'>👉 Este servicio es gratuito para el usuario: no cobramos comisiones.</p>
             </div>
 
         </footer>
