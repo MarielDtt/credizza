@@ -191,6 +191,31 @@ const lineas = [
             "Si estás preaprobado, se solicitará documentación adicional",
         ],
     },
+        {
+        id: 8,
+        title: "GCBA",
+        description:
+            "Créditos pensados para empleados de Gobierno de la Ciudad Autónoma de Buenos Aires con gestión simple y evaluación personalizada.",
+        image: "/gcba.webp",
+        whatsapp:
+            "https://wa.me/5491166669143?text=Hola%20quiero%20consultar%20por%20un%20prestamo%20para%20gcba%20Mi%20nombre%20es",
+        height: "h-[260px] lg:h-[320px]",
+        objectPosition: "center 10%",
+
+        requisitos: [
+            "Hasta 58 años mujeres y 63 años varones",
+            "No debe superar los 30 años de servicio",
+        ],
+
+        proceso:
+            "La evaluación se realiza primero por descuento de haberes. En caso de no contar con cupo, se verificará la opción por CBU.",
+
+        comoSaberCupo: [
+            "Indicanos tu DNI",
+            "Te informamos en el momento si contás con preaprobación",
+            "En algunos casos se puede solicitar recibo de haberes",
+        ],
+    },
 ];
 
 type VarianteKey = "anses" | "cbu";
