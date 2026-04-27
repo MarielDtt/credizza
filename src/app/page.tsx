@@ -1,5 +1,4 @@
 'use client'
-import ConstructionDialog from "@/components/home/ConstructionDialog";
 import Contact from "@/components/home/Contact";
 import Experience from "@/components/home/Experience";
 import Hero from "@/components/home/Hero";
@@ -28,7 +27,6 @@ export default function Home() {
       <div className="mt-8 lg:mt-12">
         <Experience />
       </div>
-      <ConstructionDialog />
     </div>
   )
 }
