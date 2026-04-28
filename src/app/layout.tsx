@@ -3,22 +3,22 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import AppProviders from "./providers";
 import Footer from "@/components/layout/Footer";
-import { Poppins } from 'next/font/google';
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/next"
-import Script from "next/script"
+import { Poppins } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
+import ButtonChat from "@/components/buttons/ButtonChat";
+import CrispWidget from "@/components/layout/CrispWidget";
 
 
 export const viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
 };
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '600', '700'],
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
 });
-
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://credizza.com.ar"),
@@ -49,11 +49,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Credizza | Sitio en construcción 🚧",
-    description: "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
+    description:
+      "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
     images: ["/og-construccion.webp"],
   },
 };
-
 
 export default function RootLayout({
   children,
@@ -62,30 +62,18 @@ export default function RootLayout({
 }>) {
   return (
     <html className="bg-background-default" lang="es-AR">
-       <head>
-        {/* GA4 */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-6BB0GMJZKV"
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-6BB0GMJZKV');
-          `}
-        </Script>
-      </head>
       <body className={poppins.className}>
         <AppProviders>
           <Navbar />
           {children}
           <Footer />
         </AppProviders>
+
         <SpeedInsights />
-        <Analytics/>
-   
+        <Analytics />
+
+        <CrispWidget />
+        <ButtonChat />
       </body>
     </html>
   );

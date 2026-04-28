@@ -1,12 +1,7 @@
 import Image from "next/image";
 import { Button } from "../buttons";
 
-declare global {
-  interface Window {
-    $crisp?: Array<[string, string, unknown?]>;
-    CRISP_WEBSITE_ID?: string;
-  }
-}
+
 const handleWhatsApp = () => {
   const phone = "5491126289448"; // formato recomendado: 54 + 9 + código de área + número (sin 0 ni 15)
   const message = "Hola, quiero consultar por un préstamo."; // opcional
