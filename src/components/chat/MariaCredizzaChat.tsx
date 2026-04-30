@@ -93,8 +93,6 @@ export default function MariaCredizzaChat() {
     setSubOptions(initialSub);
     setSecondSubOptions([]);
     addBot(getSubactivityPrompt(actividad));
-    if (actividad === "Jubilado") addBot("¿Por dónde cobra su jubilación?");
-    if (actividad === "Pensión por viudez") addBot("¿Por dónde cobra su pensión?");
     if (actividad === "Docente") addBot("¿La institución es pública o privada?");
     if (actividad === "Empleado público") addBot("¿A qué sector pertenece?");
     setStep("subActividad");
