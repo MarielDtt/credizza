@@ -93,19 +93,29 @@ export const getSubactivityPrompt = (actividad: Actividad): string => {
   return promptMap[actividad] ?? "Gracias. Continuamos con su evaluación.";
 };
 
-export const evaluateLead = (lead: LeadData): Resultado => {
+export type BcraMockData = {
+  totalSituaciones: number;
+  irregulares: number;
+  tieneSituacion1: boolean;
+};
+
+export const mockBcraData: BcraMockData = {
+  totalSituaciones: 1,
+  irregulares: 0,
+  tieneSituacion1: true,
+};
+
+export const evaluateLead = (lead: LeadData, bcraData: BcraMockData): Resultado => {
   // TODO: Reemplazar por evaluación real con BCRA.
-  const irregulares = 0;
-  const totalSituaciones = 1;
-  const hasSituacionUno = true;
+  const { irregulares, totalSituaciones, tieneSituacion1 } = bcraData;
 
   if (!lead.actividad) return "revision_manual";
   if (lead.actividad === "Empleado provincial de Santa Fe" || lead.actividad === "Empleado provincial Chubut" || lead.actividad === "No estoy seguro / Otro") return "revision_manual";
   if (lead.actividad === "Jubilado" || lead.actividad === "Pensión por viudez") return irregulares <= 2 ? "precalifica_haberes_cbu" : "precalifica_haberes";
-  if (lead.actividad === "Docente" && lead.subActividad === "Privada") return hasSituacionUno && irregulares === 0 ? "precalifica_cbu" : "rechazado";
+  if (lead.actividad === "Docente" && lead.subActividad === "Privada") return tieneSituacion1 && irregulares === 0 ? "precalifica_cbu" : "rechazado";
   if (lead.actividad === "Docente") return irregulares === 0 ? "precalifica_haberes_cbu" : "precalifica_haberes";
   if (lead.actividad === "Policía") return irregulares === 0 ? "precalifica_haberes_cbu" : "precalifica_haberes";
-  if (lead.actividad === "AUH") return hasSituacionUno && irregulares === 0 ? "precalifica_cbu" : "rechazado";
+  if (lead.actividad === "AUH") return tieneSituacion1 && irregulares === 0 ? "precalifica_cbu" : "rechazado";
   if (lead.actividad === "Pensiones") {
     if (lead.subActividad === "Otro") return "revision_manual";
     return irregulares <= 2 ? "precalifica_haberes_cbu" : "rechazado";
@@ -115,7 +125,7 @@ export const evaluateLead = (lead: LeadData): Resultado => {
     return irregulares / totalSituaciones > 0.4 ? "precalifica_haberes" : "precalifica_haberes_cbu";
   }
   if (lead.actividad === "Empleado público" && (lead.subActividad === "Nacional" || lead.subActividad === "Municipal")) {
-    return hasSituacionUno && irregulares === 0 ? "precalifica_cbu" : "rechazado";
+    return tieneSituacion1 && irregulares === 0 ? "precalifica_cbu" : "rechazado";
   }
   if (lead.actividad === "Empleado público" && lead.subActividad === "Provincial") {
     if (totalSituaciones === 0) return "revision_manual";

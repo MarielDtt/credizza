@@ -14,6 +14,7 @@ import {
   saveLeadMock,
   toVisibleResult,
   validateDni,
+  mockBcraData,
 } from "./mariaCredizzaChat.utils";
 
 type ChatMessage = { from: "bot" | "user"; text: string };
@@ -143,7 +144,7 @@ export default function MariaCredizzaChat() {
     addBot("Procesando información...");
     setStep("procesando");
 
-    const resultado = evaluateLead(updatedLead);
+    const resultado = evaluateLead(updatedLead, mockBcraData);
     const finalLead: LeadData = { ...updatedLead, resultado };
     setLead(finalLead);
     addBot(`Resultado: ${toVisibleResult(resultado)}`);
