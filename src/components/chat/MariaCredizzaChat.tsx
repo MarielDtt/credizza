@@ -5,6 +5,7 @@ import { Actividad, ChatStep, LeadData, Sexo, SubActividad } from "./mariaCrediz
 import {
   ACTIVIDADES_DISPONIBLES,
   BANCOS_DISPONIBLES,
+  buildLeadData,
   buildWhatsAppMessage,
   evaluateLead,
   generateCuil,
@@ -51,17 +52,7 @@ const suggestedBankForSub = (value: SubActividad | null, actividad: Actividad | 
   return value ? map[value] ?? null : null;
 };
 
-const INITIAL_LEAD: LeadData = {
-  actividad: null,
-  subActividad: null,
-  banco: null,
-  dni: null,
-  cuil: null,
-  sexo: null,
-  resultado: null,
-  whatsapp: null,
-  fecha: nowAsDisplayDate(),
-};
+const INITIAL_LEAD: LeadData = buildLeadData({});
 
 export default function MariaCredizzaChat() {
   const [step, setStep] = useState<ChatStep>("inicio");
@@ -87,7 +78,7 @@ export default function MariaCredizzaChat() {
   const resetChat = (): void => {
     setStep("inicio");
     setMessages([{ from: "bot", text: INITIAL_BOT_MESSAGE }]);
-    setLead({ ...INITIAL_LEAD, fecha: nowAsDisplayDate() });
+    setLead(buildLeadData({ fecha: nowAsDisplayDate() }));
     setActividadInput("");
     setSubOptions([]);
     setSecondSubOptions([]);
@@ -111,27 +102,27 @@ export default function MariaCredizzaChat() {
   const onBack = (): void => {
     if (step === "subActividad") {
       setStep("actividad");
-      setLead((prev) => ({ ...prev, subActividad: null, banco: null, dni: null, cuil: null, sexo: null, resultado: null, whatsapp: null }));
+      setLead((prev) => ({ ...prev, subActividad: "", banco: "", dni: "", cuil: "", sexo: "", resultado: "", whatsapp: "" }));
       setSecondSubOptions([]);
       return;
     }
     if (step === "banco") {
       const hasSub = Boolean(lead.subActividad) || subOptions.length > 0 || secondSubOptions.length > 0;
       setStep(hasSub ? "subActividad" : "actividad");
-      setLead((prev) => ({ ...prev, banco: null, dni: null, cuil: null, sexo: null, resultado: null, whatsapp: null }));
+      setLead((prev) => ({ ...prev, banco: "", dni: "", cuil: "", sexo: "", resultado: "", whatsapp: "" }));
       setBancoInput("");
       return;
     }
     if (step === "dni") {
       setStep("banco");
-      setLead((prev) => ({ ...prev, dni: null, cuil: null, sexo: null, resultado: null, whatsapp: null }));
+      setLead((prev) => ({ ...prev, dni: "", cuil: "", sexo: "", resultado: "", whatsapp: "" }));
       setDniInput("");
       setDniError("");
       return;
     }
     if (step === "sexo") {
       setStep("dni");
-      setLead((prev) => ({ ...prev, sexo: null, cuil: null, resultado: null, whatsapp: null }));
+      setLead((prev) => ({ ...prev, sexo: "", cuil: "", resultado: "", whatsapp: "" }));
     }
   };
 
@@ -140,7 +131,7 @@ export default function MariaCredizzaChat() {
   const onActividad = (actividad: Actividad): void => {
     addUser(actividad);
     setActividadInput("");
-    setLead((prev) => ({ ...prev, actividad, subActividad: null }));
+    setLead((prev) => ({ ...prev, actividad, subActividad: "" }));
 
     if (actividad === "Empleado GCBA" || actividad === "Empleado provincial de Santa Fe" || actividad === "Empleado provincial Chubut" || actividad === "No estoy seguro / Otro" || actividad === "AUH") {
       goToBankStep(actividad, null);
@@ -167,7 +158,8 @@ export default function MariaCredizzaChat() {
     }
 
     setLead((prev) => ({ ...prev, subActividad: value }));
-    goToBankStep(lead.actividad ?? "No estoy seguro / Otro", value);
+    const actividadActual: Actividad = lead.actividad || "No estoy seguro / Otro";
+    goToBankStep(actividadActual, value);
   };
 
   const onBanco = (banco: string): void => {
@@ -194,13 +186,13 @@ export default function MariaCredizzaChat() {
 
   const onSexo = async (sexo: Sexo): Promise<void> => {
     addUser(sexo);
-    const cuil = lead.dni ? generateCuil(lead.dni, sexo) : null;
-    const updatedLead: LeadData = { ...lead, sexo, cuil, fecha: nowAsDisplayDate() };
+    const cuil = lead.dni ? generateCuil(lead.dni, sexo) : "";
+    const updatedLead: LeadData = buildLeadData({ ...lead, sexo, cuil, fecha: nowAsDisplayDate() });
     addBot("Procesando información...");
     setStep("procesando");
 
     const resultado = evaluateLead(updatedLead, mockBcraData);
-    const finalLead: LeadData = { ...updatedLead, resultado };
+    const finalLead: LeadData = buildLeadData({ ...updatedLead, resultado: toVisibleResult(resultado) });
     setLead(finalLead);
     addBot(`Resultado: ${toVisibleResult(resultado)}`);
     if (resultado === "precalifica_haberes") {
@@ -231,7 +223,7 @@ export default function MariaCredizzaChat() {
       return;
     }
     setWhatsError("");
-    const updated = { ...lead, whatsapp: cleaned };
+    const updated: LeadData = buildLeadData({ ...lead, whatsapp: cleaned });
     setLead(updated);
     await saveLeadMock(updated);
     addUser(cleaned);

@@ -1,4 +1,4 @@
-import { Actividad, LeadData, Resultado, Sexo } from "./mariaCredizzaChat.types";
+import { Actividad, LeadData, Resultado, Sexo, SubActividad } from "./mariaCredizzaChat.types";
 
 export const ACTIVIDADES_DISPONIBLES: readonly Actividad[] = [
   "Jubilado",
@@ -95,6 +95,21 @@ export const BANCOS_DISPONIBLES: readonly string[] = [
   "Otro banco",
 ] as const;
 
+
+export const buildLeadData = (partial: Partial<LeadData>): LeadData => ({
+  fecha: partial.fecha ?? nowAsDisplayDate(),
+  nombreApellido: partial.nombreApellido ?? "",
+  sexo: partial.sexo ?? "",
+  dni: partial.dni ?? "",
+  cuil: partial.cuil ?? "",
+  actividad: partial.actividad ?? "",
+  subActividad: partial.subActividad ?? "",
+  situacionBcra: partial.situacionBcra ?? "Pendiente BCRA",
+  banco: partial.banco ?? "",
+  whatsapp: partial.whatsapp ?? "",
+  resultado: partial.resultado ?? "",
+});
+
 export const normalizeDni = (value: string): string => {
   const digits = value.replace(/[.\s-]/g, "").replace(/\D/g, "");
   if (digits.length === 7) return `0${digits}`;
@@ -171,6 +186,9 @@ export const mockBcraData: BcraMockData = {
 };
 
 export const evaluateLead = (lead: LeadData, bcraData: BcraMockData): Resultado => {
+  // TODO BCRA Jubilado/Viudez/Pensiones: >2 irregulares => "Afectado"; si no, guardar mayor situación.
+  // TODO BCRA Docente/Policía/Empleados/Otros: >1 situación mayor a 1 => "Afectado"; si no, guardar mayor situación.
+  // TODO BCRA AUH: >1 situación mayor a 1 o sin situación 1 => "Afectado"; con situación 1 y sin irregularidades => "1".
   // TODO: Reemplazar por evaluación real con BCRA.
   const { irregulares, totalSituaciones, tieneSituacion1 } = bcraData;
 
@@ -221,7 +239,7 @@ export const buildWhatsAppMessage = (lead: LeadData): string => {
     `* DNI: ${lead.dni ?? "No informado"}`,
     `* CUIL: ${lead.cuil ?? "No informado"}`,
     `* Sexo: ${lead.sexo ?? "No informado"}`,
-    `* Resultado: ${lead.resultado ? toVisibleResult(lead.resultado) : "No informado"}`,
+    `* Resultado: ${lead.resultado || "No informado"}`,
     `* Fecha: ${lead.fecha}`,
   ];
 

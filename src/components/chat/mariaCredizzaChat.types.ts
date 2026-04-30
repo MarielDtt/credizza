@@ -50,13 +50,15 @@ export type Resultado =
   | "rechazado";
 
 export type LeadData = {
-  actividad: Actividad | null;
-  subActividad: SubActividad | null;
-  banco: string | null;
-  dni: string | null;
-  cuil: string | null;
-  sexo: Sexo | null;
-  resultado: Resultado | null;
-  whatsapp: string | null;
   fecha: string;
+  nombreApellido: string;
+  sexo: Sexo | "";
+  dni: string;
+  cuil: string;
+  actividad: Actividad | "";
+  subActividad: SubActividad | "";
+  situacionBcra: string;
+  banco: string;
+  whatsapp: string;
+  resultado: string;
 };
