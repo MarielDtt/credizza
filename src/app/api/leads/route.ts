@@ -29,7 +29,10 @@ export async function POST(request: Request) {
 
     const sheetId = process.env.GOOGLE_SHEET_ID;
     const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY
+      ?.replace(/^"|"$/g, "")
+      .replace(/\\n/g, "\n")
+      .replace(/\r/g, "");
 
     if (!sheetId || !clientEmail || !privateKey) {
       return NextResponse.json({ error: "Faltan variables de entorno para Google Sheets." }, { status: 500 });
@@ -45,14 +48,14 @@ export async function POST(request: Request) {
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
-      range: "Sheet1!A:K",
+      range: "'Hoja 1'!A:K",
       valueInputOption: "USER_ENTERED",
       requestBody: { values: [row] },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error guardando lead en Google Sheets", error);
-    return NextResponse.json({ error: "No se pudo guardar el lead." }, { status: 500 });
-  }
+  console.error("Error guardando lead en Google Sheets:", JSON.stringify(error, null, 2));
+  return NextResponse.json({ error: "No se pudo guardar el lead." }, { status: 500 });
+}
 }
