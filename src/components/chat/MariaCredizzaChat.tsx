@@ -204,9 +204,10 @@ export default function MariaCredizzaChat() {
 
   const onWhatsappChoice = async (yes: boolean): Promise<void> => {
     addUser(yes ? "Sí" : "No");
-    await saveLeadMock(lead);
+    const leadToSave: LeadData = buildLeadData({ ...lead });
+    await saveLeadMock(leadToSave);
     if (yes) {
-      window.open(`https://wa.me/?text=${buildWhatsAppMessage(lead)}`, "_blank", "noopener,noreferrer");
+      window.open(`https://wa.me/?text=${buildWhatsAppMessage(leadToSave)}`, "_blank", "noopener,noreferrer");
       addBot("Perfecto. Un asesor le responderá a la brevedad vía WhatsApp.");
       setStep("fin");
       return;
