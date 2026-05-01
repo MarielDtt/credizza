@@ -247,7 +247,13 @@ export const buildWhatsAppMessage = (lead: LeadData): string => {
 };
 
 export const saveLeadMock = async (lead: LeadData): Promise<void> => {
-  // TODO: Reemplazar por integración real con Google Sheets o backend.
-  await new Promise((resolve) => window.setTimeout(resolve, 700));
-  console.info("Lead guardado (mock)", lead);
+  try {
+    await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(lead),
+    });
+  } catch (error) {
+    console.error("Error enviando lead a /api/leads", error);
+  }
 };
