@@ -23,7 +23,8 @@
     "next-sitemap": "^4.2.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "swiper": "^12.0.3"
+    "swiper": "^12.0.3",
+    "googleapis": "^144.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
