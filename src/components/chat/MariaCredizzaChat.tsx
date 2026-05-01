@@ -67,9 +67,7 @@ export default function MariaCredizzaChat() {
   const [showFullBankSearch, setShowFullBankSearch] = useState(true);
   const [dniInput, setDniInput] = useState("");
   const [dniError, setDniError] = useState("");
-  const [whatsInput, setWhatsInput] = useState("");
-  const [whatsError, setWhatsError] = useState("");
-  const [shouldOpenCredizzaWhatsapp, setShouldOpenCredizzaWhatsapp] = useState(false);
+  const [isRedirectingWhatsapp, setIsRedirectingWhatsapp] = useState(false);
 
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -95,9 +93,7 @@ export default function MariaCredizzaChat() {
     setShowFullBankSearch(true);
     setDniInput("");
     setDniError("");
-    setWhatsInput("");
-    setWhatsError("");
-    setShouldOpenCredizzaWhatsapp(false);
+    setIsRedirectingWhatsapp(false);
   };
 
   const goToBankStep = (actividad: Actividad, subActividad: SubActividad | null): void => {
@@ -211,41 +207,30 @@ export default function MariaCredizzaChat() {
     setStep("whatsapp");
   };
 
-  const onWhatsappChoice = (yes: boolean): void => {
+  const onWhatsappChoice = async (yes: boolean): Promise<void> => {
     addUser(yes ? "Sí" : "No");
-    setShouldOpenCredizzaWhatsapp(yes);
-    addBot(
-      yes
-        ? "Indique su número de WhatsApp para que un asesor pueda continuar la gestión."
-        : "Para que un asesor pueda continuar luego con su evaluación, indique su número de WhatsApp.",
-    );
-    setStep("fin");
-  };
 
-  const onManualWhatsapp = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault();
-    const cleaned = whatsInput.replace(/\D/g, "");
-    if (cleaned.length < 8) {
-      setWhatsError("Ingrese un número de WhatsApp válido.");
+    if (yes) {
+      setIsRedirectingWhatsapp(true);
+      addBot("Estamos preparando su atención...");
+
+      const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "Pendiente WhatsApp" });
+      setLead(leadToSave);
+      await saveLeadMock(leadToSave);
+
+      const encodedMessage = buildWhatsAppMessage(leadToSave);
+      window.open(`https://wa.me/${CREDIZZA_WHATSAPP}?text=${encodedMessage}`, "_blank", "noopener,noreferrer");
+      addBot("Perfecto. Un asesor le responderá a la brevedad vía WhatsApp.");
+      setIsRedirectingWhatsapp(false);
+      setStep("fin");
       return;
     }
 
-    setWhatsError("");
-    const updated: LeadData = buildLeadData({ ...lead, whatsapp: cleaned });
-    setLead(updated);
-    await saveLeadMock(updated);
-    addUser(cleaned);
-
-    if (shouldOpenCredizzaWhatsapp) {
-      const encodedMessage = buildWhatsAppMessage(updated);
-      window.open(`https://wa.me/${CREDIZZA_WHATSAPP}?text=${encodedMessage}`, "_blank", "noopener,noreferrer");
-      addBot("Perfecto. Un asesor le responderá a la brevedad vía WhatsApp.");
-    } else {
-      addBot("Gracias por completar la precalificación. Un asesor podrá contactarle a la brevedad.");
-    }
-
-    setWhatsInput("");
-    setShouldOpenCredizzaWhatsapp(false);
+    const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "No continuó por WhatsApp" });
+    setLead(leadToSave);
+    await saveLeadMock(leadToSave);
+    addBot("Gracias por completar la precalificación.");
+    setStep("fin");
   };
 
   return (
@@ -274,8 +259,8 @@ export default function MariaCredizzaChat() {
 
       {step === "sexo" && <div className="grid grid-cols-2 gap-2">{(["F", "M"] as const).map((sexo) => <button key={sexo} type="button" onClick={() => void onSexo(sexo)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">{sexo}</button>)}</div>}
       {step === "whatsapp" && <div className="grid grid-cols-2 gap-2"><button type="button" onClick={() => onWhatsappChoice(true)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Sí</button><button type="button" onClick={() => onWhatsappChoice(false)} className="rounded-xl bg-boton-neutral px-3 py-2 text-button text-texto-botones">No</button></div>}
-      {step === "fin" && <form onSubmit={(e) => void onManualWhatsapp(e)} className="space-y-2"><input value={whatsInput} onChange={(e) => setWhatsInput(e.target.value)} placeholder="Número de WhatsApp" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" />{whatsError && <p className="text-smallMobile text-boton-secundario">{whatsError}</p>}<button type="submit" className="w-full rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Guardar número</button></form>}
-
+      {isRedirectingWhatsapp && <div className="mt-2 flex items-center gap-2 rounded-xl border border-sistema-uno bg-background-default px-3 py-2 text-small text-texto-principal"><span className="inline-block animate-spin">🪙</span><span>Estamos preparando su atención...</span></div>}
+      
       {showBackButton && <button type="button" onClick={onBack} className="mt-4 text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button>}
     </section>
   );
