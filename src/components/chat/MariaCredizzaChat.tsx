@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { Actividad, ChatStep, LeadData, Sexo, SubActividad } from "./mariaCredizzaChat.types";
 import {
   ACTIVIDADES_DISPONIBLES,
@@ -68,17 +68,12 @@ export default function MariaCredizzaChat() {
   const [dniError, setDniError] = useState("");
   const [whatsInput, setWhatsInput] = useState("");
   const [whatsError, setWhatsError] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const actividadFiltrada = useMemo(() => ACTIVIDADES_DISPONIBLES.filter((item) => item.toLowerCase().includes(actividadInput.toLowerCase())), [actividadInput]);
   const bancosFiltrados = useMemo(() => BANCOS_DISPONIBLES.filter((item) => item.toLowerCase().includes(bancoInput.toLowerCase())), [bancoInput]);
 
   const addBot = (text: string): void => setMessages((prev) => [...prev, { from: "bot", text }]);
   const addUser = (text: string): void => setMessages((prev) => [...prev, { from: "user", text }]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [step, messages, subOptions, secondSubOptions, suggestedBank, showFullBankSearch, bancosFiltrados, actividadFiltrada]);
 
   const resetChat = (): void => {
     setStep("inicio");
@@ -250,22 +245,21 @@ export default function MariaCredizzaChat() {
             {m.text}
           </div>
         ))}
-        <div ref={messagesEndRef} />
       </div>
 
-      {showBackButton && <button type="button" onClick={onBack} className="mb-2 text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button>}
 
       {(step === "inicio" || step === "actividad") && <div className="space-y-2"><input value={actividadInput} onChange={(e) => setActividadInput(e.target.value)} placeholder="Buscar actividad" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" /><div className="max-h-40 overflow-y-auto rounded-xl border border-sistema-uno">{actividadFiltrada.map((act) => <button key={act} type="button" onClick={() => onActividad(act)} className="block w-full border-b border-sistema-uno px-3 py-2 text-left text-small text-texto-principal">{act}</button>)}</div></div>}
 
       {step === "subActividad" && <div className="grid grid-cols-1 gap-2">{(secondSubOptions.length > 0 ? secondSubOptions : subOptions).map((item) => <button key={item} type="button" onClick={() => onSubActivity(item)} className="rounded-xl border border-sistema-uno px-3 py-2 text-left text-small text-texto-principal">{item}</button>)}</div>}
 
-      {step === "banco" && <div className="space-y-2">{suggestedBank && !showFullBankSearch ? <div className="grid grid-cols-1 gap-2"><button type="button" onClick={() => onBanco(suggestedBank)} className="rounded-xl border border-sistema-uno px-3 py-2 text-left text-small">{suggestedBank}</button><button type="button" onClick={() => setShowFullBankSearch(true)} className="rounded-xl border border-sistema-uno px-3 py-2 text-left text-small">Otro banco</button></div> : <><input value={bancoInput} onChange={(e) => setBancoInput(e.target.value)} placeholder="Buscar banco" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" /><div className="max-h-28 overflow-y-auto rounded-xl border border-sistema-uno">{bancosFiltrados.map((bank) => <button key={bank} type="button" onClick={() => onBanco(bank)} className="block w-full border-b border-sistema-uno px-3 py-2 text-left text-small">{bank}</button>)}</div></>}<div className="flex flex-col gap-1"><button type="button" onClick={() => setShowFullBankSearch(true)} className="text-left text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">No encuentro mi banco</button><button type="button" onClick={onBack} className="text-left text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button></div></div>}
+      {step === "banco" && <div className="space-y-2">{suggestedBank && !showFullBankSearch ? <div className="grid grid-cols-1 gap-2"><button type="button" onClick={() => onBanco(suggestedBank)} className="rounded-xl border border-sistema-uno px-3 py-2 text-left text-small">{suggestedBank}</button><button type="button" onClick={() => setShowFullBankSearch(true)} className="rounded-xl border border-sistema-uno px-3 py-2 text-left text-small">Otro banco</button></div> : <><input value={bancoInput} onChange={(e) => setBancoInput(e.target.value)} placeholder="Buscar banco" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" /><div className="max-h-28 overflow-y-auto rounded-xl border border-sistema-uno">{bancosFiltrados.map((bank) => <button key={bank} type="button" onClick={() => onBanco(bank)} className="block w-full border-b border-sistema-uno px-3 py-2 text-left text-small">{bank}</button>)}</div></>}<div className="flex flex-col gap-1"><button type="button" onClick={() => setShowFullBankSearch(true)} className="text-left text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">No encuentro mi banco</button></div></div>}
 
       {step === "dni" && <form onSubmit={onDni} className="space-y-2"><input value={dniInput} onChange={(e) => setDniInput(e.target.value)} placeholder="Ingrese DNI" inputMode="numeric" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" />{dniError && <p className="text-smallMobile text-boton-secundario">{dniError}</p>}<button type="submit" className="w-full rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Continuar</button></form>}
 
       {step === "sexo" && <div className="grid grid-cols-2 gap-2">{(["F", "M"] as const).map((sexo) => <button key={sexo} type="button" onClick={() => void onSexo(sexo)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">{sexo}</button>)}</div>}
       {step === "whatsapp" && <div className="grid grid-cols-2 gap-2"><button type="button" onClick={() => void onWhatsappChoice(true)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Sí</button><button type="button" onClick={() => void onWhatsappChoice(false)} className="rounded-xl bg-boton-neutral px-3 py-2 text-button text-texto-botones">No</button></div>}
       {step === "fin" && <form onSubmit={(e) => void onManualWhatsapp(e)} className="space-y-2"><input value={whatsInput} onChange={(e) => setWhatsInput(e.target.value)} placeholder="Número de WhatsApp" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" />{whatsError && <p className="text-smallMobile text-boton-secundario">{whatsError}</p>}<button type="submit" className="w-full rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Guardar número</button></form>}
+      {showBackButton && <button type="button" onClick={onBack} className="mt-2 text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button>}
     </section>
   );
 }
