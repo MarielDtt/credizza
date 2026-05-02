@@ -66,6 +66,7 @@ export default function MariaCredizzaChat() {
   const [showFullBankSearch, setShowFullBankSearch] = useState(true);
   const [dniInput, setDniInput] = useState("");
   const [dniError, setDniError] = useState("");
+  const [isWhatsappLoading, setIsWhatsappLoading] = useState(false);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -94,6 +95,7 @@ export default function MariaCredizzaChat() {
     setShowFullBankSearch(true);
     setDniInput("");
     setDniError("");
+    setIsWhatsappLoading(false);
   };
 
   const goToBankStep = (actividad: Actividad, subActividad: SubActividad | null): void => {
@@ -208,15 +210,21 @@ export default function MariaCredizzaChat() {
   };
 
   const onWhatsappChoice = async (yes: boolean): Promise<void> => {
+    if (isWhatsappLoading) return;
     addUser(yes ? "Sí" : "No");
 
     if (yes) {
-      const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "Derivado a WhatsApp" });
-      setLead(leadToSave);
-      await saveLeadMock(leadToSave);
-      const message = buildWhatsAppMessage(leadToSave);
-      const whatsappUrl = `https://wa.me/5491166669143?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      setIsWhatsappLoading(true);
+      try {
+        const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "Derivado a WhatsApp" });
+        setLead(leadToSave);
+        await saveLeadMock(leadToSave);
+        const message = buildWhatsAppMessage(leadToSave);
+        const whatsappUrl = `https://wa.me/5491166669143?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      } finally {
+        setIsWhatsappLoading(false);
+      }
       addBot("Gracias. Será atendido por WhatsApp.");
       setStep("fin");
       return;
@@ -255,7 +263,7 @@ export default function MariaCredizzaChat() {
       {step === "dni" && <form onSubmit={onDni} className="space-y-2"><input value={dniInput} onChange={(e) => setDniInput(e.target.value)} placeholder="Ingrese DNI" inputMode="numeric" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" />{dniError && <p className="text-smallMobile text-boton-secundario">{dniError}</p>}<button type="submit" className="w-full rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Continuar</button></form>}
 
       {step === "sexo" && <div className="grid grid-cols-2 gap-2">{(["F", "M"] as const).map((sexo) => <button key={sexo} type="button" onClick={() => void onSexo(sexo)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">{sexo}</button>)}</div>}
-      {step === "whatsapp" && <div className="grid grid-cols-2 gap-2"><button type="button" onClick={() => void onWhatsappChoice(true)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Sí</button><button type="button" onClick={() => void onWhatsappChoice(false)} className="rounded-xl bg-boton-neutral px-3 py-2 text-button text-texto-botones">No</button></div>}
+      {step === "whatsapp" && <div className="space-y-2">{isWhatsappLoading && <div className="flex items-center gap-2 rounded-xl border border-sistema-uno bg-background-default px-3 py-2 text-small text-texto-secundario"><span className="inline-block animate-bounce" aria-hidden="true">📱</span><span>Estamos preparando su atención...</span></div>}<div className="grid grid-cols-2 gap-2"><button type="button" onClick={() => void onWhatsappChoice(true)} disabled={isWhatsappLoading} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones disabled:cursor-not-allowed disabled:opacity-60">Sí</button><button type="button" onClick={() => void onWhatsappChoice(false)} disabled={isWhatsappLoading} className="rounded-xl bg-boton-neutral px-3 py-2 text-button text-texto-botones disabled:cursor-not-allowed disabled:opacity-60">No</button></div></div>}
       {showBackButton && <button type="button" onClick={onBack} className="mt-2 text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button>}
     </section>
   );
