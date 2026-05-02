@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Actividad, ChatStep, LeadData, Sexo, SubActividad } from "./mariaCredizzaChat.types";
 import {
   ACTIVIDADES_DISPONIBLES,
@@ -68,12 +68,21 @@ export default function MariaCredizzaChat() {
   const [dniError, setDniError] = useState("");
   const [whatsInput, setWhatsInput] = useState("");
   const [whatsError, setWhatsError] = useState("");
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const actividadFiltrada = useMemo(() => ACTIVIDADES_DISPONIBLES.filter((item) => item.toLowerCase().includes(actividadInput.toLowerCase())), [actividadInput]);
   const bancosFiltrados = useMemo(() => BANCOS_DISPONIBLES.filter((item) => item.toLowerCase().includes(bancoInput.toLowerCase())), [bancoInput]);
 
   const addBot = (text: string): void => setMessages((prev) => [...prev, { from: "bot", text }]);
   const addUser = (text: string): void => setMessages((prev) => [...prev, { from: "user", text }]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+    }
+  }, [step, messages, lead, subOptions, secondSubOptions, showFullBankSearch, suggestedBank, actividadFiltrada, bancosFiltrados]);
 
   const resetChat = (): void => {
     setStep("inicio");
@@ -239,12 +248,13 @@ export default function MariaCredizzaChat() {
         <button type="button" onClick={resetChat} className="text-small text-texto-secundario underline">Reiniciar</button>
       </div>
 
-      <div className="mb-4 flex max-h-[60vh] flex-col gap-2 overflow-y-auto rounded-xl bg-background-default p-3">
+      <div ref={chatScrollRef} className="mb-4 flex max-h-[60vh] flex-col gap-2 overflow-y-auto rounded-xl bg-background-default p-3">
         {messages.map((m, i) => (
           <div key={`${m.from}-${i}`} className={`max-w-[90%] rounded-2xl px-3 py-2 text-small ${m.from === "bot" ? "self-start bg-background-secondary text-texto-principal" : "self-end bg-boton-primario text-texto-botones"}`}>
             {m.text}
           </div>
         ))}
+        <div ref={bottomRef} />
       </div>
 
 
