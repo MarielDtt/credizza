@@ -66,8 +66,6 @@ export default function MariaCredizzaChat() {
   const [showFullBankSearch, setShowFullBankSearch] = useState(true);
   const [dniInput, setDniInput] = useState("");
   const [dniError, setDniError] = useState("");
-  const [whatsInput, setWhatsInput] = useState("");
-  const [whatsError, setWhatsError] = useState("");
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -96,8 +94,6 @@ export default function MariaCredizzaChat() {
     setShowFullBankSearch(true);
     setDniInput("");
     setDniError("");
-    setWhatsInput("");
-    setWhatsError("");
   };
 
   const goToBankStep = (actividad: Actividad, subActividad: SubActividad | null): void => {
@@ -213,34 +209,24 @@ export default function MariaCredizzaChat() {
 
   const onWhatsappChoice = async (yes: boolean): Promise<void> => {
     addUser(yes ? "Sí" : "No");
-    const leadToSave: LeadData = buildLeadData({ ...lead });
-    await saveLeadMock(leadToSave);
+
     if (yes) {
-      const mensaje = buildWhatsAppMessage(leadToSave);
-      const whatsappUrl = `https://wa.me/5491166669143?text=${encodeURIComponent(mensaje)}`;
+      const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "Derivado a WhatsApp" });
+      setLead(leadToSave);
+      await saveLeadMock(leadToSave);
+      const message = buildWhatsAppMessage(leadToSave);
+      const whatsappUrl = `https://wa.me/5491166669143?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-      addBot("Perfecto. Un asesor le responderá a la brevedad vía WhatsApp.");
+      addBot("Gracias. Será atendido por WhatsApp.");
       setStep("fin");
       return;
     }
-    addBot("Para que un asesor pueda continuar luego con su evaluación, indique su número de WhatsApp.");
-    setStep("fin");
-  };
 
-  const onManualWhatsapp = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault();
-    const cleaned = whatsInput.replace(/\D/g, "");
-    if (cleaned.length < 8) {
-      setWhatsError("Ingrese un número de WhatsApp válido.");
-      return;
-    }
-    setWhatsError("");
-    const updated: LeadData = buildLeadData({ ...lead, whatsapp: cleaned });
-    setLead(updated);
-    await saveLeadMock(updated);
-    addUser(cleaned);
-    addBot("Gracias por completar la precalificación. Un asesor podrá contactarle a la brevedad.");
-    setWhatsInput("");
+    const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "No continuó por WhatsApp" });
+    setLead(leadToSave);
+    await saveLeadMock(leadToSave);
+    addBot("Gracias por completar la precalificación.");
+    setStep("fin");
   };
 
   return (
@@ -270,7 +256,6 @@ export default function MariaCredizzaChat() {
 
       {step === "sexo" && <div className="grid grid-cols-2 gap-2">{(["F", "M"] as const).map((sexo) => <button key={sexo} type="button" onClick={() => void onSexo(sexo)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">{sexo}</button>)}</div>}
       {step === "whatsapp" && <div className="grid grid-cols-2 gap-2"><button type="button" onClick={() => void onWhatsappChoice(true)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Sí</button><button type="button" onClick={() => void onWhatsappChoice(false)} className="rounded-xl bg-boton-neutral px-3 py-2 text-button text-texto-botones">No</button></div>}
-      {step === "fin" && <form onSubmit={(e) => void onManualWhatsapp(e)} className="space-y-2"><input value={whatsInput} onChange={(e) => setWhatsInput(e.target.value)} placeholder="Número de WhatsApp" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" />{whatsError && <p className="text-smallMobile text-boton-secundario">{whatsError}</p>}<button type="submit" className="w-full rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Guardar número</button></form>}
       {showBackButton && <button type="button" onClick={onBack} className="mt-2 text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button>}
     </section>
   );
