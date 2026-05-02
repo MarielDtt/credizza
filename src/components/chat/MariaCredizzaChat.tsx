@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Actividad, ChatStep, LeadData, Sexo, SubActividad } from "./mariaCredizzaChat.types";
 import {
   ACTIVIDADES_DISPONIBLES,
@@ -68,12 +68,17 @@ export default function MariaCredizzaChat() {
   const [dniError, setDniError] = useState("");
   const [whatsInput, setWhatsInput] = useState("");
   const [whatsError, setWhatsError] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const actividadFiltrada = useMemo(() => ACTIVIDADES_DISPONIBLES.filter((item) => item.toLowerCase().includes(actividadInput.toLowerCase())), [actividadInput]);
   const bancosFiltrados = useMemo(() => BANCOS_DISPONIBLES.filter((item) => item.toLowerCase().includes(bancoInput.toLowerCase())), [bancoInput]);
 
   const addBot = (text: string): void => setMessages((prev) => [...prev, { from: "bot", text }]);
   const addUser = (text: string): void => setMessages((prev) => [...prev, { from: "user", text }]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [step, messages, subOptions, secondSubOptions, suggestedBank, showFullBankSearch, bancosFiltrados, actividadFiltrada]);
 
   const resetChat = (): void => {
     setStep("inicio");
@@ -245,6 +250,7 @@ export default function MariaCredizzaChat() {
             {m.text}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       {showBackButton && <button type="button" onClick={onBack} className="mb-2 text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button>}
