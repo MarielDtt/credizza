@@ -199,7 +199,7 @@ export default function MariaCredizzaChat() {
 
   const onSexo = async (sexo: Sexo): Promise<void> => {
     addUser(sexo);
-    const cuil = lead.dni ? generateCuil(lead.dni, sexo) : "";
+    const cuil = lead.dni ? generateCuil(lead.dni, sexo).replace(/\D/g, "") : "";
     const updatedLead: LeadData = buildLeadData({ ...lead, sexo, cuil, fecha: nowAsDisplayDate() });
     addBot("Procesando información...");
     setStep("procesando");
@@ -265,7 +265,7 @@ export default function MariaCredizzaChat() {
 
     setContactError("");
     setIsAlternateContactSaved(false);
-    const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: `No continuó por WhatsApp - Contacto: ${trimmed}` });
+    const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: `Contacto: ${trimmed}` });
     setLead(leadToSave);
     await saveLeadMock(leadToSave);
     addUser(trimmed);
