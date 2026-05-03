@@ -67,6 +67,9 @@ export default function MariaCredizzaChat() {
   const [dniInput, setDniInput] = useState("");
   const [dniError, setDniError] = useState("");
   const [isWhatsappLoading, setIsWhatsappLoading] = useState(false);
+  const [contactInput, setContactInput] = useState("");
+  const [contactError, setContactError] = useState("");
+  const [isAlternateContactSaved, setIsAlternateContactSaved] = useState(false);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -96,6 +99,9 @@ export default function MariaCredizzaChat() {
     setDniInput("");
     setDniError("");
     setIsWhatsappLoading(false);
+    setContactInput("");
+    setContactError("");
+    setIsAlternateContactSaved(false);
   };
 
   const goToBankStep = (actividad: Actividad, subActividad: SubActividad | null): void => {
@@ -133,7 +139,7 @@ export default function MariaCredizzaChat() {
     }
   };
 
-  const showBackButton = step === "subActividad" || step === "banco" || step === "dni" || step === "sexo";
+  const showBackButton = step === "subActividad" || step === "banco" || step === "dni" || step === "sexo" || step === "fin";
 
   const onActividad = (actividad: Actividad): void => {
     addUser(actividad);
@@ -209,6 +215,16 @@ export default function MariaCredizzaChat() {
     setStep("whatsapp");
   };
 
+
+  const isValidEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  const isValidPhone = (value: string): boolean => value.replace(/\D/g, "").length >= 8;
+
+  const isValidAlternateContact = (value: string): boolean => {
+    const trimmed = value.trim();
+    return Boolean(trimmed) && (isValidEmail(trimmed) || isValidPhone(trimmed));
+  };
+
   const onWhatsappChoice = async (yes: boolean): Promise<void> => {
     if (isWhatsappLoading) return;
     addUser(yes ? "Sí" : "No");
@@ -230,11 +246,31 @@ export default function MariaCredizzaChat() {
       return;
     }
 
-    const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "No continuó por WhatsApp" });
+    addBot("Para que un asesor pueda contactarle luego, indique un email o teléfono de contacto.");
+    setContactInput("");
+    setContactError("");
+    setIsAlternateContactSaved(false);
+    setStep("fin");
+  };
+
+
+  const onAlternateContactSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault();
+    const trimmed = contactInput.trim();
+
+    if (!isValidAlternateContact(trimmed)) {
+      setContactError("Por favor ingrese un email o teléfono válido.");
+      return;
+    }
+
+    setContactError("");
+    setIsAlternateContactSaved(false);
+    const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: `No continuó por WhatsApp - Contacto: ${trimmed}` });
     setLead(leadToSave);
     await saveLeadMock(leadToSave);
-    addBot("Gracias por completar la precalificación.");
-    setStep("fin");
+    addUser(trimmed);
+    addBot("Gracias por completar la precalificación. Un asesor podrá contactarle a la brevedad.");
+    setIsAlternateContactSaved(true);
   };
 
   return (
@@ -264,6 +300,7 @@ export default function MariaCredizzaChat() {
 
       {step === "sexo" && <div className="grid grid-cols-2 gap-2">{(["F", "M"] as const).map((sexo) => <button key={sexo} type="button" onClick={() => void onSexo(sexo)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">{sexo}</button>)}</div>}
       {step === "whatsapp" && <div className="space-y-2">{isWhatsappLoading && <div className="flex items-center gap-2 rounded-xl border border-sistema-uno bg-background-default px-3 py-2 text-small text-texto-secundario"><span className="inline-block animate-bounce" aria-hidden="true">📱</span><span>Estamos preparando su atención...</span></div>}<div className="grid grid-cols-2 gap-2"><button type="button" onClick={() => void onWhatsappChoice(true)} disabled={isWhatsappLoading} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones disabled:cursor-not-allowed disabled:opacity-60">Sí</button><button type="button" onClick={() => void onWhatsappChoice(false)} disabled={isWhatsappLoading} className="rounded-xl bg-boton-neutral px-3 py-2 text-button text-texto-botones disabled:cursor-not-allowed disabled:opacity-60">No</button></div></div>}
+      {step === "fin" && !isAlternateContactSaved && <form onSubmit={(e) => void onAlternateContactSubmit(e)} className="space-y-2"><input value={contactInput} onChange={(e) => setContactInput(e.target.value)} placeholder="Email o teléfono" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" />{contactError && <p className="text-smallMobile text-boton-secundario">{contactError}</p>}<button type="submit" disabled={!isValidAlternateContact(contactInput)} className="w-full rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones disabled:cursor-not-allowed disabled:opacity-60">Guardar contacto</button></form>}
       {showBackButton && <button type="button" onClick={onBack} className="mt-2 text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button>}
     </section>
   );
