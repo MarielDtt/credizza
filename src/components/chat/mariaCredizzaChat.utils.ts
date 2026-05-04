@@ -243,7 +243,7 @@ export const buildWhatsAppMessage = (lead: LeadData): string => {
     `* Fecha: ${lead.fecha}`,
   ];
 
-  return encodeURIComponent(lines.join("\n"));
+  return lines.join("\n");
 };
 
 export const saveLeadMock = async (lead: LeadData): Promise<void> => {
