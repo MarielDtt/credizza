@@ -1,31 +1,8 @@
 import { NextResponse } from "next/server";
 
-type BcraRequestBody = {
-  cuil: string;
-};
+type BcraRequestBody = { cuil: string };
 
-type BcraEntidadRaw = {
-  entidad?: string;
-  situacion?: number;
-  monto?: number;
-  diasAtrasoPago?: number;
-};
-
-type BcraPeriodoRaw = {
-  periodo?: string;
-  entidades?: BcraEntidadRaw[];
-};
-
-type BcraResultRaw = {
-  denominacion?: string;
-  periodos?: BcraPeriodoRaw[];
-};
-
-type BcraApiResponseRaw = {
-  results?: BcraResultRaw[];
-};
-
-type SituacionNormalizada = {
+type BcraSituacion = {
   entidad: string;
   situacion: number;
   monto: number;
@@ -36,14 +13,18 @@ type BcraNormalizedResponse = {
   success: true;
   cuil: string;
   nombreApellido: string;
-  situaciones: SituacionNormalizada[];
+  situaciones: BcraSituacion[];
   tieneSituacion1: boolean;
   cantidadSituacionesTotal: number;
   cantidadIrregulares: number;
   mayorSituacion: number | null;
 };
 
-const EMPTY_RESPONSE = (cuil: string): BcraNormalizedResponse => ({
+type RawEntidad = Record<string, unknown>;
+type RawPeriodo = Record<string, unknown>;
+type RawResult = Record<string, unknown>;
+
+const buildEmptyResponse = (cuil: string): BcraNormalizedResponse => ({
   success: true,
   cuil,
   nombreApellido: "",
@@ -56,15 +37,7 @@ const EMPTY_RESPONSE = (cuil: string): BcraNormalizedResponse => ({
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 
-const parseBody = (value: unknown): BcraRequestBody | null => {
-  if (!isRecord(value)) return null;
-  if (typeof value.cuil !== "string") return null;
-  return { cuil: value.cuil.trim() };
-};
-
-const isValidCuil = (cuil: string): boolean => /^\d{11}$/.test(cuil);
-
-const parseNumber = (value: unknown): number | null => {
+const toFiniteNumber = (value: unknown): number | null => {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string") {
     const parsed = Number(value);
@@ -73,129 +46,115 @@ const parseNumber = (value: unknown): number | null => {
   return null;
 };
 
-const parseBcraResponse = (value: unknown): BcraApiResponseRaw => {
-  if (!isRecord(value)) return {};
-  const resultsRaw = value.results;
-  if (!Array.isArray(resultsRaw)) return {};
+const getEntidadesArray = (periodo: RawPeriodo): RawEntidad[] => {
+  const direct = periodo.entidades;
+  if (Array.isArray(direct)) {
+    return direct.filter(isRecord);
+  }
 
-  const results: BcraResultRaw[] = resultsRaw
-    .filter(isRecord)
-    .map((result) => {
-      const denominacion = typeof result.denominacion === "string" ? result.denominacion : undefined;
-      const periodosRaw = Array.isArray(result.periodos) ? result.periodos : [];
-      const periodos: BcraPeriodoRaw[] = periodosRaw
-        .filter(isRecord)
-        .map((periodo) => {
-          const periodoValue = typeof periodo.periodo === "string" ? periodo.periodo : undefined;
-          const entidadesRaw = Array.isArray(periodo.entidades) ? periodo.entidades : [];
-          const entidades: BcraEntidadRaw[] = entidadesRaw
-            .filter(isRecord)
-            .map((entidad) => ({
-              entidad: typeof entidad.entidad === "string" ? entidad.entidad : undefined,
-              situacion: parseNumber(entidad.situacion) ?? undefined,
-              monto: parseNumber(entidad.monto) ?? undefined,
-              diasAtrasoPago: parseNumber(entidad.diasAtrasoPago) ?? undefined,
-            }));
+  const nestedDetails = periodo.detalleEntidades;
+  if (Array.isArray(nestedDetails)) {
+    return nestedDetails.filter(isRecord);
+  }
 
-          return { periodo: periodoValue, entidades };
-        });
-
-      return { denominacion, periodos };
-    });
-
-  return { results };
+  return [];
 };
 
-const getLatestPeriodo = (periodos: BcraPeriodoRaw[]): BcraPeriodoRaw | null => {
-  if (periodos.length === 0) return null;
+const normalize = (cuil: string, rawResponse: unknown): BcraNormalizedResponse => {
+  if (!isRecord(rawResponse)) return buildEmptyResponse(cuil);
 
-  const sorted = [...periodos].sort((a, b) => {
-    const aKey = a.periodo ?? "";
-    const bKey = b.periodo ?? "";
-    return bKey.localeCompare(aKey);
-  });
+  const resultsRaw = rawResponse.results;
+  const results = Array.isArray(resultsRaw) ? resultsRaw.filter(isRecord) : [];
+  const result = (results[0] as RawResult | undefined) ?? null;
+  if (!result) return buildEmptyResponse(cuil);
 
-  return sorted[0] ?? null;
-};
+  const nombreApellido = typeof result.denominacion === "string" ? result.denominacion : "";
 
-const normalizeBcra = (cuil: string, raw: BcraApiResponseRaw): BcraNormalizedResponse => {
-  const firstResult = raw.results?.[0];
-  if (!firstResult) return EMPTY_RESPONSE(cuil);
+  const periodosRaw = result.periodos;
+  const periodos = Array.isArray(periodosRaw) ? periodosRaw.filter(isRecord) : [];
+  const latestPeriodo = [...periodos].sort((a, b) => {
+    const aPeriodo = typeof a.periodo === "string" ? a.periodo : "";
+    const bPeriodo = typeof b.periodo === "string" ? b.periodo : "";
+    return bPeriodo.localeCompare(aPeriodo);
+  })[0];
 
-  const latestPeriodo = getLatestPeriodo(firstResult.periodos ?? []);
-  const entidades = latestPeriodo?.entidades ?? [];
+  if (!latestPeriodo) {
+    return { ...buildEmptyResponse(cuil), nombreApellido };
+  }
 
-  const situaciones: SituacionNormalizada[] = entidades
-    .map((entidad): SituacionNormalizada | null => {
-      const situacion = entidad.situacion;
-      const monto = entidad.monto;
-      const diasAtrasoPago = entidad.diasAtrasoPago;
+  const entidades = getEntidadesArray(latestPeriodo);
 
-      if (situacion === undefined || monto === undefined || diasAtrasoPago === undefined) return null;
+  const situaciones: BcraSituacion[] = entidades
+    .map((entidad) => {
+      const situacion = toFiniteNumber(entidad.situacion);
+      const monto = toFiniteNumber(entidad.monto);
+      const diasAtrasoPago = toFiniteNumber(entidad.diasAtrasoPago);
+      if (situacion === null || monto === null || diasAtrasoPago === null) return null;
 
       return {
-        entidad: entidad.entidad ?? "",
+        entidad: typeof entidad.entidad === "string" ? entidad.entidad : "",
         situacion,
         monto,
         diasAtrasoPago,
       };
     })
-    .filter((item): item is SituacionNormalizada => item !== null);
+    .filter((item): item is BcraSituacion => item !== null);
 
-  const tieneSituacion1 = situaciones.some((item) => item.situacion === 1);
+  const cantidadSituacionesTotal = situaciones.length;
   const cantidadIrregulares = situaciones.filter((item) => item.situacion >= 2).length;
-  const mayorSituacion = situaciones.length > 0 ? Math.max(...situaciones.map((item) => item.situacion)) : null;
 
   return {
     success: true,
     cuil,
-    nombreApellido: firstResult.denominacion ?? "",
+    nombreApellido,
     situaciones,
-    tieneSituacion1,
-    cantidadSituacionesTotal: situaciones.length,
+    tieneSituacion1: situaciones.some((item) => item.situacion === 1),
+    cantidadSituacionesTotal,
     cantidadIrregulares,
-    mayorSituacion,
+    mayorSituacion: cantidadSituacionesTotal > 0 ? Math.max(...situaciones.map((item) => item.situacion)) : null,
   };
 };
 
-export async function POST(request: Request) {
-  let cuilForLogs = "";
+const parseBody = (value: unknown): BcraRequestBody | null => {
+  if (!isRecord(value) || typeof value.cuil !== "string") return null;
+  return { cuil: value.cuil.trim() };
+};
 
+const isValidCuil = (cuil: string): boolean => /^\d{11}$/.test(cuil);
+
+export async function POST(request: Request) {
   try {
-    const parsedBody = parseBody(await request.json());
-    if (!parsedBody || !isValidCuil(parsedBody.cuil)) {
-      return NextResponse.json({ error: "CUIL inválido. Debe contener solo números y 11 dígitos." }, { status: 400 });
+    const bodyUnknown: unknown = await request.json();
+    const body = parseBody(bodyUnknown);
+
+    if (!body || !isValidCuil(body.cuil)) {
+      return NextResponse.json({ error: "CUIL inválido. Debe contener solo números y exactamente 11 dígitos." }, { status: 400 });
     }
 
-    cuilForLogs = parsedBody.cuil;
-
-    const bcraResponse = await fetch(`https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/${parsedBody.cuil}`, {
+    const upstream = await fetch(`https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/${body.cuil}`, {
       method: "GET",
       headers: { Accept: "application/json" },
       cache: "no-store",
     });
 
-    if (bcraResponse.status === 404) {
-      return NextResponse.json(EMPTY_RESPONSE(parsedBody.cuil));
+    if (upstream.status === 404) {
+      return NextResponse.json(buildEmptyResponse(body.cuil));
     }
 
-    if (!bcraResponse.ok) {
-      const errorBody = await bcraResponse.text();
-      console.error("BCRA respondió con error", {
-        status: bcraResponse.status,
-        statusText: bcraResponse.statusText,
-        cuil: parsedBody.cuil,
-        body: errorBody,
+    if (!upstream.ok) {
+      console.error("BCRA upstream error", {
+        status: upstream.status,
+        statusText: upstream.statusText,
+        cuil: body.cuil,
+        body: await upstream.text(),
       });
       return NextResponse.json({ error: "Error consultando BCRA." }, { status: 500 });
     }
 
-    const bcraRaw = parseBcraResponse(await bcraResponse.json());
-    const normalized = normalizeBcra(parsedBody.cuil, bcraRaw);
-
-    return NextResponse.json(normalized);
+    const upstreamJson: unknown = await upstream.json();
+    return NextResponse.json(normalize(body.cuil, upstreamJson));
   } catch (error: unknown) {
-    console.error("Error interno consultando BCRA", { cuil: cuilForLogs, error });
+    console.error("Error interno en /api/bcra", { error });
     return NextResponse.json({ error: "Error interno consultando BCRA." }, { status: 500 });
   }
 }
