@@ -50,7 +50,7 @@ export default function Contact() {
 
             {/* Número */}
             <p className="my-4 text-body">
-              +54 11 2628-9448
+              +54  11 6666-9143
             </p>
 
             {/* Botón */}
@@ -62,7 +62,7 @@ export default function Contact() {
                 onClick={() => {
                   setTimeout(() => {
                     window.open(
-                      "https://wa.me/54126289448?text=Hola,%20quiero%20a%20contactarme%20para%20obtener%20informacion",
+                      "https://wa.me/541166669143?text=Hola,%20quiero%20a%20contactarme%20para%20obtener%20informacion",
                       "_blank"
                     );
                   }, 120);

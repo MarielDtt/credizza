@@ -3,7 +3,7 @@ import { Button } from "../buttons";
 
 
 const handleWhatsApp = () => {
-  const phone = "5491126289448"; // formato recomendado: 54 + 9 + código de área + número (sin 0 ni 15)
+  const phone = "5491 1166669143"; // formato recomendado: 54 + 9 + código de área + número (sin 0 ni 15)
   const message = "Hola, quiero consultar por un préstamo."; // opcional
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
