@@ -87,11 +87,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "El campo cuil debe tener exactamente 11 dígitos." }, { status: 400 });
   }
 
-  const bcraResponse = await fetch(`https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/${cuil}`, {
-    method: "GET",
-    headers: { Accept: "application/json" },
-    cache: "no-store",
-  });
+  let bcraResponse: Response;
+
+  try {
+    bcraResponse = await fetch(`https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/${cuil}`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    });
+  } catch {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "No se pudo conectar con BCRA. Intentá nuevamente.",
+      },
+      { status: 503 },
+    );
+  }
 
   if (bcraResponse.status === 404) {
     return NextResponse.json(buildEmptyResponse(cuil));
