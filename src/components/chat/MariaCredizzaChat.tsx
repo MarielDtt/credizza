@@ -15,6 +15,7 @@ import {
   nowAsDisplayDate,
   saveLeadMock,
   toVisibleResult,
+  enrichLeadWithBcra,
   validateDni,
 } from "./mariaCredizzaChat.utils";
 
@@ -233,9 +234,10 @@ export default function MariaCredizzaChat() {
       setIsWhatsappLoading(true);
       try {
         const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "Derivado a WhatsApp" });
-        setLead(leadToSave);
-        await saveLeadMock(leadToSave);
-        const message = buildWhatsAppMessage(leadToSave);
+        const leadWithBcra = await enrichLeadWithBcra(leadToSave);
+        setLead(leadWithBcra);
+        await saveLeadMock(leadWithBcra);
+        const message = buildWhatsAppMessage(leadWithBcra);
         const whatsappUrl = `https://wa.me/5491166669143?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       } finally {
@@ -266,8 +268,9 @@ export default function MariaCredizzaChat() {
     setContactError("");
     setIsAlternateContactSaved(false);
     const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: `Contacto: ${trimmed}` });
-    setLead(leadToSave);
-    await saveLeadMock(leadToSave);
+    const leadWithBcra = await enrichLeadWithBcra(leadToSave);
+    setLead(leadWithBcra);
+    await saveLeadMock(leadWithBcra);
     addUser(trimmed);
     addBot("Gracias por completar la precalificación. Un asesor podrá contactarle a la brevedad.");
     setIsAlternateContactSaved(true);

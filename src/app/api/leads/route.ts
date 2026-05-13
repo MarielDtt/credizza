@@ -13,6 +13,13 @@ type LeadData = {
   banco: string;
   whatsapp?: string;
   resultado: string;
+  bcraEstadoConsulta?: string;
+  bcraNombre?: string;
+  bcraTieneSituacion1?: string;
+  bcraCantidadTotal?: string;
+  bcraCantidadIrregulares?: string;
+  bcraMayorSituacion?: string;
+  bcraDetalle?: string;
 };
 
 const requiredFields: Array<keyof Pick<LeadData, "fecha" | "dni" | "cuil" | "actividad" | "banco" | "resultado">> = ["fecha", "dni", "cuil", "actividad", "banco", "resultado"];
@@ -41,14 +48,30 @@ export async function POST(request: Request) {
     const auth = new google.auth.JWT({ email: clientEmail, key: privateKey, scopes: ["https://www.googleapis.com/auth/spreadsheets"] });
     const sheets = google.sheets({ version: "v4", auth });
 
-    // TODO: Integrar BCRA para completar nombreApellido real.
-    // TODO: Integrar BCRA para calcular situacionBcra real.
-    // TODO: Reemplazar valores mock por respuesta real de BCRA.
-    const row = [lead.fecha, lead.nombreApellido, lead.sexo, lead.dni, lead.cuil, lead.actividad, lead.subActividad || "", lead.situacionBcra, lead.banco, lead.whatsapp || "", lead.resultado];
+    const row = [
+      lead.fecha,
+      lead.nombreApellido,
+      lead.sexo,
+      lead.dni,
+      lead.cuil,
+      lead.actividad,
+      lead.subActividad || "",
+      lead.situacionBcra,
+      lead.banco,
+      lead.whatsapp || "",
+      lead.resultado,
+      lead.bcraEstadoConsulta || "No disponible",
+      lead.bcraNombre || "",
+      lead.bcraTieneSituacion1 || "",
+      lead.bcraCantidadTotal || "",
+      lead.bcraCantidadIrregulares || "",
+      lead.bcraMayorSituacion || "",
+      lead.bcraDetalle || "",
+    ];
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
-      range: "'Hoja 1'!A:K",
+      range: "'Leads Credizza - Precalificador Web'!A:R",
       valueInputOption: "USER_ENTERED",
       requestBody: { values: [row] },
     });
