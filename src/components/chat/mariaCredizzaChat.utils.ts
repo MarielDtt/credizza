@@ -95,7 +95,6 @@ export const BANCOS_DISPONIBLES: readonly string[] = [
   "Otro banco",
 ] as const;
 
-
 export const buildLeadData = (partial: Partial<LeadData>): LeadData => ({
   fecha: partial.fecha ?? nowAsDisplayDate(),
   nombreApellido: partial.nombreApellido ?? "",
@@ -108,13 +107,6 @@ export const buildLeadData = (partial: Partial<LeadData>): LeadData => ({
   banco: partial.banco ?? "",
   whatsapp: partial.whatsapp ?? "",
   resultado: partial.resultado ?? "",
-  bcraEstadoConsulta: partial.bcraEstadoConsulta ?? "Pendiente",
-  bcraNombre: partial.bcraNombre ?? "",
-  bcraTieneSituacion1: partial.bcraTieneSituacion1 ?? "",
-  bcraCantidadTotal: partial.bcraCantidadTotal ?? "",
-  bcraCantidadIrregulares: partial.bcraCantidadIrregulares ?? "",
-  bcraMayorSituacion: partial.bcraMayorSituacion ?? "",
-  bcraDetalle: partial.bcraDetalle ?? "",
 });
 
 export const normalizeDni = (value: string): string => {
@@ -193,10 +185,6 @@ export const mockBcraData: BcraMockData = {
 };
 
 export const evaluateLead = (lead: LeadData, bcraData: BcraMockData): Resultado => {
-  // TODO BCRA Jubilado/Viudez/Pensiones: >2 irregulares => "Afectado"; si no, guardar mayor situación.
-  // TODO BCRA Docente/Policía/Empleados/Otros: >1 situación mayor a 1 => "Afectado"; si no, guardar mayor situación.
-  // TODO BCRA AUH: >1 situación mayor a 1 o sin situación 1 => "Afectado"; con situación 1 y sin irregularidades => "1".
-  // TODO: Reemplazar por evaluación real con BCRA.
   const { irregulares, totalSituaciones, tieneSituacion1 } = bcraData;
 
   if (!lead.actividad) return "revision_manual";
@@ -246,6 +234,7 @@ export const buildWhatsAppMessage = (lead: LeadData): string => {
     `* DNI: ${lead.dni ?? "No informado"}`,
     `* CUIL: ${lead.cuil ?? "No informado"}`,
     `* Sexo: ${lead.sexo ?? "No informado"}`,
+    `* Situación BCRA: ${lead.situacionBcra || "No informado"}`,
     `* Resultado: ${lead.resultado || "No informado"}`,
     `* Fecha: ${lead.fecha}`,
   ];
@@ -255,12 +244,22 @@ export const buildWhatsAppMessage = (lead: LeadData): string => {
 
 export const saveLeadMock = async (lead: LeadData): Promise<void> => {
   try {
-    await fetch("/api/leads", {
+    const response = await fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(lead),
+      signal: AbortSignal.timeout(15000),
     });
+
+    if (!response.ok) {
+      console.error("Error guardando lead en /api/leads", await response.text());
+    }
   } catch (error) {
+    if (error instanceof DOMException && error.name === "TimeoutError") {
+      console.error("Timeout guardando lead en /api/leads");
+      return;
+    }
+
     console.error("Error enviando lead a /api/leads", error);
   }
 };
@@ -284,46 +283,108 @@ type BcraApiResponse = {
   message?: string;
 };
 
-const formatBcraAmount = (amount: number): string => `$${Math.round(amount)}`;
+const ACTIVIDADES_FLEXIBLES: readonly Actividad[] = [
+  "Jubilado",
+  "Pensión por viudez",
+  "Pensiones",
+];
 
-const buildBcraDetalle = (situaciones: BcraSituacion[]): string =>
-  situaciones.map((item) => `${item.entidad}: Sit. ${item.situacion} - ${formatBcraAmount(item.monto)}`).join(" | ");
+const ACTIVIDADES_ESTRICTAS: readonly Actividad[] = [
+  "Docente",
+  "Policía",
+  "AUH",
+];
 
-export const enrichLeadWithBcra = async (lead: LeadData): Promise<LeadData> => {
-  try {
-    const response = await fetch("/api/bcra", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cuil: lead.cuil }),
-      signal: AbortSignal.timeout(8000),
-    });
+const calcularSituacionBcra = (actividad: Actividad, situaciones: BcraSituacion[]): string => {
+  const numeros = situaciones
+    .map((item) => Number(item.situacion))
+    .filter((situacion) => !Number.isNaN(situacion));
 
-    if (!response.ok) {
-      return buildLeadData({ ...lead, bcraEstadoConsulta: "No disponible", bcraDetalle: "No se pudo consultar BCRA." });
-    }
+  const tieneSituacion1 = numeros.includes(1);
+  const irregulares = numeros.filter((situacion) => situacion > 1);
+  const mayorSituacion = numeros.length > 0 ? Math.max(...numeros) : null;
 
-    const data = (await response.json()) as BcraApiResponse;
-    if (!data.success) {
-      return buildLeadData({
-        ...lead,
-        bcraEstadoConsulta: "No disponible",
-        bcraDetalle: data.message ?? "No se pudo consultar BCRA.",
+  if (ACTIVIDADES_FLEXIBLES.includes(actividad)) {
+    if (irregulares.length >= 3) return "Afectado";
+    if (irregulares.length >= 1 && mayorSituacion !== null) return String(mayorSituacion);
+    if (tieneSituacion1) return "1";
+    return "Sin situación";
+  }
+
+  if (ACTIVIDADES_ESTRICTAS.includes(actividad)) {
+    if (irregulares.length > 0) return "Afectado";
+    if (tieneSituacion1) return "1";
+    return "No califica";
+  }
+
+  if (irregulares.length > 0) return "Afectado";
+  if (tieneSituacion1) return "1";
+  return "Sin situación";
+};
+
+const sleep = (ms: number): Promise<void> =>
+  new Promise((resolve) => window.setTimeout(resolve, ms));
+
+const fetchBcraWithRetry = async (
+  cuil: string
+): Promise<BcraApiResponse> => {
+  const maxAttempts = 5;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const response = await fetch("/api/bcra", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cuil }),
+        signal: AbortSignal.timeout(15000),
       });
+
+      // Si BCRA está temporalmente saturado
+      if (response.status === 503) {
+        if (attempt < maxAttempts) {
+          await sleep(500);
+          continue;
+        }
+      }
+
+      const data = (await response.json()) as BcraApiResponse;
+
+      if (response.ok && data.success) {
+        return data;
+      }
+    } catch {
+      // Error de red o timeout → reintenta
     }
+
+    if (attempt < maxAttempts) {
+      await sleep(500);
+    }
+  }
+
+  throw new Error("No se pudo consultar BCRA después de varios intentos.");
+};
+export const enrichLeadWithBcra = async (
+  lead: LeadData
+): Promise<LeadData> => {
+  try {
+    const data = await fetchBcraWithRetry(lead.cuil);
 
     const situaciones = data.situaciones ?? [];
+
     return buildLeadData({
       ...lead,
-      bcraEstadoConsulta: "Consultado",
-      bcraNombre: data.nombreApellido ?? "",
-      bcraTieneSituacion1: String(Boolean(data.tieneSituacion1)),
-      bcraCantidadTotal: String(data.cantidadSituacionesTotal ?? 0),
-      bcraCantidadIrregulares: String(data.cantidadIrregulares ?? 0),
-      bcraMayorSituacion: data.mayorSituacion == null ? "" : String(data.mayorSituacion),
-      bcraDetalle: buildBcraDetalle(situaciones),
+      nombreApellido: data.nombreApellido ?? "",
+      situacionBcra: lead.actividad
+        ? calcularSituacionBcra(lead.actividad, situaciones)
+        : "Sin situación",
     });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "No se pudo consultar BCRA.";
-    return buildLeadData({ ...lead, bcraEstadoConsulta: "No disponible", bcraDetalle: message });
+  } catch {
+    return buildLeadData({
+      ...lead,
+      nombreApellido: "",
+      situacionBcra: "BCRA no disponible",
+    });
   }
 };

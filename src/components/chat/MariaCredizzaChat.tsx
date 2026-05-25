@@ -21,7 +21,8 @@ import {
 
 type ChatMessage = { from: "bot" | "user"; text: string };
 
-const INITIAL_BOT_MESSAGE = "Hola 👋 Soy María de Credizza. Vamos a iniciar su evaluación para obtener un crédito. Es rápido y sin compromiso.";
+const INITIAL_BOT_MESSAGE =
+  "Hola 👋 Soy María de Credizza. Vamos a iniciar su evaluación para obtener un crédito. Es rápido y sin compromiso.";
 
 const ACTIVIDAD_SUBOPCIONES: Partial<Record<Actividad, readonly SubActividad[]>> = {
   Jubilado: ["ANSES", "IPS Bs.As.", "Provincial Santa Fe", "Provincial Chubut", "Otro"],
@@ -37,7 +38,10 @@ const SUBOPCIONES_NIVEL_2: Partial<Record<SubActividad, readonly SubActividad[]>
   Provincial: ["Provincia Bs.As.", "CABA", "Provincial Santa Fe", "Provincial Chubut", "Otro"],
 };
 
-const suggestedBankForSub = (value: SubActividad | null, actividad: Actividad | null): string | null => {
+const suggestedBankForSub = (
+  value: SubActividad | null,
+  actividad: Actividad | null
+): string | null => {
   if (actividad === "Empleado GCBA") return "Ciudad de Bs.As.";
   if (actividad === "Empleado provincial de Santa Fe") return "Nuevo Banco Santa Fe";
   if (actividad === "Empleado provincial Chubut") return "Banco Chubut";
@@ -50,6 +54,7 @@ const suggestedBankForSub = (value: SubActividad | null, actividad: Actividad | 
     "Provincial Chubut": "Banco Chubut",
     Nacional: "Nación",
   };
+
   return value ? map[value] ?? null : null;
 };
 
@@ -57,7 +62,9 @@ const INITIAL_LEAD: LeadData = buildLeadData({});
 
 export default function MariaCredizzaChat() {
   const [step, setStep] = useState<ChatStep>("inicio");
-  const [messages, setMessages] = useState<ChatMessage[]>([{ from: "bot", text: INITIAL_BOT_MESSAGE }]);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { from: "bot", text: INITIAL_BOT_MESSAGE },
+  ]);
   const [lead, setLead] = useState<LeadData>(INITIAL_LEAD);
   const [actividadInput, setActividadInput] = useState("");
   const [subOptions, setSubOptions] = useState<readonly SubActividad[]>([]);
@@ -67,25 +74,49 @@ export default function MariaCredizzaChat() {
   const [showFullBankSearch, setShowFullBankSearch] = useState(true);
   const [dniInput, setDniInput] = useState("");
   const [dniError, setDniError] = useState("");
-  const [isWhatsappLoading, setIsWhatsappLoading] = useState(false);
-  const [contactInput, setContactInput] = useState("");
-  const [contactError, setContactError] = useState("");
-  const [isAlternateContactSaved, setIsAlternateContactSaved] = useState(false);
+
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  const actividadFiltrada = useMemo(() => ACTIVIDADES_DISPONIBLES.filter((item) => item.toLowerCase().includes(actividadInput.toLowerCase())), [actividadInput]);
-  const bancosFiltrados = useMemo(() => BANCOS_DISPONIBLES.filter((item) => item.toLowerCase().includes(bancoInput.toLowerCase())), [bancoInput]);
+  const actividadFiltrada = useMemo(
+    () =>
+      ACTIVIDADES_DISPONIBLES.filter((item) =>
+        item.toLowerCase().includes(actividadInput.toLowerCase())
+      ),
+    [actividadInput]
+  );
 
-  const addBot = (text: string): void => setMessages((prev) => [...prev, { from: "bot", text }]);
-  const addUser = (text: string): void => setMessages((prev) => [...prev, { from: "user", text }]);
+  const bancosFiltrados = useMemo(
+    () =>
+      BANCOS_DISPONIBLES.filter((item) =>
+        item.toLowerCase().includes(bancoInput.toLowerCase())
+      ),
+    [bancoInput]
+  );
+
+  const addBot = (text: string): void =>
+    setMessages((prev) => [...prev, { from: "bot", text }]);
+
+  const addUser = (text: string): void =>
+    setMessages((prev) => [...prev, { from: "user", text }]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+
     if (chatScrollRef.current) {
       chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
     }
-  }, [step, messages, lead, subOptions, secondSubOptions, showFullBankSearch, suggestedBank, actividadFiltrada, bancosFiltrados]);
+  }, [
+    step,
+    messages,
+    lead,
+    subOptions,
+    secondSubOptions,
+    showFullBankSearch,
+    suggestedBank,
+    actividadFiltrada,
+    bancosFiltrados,
+  ]);
 
   const resetChat = (): void => {
     setStep("inicio");
@@ -99,13 +130,12 @@ export default function MariaCredizzaChat() {
     setShowFullBankSearch(true);
     setDniInput("");
     setDniError("");
-    setIsWhatsappLoading(false);
-    setContactInput("");
-    setContactError("");
-    setIsAlternateContactSaved(false);
   };
 
-  const goToBankStep = (actividad: Actividad, subActividad: SubActividad | null): void => {
+  const goToBankStep = (
+    actividad: Actividad,
+    subActividad: SubActividad | null
+  ): void => {
     const suggested = suggestedBankForSub(subActividad, actividad);
     setSuggestedBank(suggested);
     setShowFullBankSearch(!suggested);
@@ -116,38 +146,85 @@ export default function MariaCredizzaChat() {
   const onBack = (): void => {
     if (step === "subActividad") {
       setStep("actividad");
-      setLead((prev) => ({ ...prev, subActividad: "", banco: "", dni: "", cuil: "", sexo: "", resultado: "", whatsapp: "" }));
+      setLead((prev) => ({
+        ...prev,
+        subActividad: "",
+        banco: "",
+        dni: "",
+        cuil: "",
+        sexo: "",
+        resultado: "",
+        whatsapp: "",
+      }));
       setSecondSubOptions([]);
       return;
     }
+
     if (step === "banco") {
-      const hasSub = Boolean(lead.subActividad) || subOptions.length > 0 || secondSubOptions.length > 0;
+      const hasSub =
+        Boolean(lead.subActividad) ||
+        subOptions.length > 0 ||
+        secondSubOptions.length > 0;
+
       setStep(hasSub ? "subActividad" : "actividad");
-      setLead((prev) => ({ ...prev, banco: "", dni: "", cuil: "", sexo: "", resultado: "", whatsapp: "" }));
+      setLead((prev) => ({
+        ...prev,
+        banco: "",
+        dni: "",
+        cuil: "",
+        sexo: "",
+        resultado: "",
+        whatsapp: "",
+      }));
       setBancoInput("");
       return;
     }
+
     if (step === "dni") {
       setStep("banco");
-      setLead((prev) => ({ ...prev, dni: "", cuil: "", sexo: "", resultado: "", whatsapp: "" }));
+      setLead((prev) => ({
+        ...prev,
+        dni: "",
+        cuil: "",
+        sexo: "",
+        resultado: "",
+        whatsapp: "",
+      }));
       setDniInput("");
       setDniError("");
       return;
     }
+
     if (step === "sexo") {
       setStep("dni");
-      setLead((prev) => ({ ...prev, sexo: "", cuil: "", resultado: "", whatsapp: "" }));
+      setLead((prev) => ({
+        ...prev,
+        sexo: "",
+        cuil: "",
+        resultado: "",
+        whatsapp: "",
+      }));
     }
   };
 
-  const showBackButton = step === "subActividad" || step === "banco" || step === "dni" || step === "sexo" || step === "fin";
+  const showBackButton =
+    step === "subActividad" ||
+    step === "banco" ||
+    step === "dni" ||
+    step === "sexo";
 
   const onActividad = (actividad: Actividad): void => {
     addUser(actividad);
     setActividadInput("");
     setLead((prev) => ({ ...prev, actividad, subActividad: "" }));
 
-    if (actividad === "Empleado GCBA" || actividad === "Empleado provincial de Santa Fe" || actividad === "Empleado provincial Chubut" || actividad === "No estoy seguro / Otro" || actividad === "AUH") {
+    if (
+      actividad === "Empleado GCBA" ||
+      actividad === "Empleado provincial de Santa Fe" ||
+      actividad === "Empleado provincial Chubut" ||
+      actividad === "No estoy seguro / Otro" ||
+      actividad === "AUH"
+    ) {
       goToBankStep(actividad, null);
       return;
     }
@@ -155,15 +232,20 @@ export default function MariaCredizzaChat() {
     const initialSub = ACTIVIDAD_SUBOPCIONES[actividad] ?? [];
     setSubOptions(initialSub);
     setSecondSubOptions([]);
+
     addBot(getSubactivityPrompt(actividad));
+
     if (actividad === "Docente") addBot("¿La institución es pública o privada?");
     if (actividad === "Empleado público") addBot("¿A qué sector pertenece?");
+
     setStep("subActividad");
   };
 
   const onSubActivity = (value: SubActividad): void => {
     addUser(value);
+
     const nextLevel = SUBOPCIONES_NIVEL_2[value];
+
     if (nextLevel) {
       setLead((prev) => ({ ...prev, subActividad: value }));
       setSecondSubOptions(nextLevel);
@@ -172,6 +254,7 @@ export default function MariaCredizzaChat() {
     }
 
     setLead((prev) => ({ ...prev, subActividad: value }));
+
     const actividadActual: Actividad = lead.actividad || "No estoy seguro / Otro";
     goToBankStep(actividadActual, value);
   };
@@ -185,13 +268,18 @@ export default function MariaCredizzaChat() {
 
   const onDni = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+
     const check = validateDni(dniInput);
+
     if (!check.isValid) {
       setDniError(check.error ?? "DNI inválido.");
       return;
     }
+
     setDniError("");
+
     const normalized = normalizeDni(check.normalized);
+
     addUser(normalized);
     setLead((prev) => ({ ...prev, dni: normalized }));
     addBot("Sexo");
@@ -200,111 +288,251 @@ export default function MariaCredizzaChat() {
 
   const onSexo = async (sexo: Sexo): Promise<void> => {
     addUser(sexo);
+
     const cuil = lead.dni ? generateCuil(lead.dni, sexo).replace(/\D/g, "") : "";
-    const updatedLead: LeadData = buildLeadData({ ...lead, sexo, cuil, fecha: nowAsDisplayDate() });
+
+    const updatedLead: LeadData = buildLeadData({
+      ...lead,
+      sexo,
+      cuil,
+      fecha: nowAsDisplayDate(),
+    });
+
     addBot("Procesando información...");
     setStep("procesando");
 
     const resultado = evaluateLead(updatedLead, mockBcraData);
-    const finalLead: LeadData = buildLeadData({ ...updatedLead, resultado: toVisibleResult(resultado) });
+
+    const finalLead: LeadData = buildLeadData({
+      ...updatedLead,
+      resultado: toVisibleResult(resultado),
+    });
+
     setLead(finalLead);
     addBot(`Resultado: ${toVisibleResult(resultado)}`);
+
     if (resultado === "precalifica_haberes") {
-      addBot("Para continuar con la evaluación por descuento de haberes, será necesario contar con el último recibo de haberes. Un asesor se lo solicitará por WhatsApp.");
+      addBot(
+        "Para continuar con la evaluación por descuento de haberes, será necesario contar con el último recibo de haberes. Un asesor se lo solicitará por WhatsApp."
+      );
     }
-    addBot("¿Desea continuar por WhatsApp?");
+
     setStep("whatsapp");
-  };
 
+    try {
+      const leadToSave: LeadData = buildLeadData({
+        ...finalLead,
+        whatsapp: "Derivado a WhatsApp",
+      });
 
-  const isValidEmail = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      const leadWithBcra = await enrichLeadWithBcra(leadToSave);
 
-  const isValidPhone = (value: string): boolean => value.replace(/\D/g, "").length >= 8;
+      setLead(leadWithBcra);
 
-  const isValidAlternateContact = (value: string): boolean => {
-    const trimmed = value.trim();
-    return Boolean(trimmed) && (isValidEmail(trimmed) || isValidPhone(trimmed));
-  };
+      await saveLeadMock(leadWithBcra);
 
-  const onWhatsappChoice = async (yes: boolean): Promise<void> => {
-    if (isWhatsappLoading) return;
-    addUser(yes ? "Sí" : "No");
+      const message = buildWhatsAppMessage(leadWithBcra);
+      const whatsappUrl = `https://wa.me/5491166669143?text=${encodeURIComponent(
+        message
+      )}`;
 
-    if (yes) {
-      setIsWhatsappLoading(true);
-      try {
-        const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: "Derivado a WhatsApp" });
-        const leadWithBcra = await enrichLeadWithBcra(leadToSave);
-        setLead(leadWithBcra);
-        await saveLeadMock(leadWithBcra);
-        const message = buildWhatsAppMessage(leadWithBcra);
-        const whatsappUrl = `https://wa.me/5491166669143?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-      } finally {
-        setIsWhatsappLoading(false);
-      }
-      addBot("Gracias. Será atendido por WhatsApp.");
-      setStep("fin");
-      return;
+      window.location.href = whatsappUrl;
+    } catch {
+      addBot(
+        "No pudimos consultar BCRA en este momento. Intentá nuevamente en unos segundos."
+      );
     }
-
-    addBot("Para que un asesor pueda contactarle luego, indique un email o teléfono de contacto.");
-    setContactInput("");
-    setContactError("");
-    setIsAlternateContactSaved(false);
-    setStep("fin");
-  };
-
-
-  const onAlternateContactSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault();
-    const trimmed = contactInput.trim();
-
-    if (!isValidAlternateContact(trimmed)) {
-      setContactError("Por favor ingrese un email o teléfono válido.");
-      return;
-    }
-
-    setContactError("");
-    setIsAlternateContactSaved(false);
-    const leadToSave: LeadData = buildLeadData({ ...lead, whatsapp: `Contacto: ${trimmed}` });
-    const leadWithBcra = await enrichLeadWithBcra(leadToSave);
-    setLead(leadWithBcra);
-    await saveLeadMock(leadWithBcra);
-    addUser(trimmed);
-    addBot("Gracias por completar la precalificación. Un asesor podrá contactarle a la brevedad.");
-    setIsAlternateContactSaved(true);
   };
 
   return (
-    <section className="mx-auto w-full max-w-md rounded-2xl border border-sistema-uno bg-background-secondary p-4 shadow-sm">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-heading2 text-texto-principal">Asistente María - Credizza</h2>
-        <button type="button" onClick={resetChat} className="text-small text-texto-secundario underline">Reiniciar</button>
+    <section className="w-full max-w-md p-4 mx-auto border shadow-sm rounded-2xl border-sistema-uno bg-background-secondary">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-heading2 text-texto-principal">
+          Asistente María - Credizza
+        </h2>
+
+        <button
+          type="button"
+          onClick={resetChat}
+          className="underline text-small text-texto-secundario"
+        >
+          Reiniciar
+        </button>
       </div>
 
-      <div ref={chatScrollRef} className="mb-4 flex max-h-[60vh] flex-col gap-2 overflow-y-auto rounded-xl bg-background-default p-3">
+      <div
+        ref={chatScrollRef}
+        className="mb-4 flex max-h-[60vh] flex-col gap-2 overflow-y-auto rounded-xl bg-background-default p-3"
+      >
         {messages.map((m, i) => (
-          <div key={`${m.from}-${i}`} className={`max-w-[90%] rounded-2xl px-3 py-2 text-small ${m.from === "bot" ? "self-start bg-background-secondary text-texto-principal" : "self-end bg-boton-primario text-texto-botones"}`}>
+          <div
+            key={`${m.from}-${i}`}
+            className={`max-w-[90%] rounded-2xl px-3 py-2 text-small ${
+              m.from === "bot"
+                ? "self-start bg-background-secondary text-texto-principal"
+                : "self-end bg-boton-primario text-texto-botones"
+            }`}
+          >
             {m.text}
           </div>
         ))}
+
         <div ref={bottomRef} />
       </div>
 
+      {(step === "inicio" || step === "actividad") && (
+        <div className="space-y-2">
+          <input
+            value={actividadInput}
+            onChange={(e) => setActividadInput(e.target.value)}
+            placeholder="Buscar actividad"
+            className="w-full px-3 py-2 border rounded-xl border-sistema-uno text-small"
+          />
 
-      {(step === "inicio" || step === "actividad") && <div className="space-y-2"><input value={actividadInput} onChange={(e) => setActividadInput(e.target.value)} placeholder="Buscar actividad" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" /><div className="max-h-40 overflow-y-auto rounded-xl border border-sistema-uno">{actividadFiltrada.map((act) => <button key={act} type="button" onClick={() => onActividad(act)} className="block w-full border-b border-sistema-uno px-3 py-2 text-left text-small text-texto-principal">{act}</button>)}</div></div>}
+          <div className="overflow-y-auto border max-h-40 rounded-xl border-sistema-uno">
+            {actividadFiltrada.map((act) => (
+              <button
+                key={act}
+                type="button"
+                onClick={() => onActividad(act)}
+                className="block w-full px-3 py-2 text-left border-b border-sistema-uno text-small text-texto-principal"
+              >
+                {act}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {step === "subActividad" && <div className="grid grid-cols-1 gap-2">{(secondSubOptions.length > 0 ? secondSubOptions : subOptions).map((item) => <button key={item} type="button" onClick={() => onSubActivity(item)} className="rounded-xl border border-sistema-uno px-3 py-2 text-left text-small text-texto-principal">{item}</button>)}</div>}
+      {step === "subActividad" && (
+        <div className="grid grid-cols-1 gap-2">
+          {(secondSubOptions.length > 0 ? secondSubOptions : subOptions).map(
+            (item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => onSubActivity(item)}
+                className="px-3 py-2 text-left border rounded-xl border-sistema-uno text-small text-texto-principal"
+              >
+                {item}
+              </button>
+            )
+          )}
+        </div>
+      )}
 
-      {step === "banco" && <div className="space-y-2">{suggestedBank && !showFullBankSearch ? <div className="grid grid-cols-1 gap-2"><button type="button" onClick={() => onBanco(suggestedBank)} className="rounded-xl border border-sistema-uno px-3 py-2 text-left text-small">{suggestedBank}</button><button type="button" onClick={() => setShowFullBankSearch(true)} className="rounded-xl border border-sistema-uno px-3 py-2 text-left text-small">Otro banco</button></div> : <><input value={bancoInput} onChange={(e) => setBancoInput(e.target.value)} placeholder="Buscar banco" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" /><div className="max-h-28 overflow-y-auto rounded-xl border border-sistema-uno">{bancosFiltrados.map((bank) => <button key={bank} type="button" onClick={() => onBanco(bank)} className="block w-full border-b border-sistema-uno px-3 py-2 text-left text-small">{bank}</button>)}</div></>}<div className="flex flex-col gap-1"><button type="button" onClick={() => setShowFullBankSearch(true)} className="text-left text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">No encuentro mi banco</button></div></div>}
+      {step === "banco" && (
+        <div className="space-y-2">
+          {suggestedBank && !showFullBankSearch ? (
+            <div className="grid grid-cols-1 gap-2">
+              <button
+                type="button"
+                onClick={() => onBanco(suggestedBank)}
+                className="px-3 py-2 text-left border rounded-xl border-sistema-uno text-small"
+              >
+                {suggestedBank}
+              </button>
 
-      {step === "dni" && <form onSubmit={onDni} className="space-y-2"><input value={dniInput} onChange={(e) => setDniInput(e.target.value)} placeholder="Ingrese DNI" inputMode="numeric" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" />{dniError && <p className="text-smallMobile text-boton-secundario">{dniError}</p>}<button type="submit" className="w-full rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">Continuar</button></form>}
+              <button
+                type="button"
+                onClick={() => setShowFullBankSearch(true)}
+                className="px-3 py-2 text-left border rounded-xl border-sistema-uno text-small"
+              >
+                Otro banco
+              </button>
+            </div>
+          ) : (
+            <>
+              <input
+                value={bancoInput}
+                onChange={(e) => setBancoInput(e.target.value)}
+                placeholder="Buscar banco"
+                className="w-full px-3 py-2 border rounded-xl border-sistema-uno text-small"
+              />
 
-      {step === "sexo" && <div className="grid grid-cols-2 gap-2">{(["F", "M"] as const).map((sexo) => <button key={sexo} type="button" onClick={() => void onSexo(sexo)} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones">{sexo}</button>)}</div>}
-      {step === "whatsapp" && <div className="space-y-2">{isWhatsappLoading && <div className="flex items-center gap-2 rounded-xl border border-sistema-uno bg-background-default px-3 py-2 text-small text-texto-secundario"><span className="inline-block animate-bounce" aria-hidden="true">📱</span><span>Estamos preparando su atención...</span></div>}<div className="grid grid-cols-2 gap-2"><button type="button" onClick={() => void onWhatsappChoice(true)} disabled={isWhatsappLoading} className="rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones disabled:cursor-not-allowed disabled:opacity-60">Sí</button><button type="button" onClick={() => void onWhatsappChoice(false)} disabled={isWhatsappLoading} className="rounded-xl bg-boton-neutral px-3 py-2 text-button text-texto-botones disabled:cursor-not-allowed disabled:opacity-60">No</button></div></div>}
-      {step === "fin" && !isAlternateContactSaved && <form onSubmit={(e) => void onAlternateContactSubmit(e)} className="space-y-2"><input value={contactInput} onChange={(e) => setContactInput(e.target.value)} placeholder="Email o teléfono" className="w-full rounded-xl border border-sistema-uno px-3 py-2 text-small" />{contactError && <p className="text-smallMobile text-boton-secundario">{contactError}</p>}<button type="submit" disabled={!isValidAlternateContact(contactInput)} className="w-full rounded-xl bg-boton-primario px-3 py-2 text-button text-texto-botones disabled:cursor-not-allowed disabled:opacity-60">Guardar contacto</button></form>}
-      {showBackButton && <button type="button" onClick={onBack} className="mt-2 text-small text-texto-secundario transition-opacity hover:opacity-80 cursor-pointer">← Cambiar respuesta</button>}
+              <div className="overflow-y-auto border max-h-28 rounded-xl border-sistema-uno">
+                {bancosFiltrados.map((bank) => (
+                  <button
+                    key={bank}
+                    type="button"
+                    onClick={() => onBanco(bank)}
+                    className="block w-full px-3 py-2 text-left border-b border-sistema-uno text-small"
+                  >
+                    {bank}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="flex flex-col gap-1">
+            <button
+              type="button"
+              onClick={() => setShowFullBankSearch(true)}
+              className="text-left transition-opacity cursor-pointer text-small text-texto-secundario hover:opacity-80"
+            >
+              No encuentro mi banco
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === "dni" && (
+        <form onSubmit={onDni} className="space-y-2">
+          <input
+            value={dniInput}
+            onChange={(e) => setDniInput(e.target.value)}
+            placeholder="Ingrese DNI"
+            inputMode="numeric"
+            className="w-full px-3 py-2 border rounded-xl border-sistema-uno text-small"
+          />
+
+          {dniError && <p className="text-smallMobile text-boton-secundario">{dniError}</p>}
+
+          <button
+            type="submit"
+            className="w-full px-3 py-2 rounded-xl bg-boton-primario text-button text-texto-botones"
+          >
+            Continuar
+          </button>
+        </form>
+      )}
+
+      {step === "sexo" && (
+        <div className="grid grid-cols-2 gap-2">
+          {(["F", "M"] as const).map((sexo) => (
+            <button
+              key={sexo}
+              type="button"
+              onClick={() => void onSexo(sexo)}
+              className="px-3 py-2 rounded-xl bg-boton-primario text-button text-texto-botones"
+            >
+              {sexo}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {step === "whatsapp" && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 px-3 py-2 border rounded-xl border-sistema-uno bg-background-default text-small text-texto-secundario">
+            <span className="inline-block animate-bounce" aria-hidden="true">
+              📱
+            </span>
+            <span>Estamos validando la información y preparando su atención...</span>
+          </div>
+        </div>
+      )}
+
+      {showBackButton && (
+        <button
+          type="button"
+          onClick={onBack}
+          className="mt-2 transition-opacity cursor-pointer text-small text-texto-secundario hover:opacity-80"
+        >
+          ← Cambiar respuesta
+        </button>
+      )}
     </section>
   );
 }

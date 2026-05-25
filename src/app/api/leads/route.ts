@@ -13,13 +13,6 @@ type LeadData = {
   banco: string;
   whatsapp?: string;
   resultado: string;
-  bcraEstadoConsulta?: string;
-  bcraNombre?: string;
-  bcraTieneSituacion1?: string;
-  bcraCantidadTotal?: string;
-  bcraCantidadIrregulares?: string;
-  bcraMayorSituacion?: string;
-  bcraDetalle?: string;
 };
 
 const requiredFields: Array<keyof Pick<LeadData, "fecha" | "dni" | "cuil" | "actividad" | "banco" | "resultado">> = ["fecha", "dni", "cuil", "actividad", "banco", "resultado"];
@@ -60,25 +53,18 @@ export async function POST(request: Request) {
       lead.banco,
       lead.whatsapp || "",
       lead.resultado,
-      lead.bcraEstadoConsulta || "No disponible",
-      lead.bcraNombre || "",
-      lead.bcraTieneSituacion1 || "",
-      lead.bcraCantidadTotal || "",
-      lead.bcraCantidadIrregulares || "",
-      lead.bcraMayorSituacion || "",
-      lead.bcraDetalle || "",
     ];
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
-      range: "'Leads Credizza - Precalificador Web'!A:R",
+      range: "'Hoja 1'!A:K",
       valueInputOption: "USER_ENTERED",
       requestBody: { values: [row] },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-  console.error("Error guardando lead en Google Sheets:", JSON.stringify(error, null, 2));
-  return NextResponse.json({ error: "No se pudo guardar el lead." }, { status: 500 });
-}
+    console.error("Error guardando lead en Google Sheets:", JSON.stringify(error, null, 2));
+    return NextResponse.json({ error: "No se pudo guardar el lead." }, { status: 500 });
+  }
 }

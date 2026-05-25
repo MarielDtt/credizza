@@ -61,11 +61,4 @@ export type LeadData = {
   banco: string;
   whatsapp: string;
   resultado: string;
-  bcraEstadoConsulta: string;
-  bcraNombre: string;
-  bcraTieneSituacion1: string;
-  bcraCantidadTotal: string;
-  bcraCantidadIrregulares: string;
-  bcraMayorSituacion: string;
-  bcraDetalle: string;
 };
