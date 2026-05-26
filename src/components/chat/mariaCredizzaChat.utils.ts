@@ -328,7 +328,7 @@ const sleep = (ms: number): Promise<void> =>
 const fetchBcraWithRetry = async (
   cuil: string
 ): Promise<BcraApiResponse> => {
-  const maxAttempts = 5;
+  const maxAttempts = 15;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
