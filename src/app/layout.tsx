@@ -22,7 +22,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://credizza.com.ar"),
-  title: "Credizza | Sitio en construcción 🚧",
+  title: "Credizza",
   description:
     "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
   icons: { icon: "/favicon.ico" },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     locale: "es_AR",
     url: "https://credizza.com.ar",
     siteName: "Credizza",
-    title: "Credizza | Sitio en construcción 🚧",
+    title: "Credizza",
     description:
       "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
     images: [
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
         url: "/og-construccion.webp",
         width: 1200,
         height: 630,
-        alt: "Credizza - Sitio en construcción",
+        alt: "Credizza",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Credizza | Sitio en construcción 🚧",
+    title: "Credizza",
     description:
       "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
     images: ["/og-construccion.webp"],
