@@ -20,9 +20,9 @@ export default function ArgenpesosLoanDetails() {
         <p>La TNA varía según el perfil crediticio del solicitante. Consultá las tasas, los cargos y las condiciones específicas antes de aceptar la propuesta.</p>
       </section>
       <section className="space-y-3">
-        <h3 className="text-heading2 font-semibold">Ejemplo incluido en la información de la entidad</h3>
-        <p>Capital: <strong>$10.000</strong>. Plazo: <strong>12 cuotas de $3.300</strong>. Total a devolver: <strong>$39.600</strong>. Diferencia sobre el capital: <strong>$29.600</strong>.</p>
-        <p className="text-small text-texto-secundario">Este ejemplo fue suministrado junto con las condiciones generales y utiliza un monto inferior al mínimo informado de $30.000. No constituye una oferta vigente de $10.000. Las tasas específicas del ejemplo no fueron identificadas en el texto recibido.</p>
+        <h3 className="text-heading2 font-semibold">Ejemplo de financiación</h3>
+        <p>Capital: <strong>$300.000</strong>. Plazo: <strong>12 cuotas de $72.001</strong>. Total a devolver: <strong>$864.012</strong>. Diferencia sobre el capital: <strong>$564.012</strong>.</p>
+        <p className="text-small text-texto-secundario">Ejemplo proporcionado por Credizza. El total se calcula multiplicando las 12 cuotas por $72.001. La diferencia sobre el capital no es una tasa anual ni el CFT. Las tasas y condiciones específicas deben confirmarse con la entidad antes de contratar.</p>
       </section>
       <section className="space-y-2 text-small text-texto-secundario">
         <p>Opción informada por Argenpesos. Credizza brinda orientación y acompañamiento; no otorga el préstamo. Información proporcionada a Credizza: 6 de octubre de 2026.</p>
