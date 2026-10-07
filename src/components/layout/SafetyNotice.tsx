@@ -32,7 +32,7 @@ export default function SafetyNotice() {
 
   useEffect(() => {
     if (!visible || !imageReady) return;
-    const timeout = window.setTimeout(() => setVisible(false), 3000);
+    const timeout = window.setTimeout(() => setVisible(false), 4000);
     return () => window.clearTimeout(timeout);
   }, [visible, imageReady]);
 
@@ -75,7 +75,7 @@ export default function SafetyNotice() {
           <h2 id="safety-notice-title" className="text-lg font-semibold leading-relaxed">
             Recordá que Credizza nunca te solicita dinero.
           </h2>
-          <p className="mt-4 text-[11px] opacity-70">Este aviso se cierra en 3 segundos.</p>
+          <p className="mt-4 text-[11px] opacity-70">Este aviso se cierra en 4 segundos.</p>
         </div>
       </section>
     </div>
