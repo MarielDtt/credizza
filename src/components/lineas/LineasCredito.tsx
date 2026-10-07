@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Button } from "../buttons";
 import AnsesLoanDetails from "./AnsesLoanDetails";
+import ArgenpesosLoanDetails from "./ArgenpesosLoanDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 
@@ -406,7 +407,7 @@ export default function LineasCredito() {
                                         </div>
                                     </div>
                                 </div>
-                                {linea.id === 1 && jubiladosTab === "anses" && (
+                                {((linea.id === 1 && jubiladosTab === "anses") || linea.id === 2 || linea.id === 7) && (
                                     <div className="mt-6 w-full rounded-2xl bg-background-secondary px-4 py-1 lg:px-6">
                                         <Accordion
                                             defaultExpanded={false}
@@ -422,8 +423,8 @@ export default function LineasCredito() {
                                         >
                                             <AccordionSummary
                                                 expandIcon={<ExpandMoreIcon />}
-                                                id="anses-condiciones-header"
-                                                aria-controls="anses-condiciones-content"
+                                                id={`condiciones-header-${linea.id}`}
+                                                aria-controls={`condiciones-content-${linea.id}`}
                                                 sx={{
                                                     minHeight: 44,
                                                     "&.Mui-expanded": { minHeight: 44 },
@@ -432,11 +433,11 @@ export default function LineasCredito() {
                                                 }}
                                             >
                                                 <span className="text-body text-texto-principal">
-                                                    Ver cuotas y condiciones del préstamo ANSES
+                                                    {linea.id === 1 ? "Ver una opción de préstamo ANSES: cuotas y condiciones" : "Ver una opción de Argenpesos: montos y condiciones"}
                                                 </span>
                                             </AccordionSummary>
-                                            <AccordionDetails id="anses-condiciones-content">
-                                                <AnsesLoanDetails />
+                                            <AccordionDetails id={`condiciones-content-${linea.id}`}>
+                                                {linea.id === 1 ? <AnsesLoanDetails /> : <ArgenpesosLoanDetails />}
                                             </AccordionDetails>
                                         </Accordion>
                                     </div>
