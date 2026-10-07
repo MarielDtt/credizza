@@ -13,7 +13,7 @@ export default function ArgenpesosLoanDetails() {
       </section>
       <section className="space-y-3">
         <h3 className="text-base font-semibold">Cuotas e importe total del ejemplo</h3>
-        <p>Ejemplo de financiación para un capital de $300.000.</p>
+        <p>Ejemplo de financiación para un capital de $300.000. La cuota social y otros cargos dependen de la entidad y la línea; se informan en la propuesta antes de contratar. No se confirmó si el ejemplo incluye cargos adicionales.</p>
         <div className="overflow-x-auto rounded-lg border border-texto-principal/20">
           <table className="w-full text-left text-xs sm:text-sm">
             <caption className="sr-only">Ejemplo de préstamo de trescientos mil pesos</caption>
