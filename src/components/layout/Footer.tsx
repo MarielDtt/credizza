@@ -122,9 +122,9 @@ const Footer = () => {
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    Estamos armando nuestro Instagram 🚧
+                    Visitá nuestro Instagram
                     <br />
-                    ¡Seguinos y acompañanos en el proceso!
+                    Seguinos para conocer nuestras novedades.
                 </Alert>
             </Snackbar>
         </footer>
