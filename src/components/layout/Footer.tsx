@@ -81,7 +81,7 @@ const Footer = () => {
                 </Link>
             </div>
 
-            <div className="px-4 pb-4 text-sm text-texto-botones"><Link href="/prestamos#jubilados-anses" className="underline">Préstamos para jubilados: cuotas y condiciones</Link><p className="mt-2">Atención online. Sin local de atención al público.</p></div>
+            <div className="px-4 pb-4 text-sm text-texto-botones"><Link href="/prestamos#jubilados-anses" className="underline">Préstamos para jubilados: cuotas y condiciones</Link><p className="mt-2 text-xs leading-relaxed">Domicilio administrativo: Llavallol 4248, Ciudad Autónoma de Buenos Aires. Atención exclusivamente online, sin atención al público.</p></div>
 
             <div className='p-4 space-y-2 text-smallMobile text-sistema-uno lg:text-small'>
                 <p className='space-y-2 leading-relaxed'>
