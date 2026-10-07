@@ -9,7 +9,7 @@ const options = [
 
 export default function AnsesLoanDetails() {
   return (
-    <div className="mt-6 space-y-6 border-t border-slate-300 pt-6 text-slate-900">
+    <div className="mt-6 space-y-6 border-t border-texto-principal/20 pt-6 text-texto-principal">
       <section className="space-y-4">
         <p className="font-semibold">Jubilados y pensionados ANSES</p>
         <h3 className="text-2xl font-bold">Consultá por un préstamo de $1.000.000</h3>
@@ -20,16 +20,16 @@ export default function AnsesLoanDetails() {
       <section className="space-y-3">
         <h3 className="text-2xl font-semibold">Cuotas e importe total del ejemplo</h3>
         <p>Sin cuota social ni otros cargos adicionales informados para este ejemplo. Sistema de amortización francés; cuotas mensuales, iguales y consecutivas.</p>
-        <div className="overflow-x-auto rounded-lg border border-slate-300">
+        <div className="overflow-x-auto rounded-lg border border-texto-principal/20">
           <table className="w-full text-left text-sm sm:text-base">
             <caption className="sr-only">Opciones para recibir un millón de pesos</caption>
-            <thead className="bg-slate-100"><tr><th scope="col" className="p-3">Plazo</th><th scope="col" className="p-3">Cuota mensual</th><th scope="col" className="p-3">Total a devolver</th><th scope="col" className="p-3">Costo sobre el capital</th></tr></thead>
-            <tbody>{options.map(option => <tr key={option.months} className="border-t border-slate-200"><th scope="row" className="whitespace-nowrap p-3">{option.months} cuotas</th><td className="whitespace-nowrap p-3">{option.payment}</td><td className="whitespace-nowrap p-3">{option.total}</td><td className="whitespace-nowrap p-3">{option.cost}</td></tr>)}</tbody>
+            <thead className="bg-background-seccion"><tr><th scope="col" className="p-3">Plazo</th><th scope="col" className="p-3">Cuota mensual</th><th scope="col" className="p-3">Total a devolver</th><th scope="col" className="p-3">Costo sobre el capital</th></tr></thead>
+            <tbody>{options.map(option => <tr key={option.months} className="border-t border-texto-principal/10"><th scope="row" className="whitespace-nowrap p-3">{option.months} cuotas</th><td className="whitespace-nowrap p-3">{option.payment}</td><td className="whitespace-nowrap p-3">{option.total}</td><td className="whitespace-nowrap p-3">{option.cost}</td></tr>)}</tbody>
           </table>
         </div>
         <p className="text-sm">Total calculado como cantidad de cuotas × cuota mensual. El costo sobre el capital es la diferencia entre ese total y $1.000.000; no es una tasa anual ni el CFT.</p>
       </section>
-      <section className="space-y-3 rounded-lg border border-slate-300 bg-white p-5">
+      <section className="space-y-3 rounded-lg border border-texto-principal/20 bg-background-seccion p-5">
         <h3 className="text-2xl font-semibold">Tasas generales publicadas por la cooperativa</h3>
         <p>Estos rangos corresponden al conjunto de líneas de la cooperativa. <strong>No identifican las tasas específicas del ejemplo anterior.</strong></p>
         <p className="text-xl font-bold">TEA máxima general sin IVA: 178,66%</p>
