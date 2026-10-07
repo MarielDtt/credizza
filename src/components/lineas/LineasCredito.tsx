@@ -53,7 +53,7 @@ const lineas = [
         title: "Pensiones Graciables",
         description:
             "Si contás con pensión por madre de 7 hijos, PUAM o discapacidad, podés acceder a tu préstamo de forma simple, rápida y sin moverte de tu casa.",
-        image: "/Pension.webp",
+        image: "/Pension-v2.webp",
         whatsapp:
             "https://wa.me/5491166669143?text=Hola%20quiero%20consultar%20por%20un%20prestamo%20para%20pensiones%20graciables%20Mi%20nombre%20es",
         height: "h-[220px] lg:h-full",
