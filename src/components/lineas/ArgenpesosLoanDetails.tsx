@@ -4,7 +4,7 @@ export default function ArgenpesosLoanDetails() {
   return (
     <div className="space-y-5 pt-3 text-body text-texto-principal">
       <section className="space-y-3">
-        <h3 className="text-heading2 font-semibold">Una de las opciones disponibles</h3>
+        <h3 className="text-heading2 font-semibold">Una opción de préstamo por CBU</h3>
         <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Argenpesos.</p>
         <p>Trabajamos con distintas entidades. Estas condiciones corresponden a una de las opciones y no representan todas las líneas disponibles en Credizza.</p>
         <p>Préstamos personales con cuotas fijas en pesos. Montos generales informados: <strong>mínimo $30.000 y máximo $3.000.000</strong>. Plazos: <strong>6 a 15 meses</strong>.</p>
