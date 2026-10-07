@@ -433,7 +433,7 @@ export default function LineasCredito() {
                                                 }}
                                             >
                                                 <span className="text-body text-texto-principal">
-                                                    {linea.id === 1 ? "Ver una opción de préstamo ANSES: cuotas y condiciones" : "Ver una opción de Argenpesos: montos y condiciones"}
+                                                    {linea.id === 1 ? "Ver una opción de préstamo ANSES: cuotas y condiciones" : "Ver una opción de préstamo por CBU"}
                                                 </span>
                                             </AccordionSummary>
                                             <AccordionDetails id={`condiciones-content-${linea.id}`}>
