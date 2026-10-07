@@ -4,8 +4,9 @@ export default function ArgenpesosLoanDetails() {
   return (
     <div className="space-y-5 pt-3 text-body text-texto-principal">
       <section className="space-y-3">
-        <h3 className="text-heading2 font-semibold">Una de las opciones: Argenpesos</h3>
-        <p>Trabajamos con distintas entidades. Estas condiciones corresponden a una opción de Argenpesos y no representan todas las líneas disponibles en Credizza.</p>
+        <h3 className="text-heading2 font-semibold">Una de las opciones disponibles</h3>
+        <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Argenpesos.</p>
+        <p>Trabajamos con distintas entidades. Estas condiciones corresponden a una de las opciones y no representan todas las líneas disponibles en Credizza.</p>
         <p>Préstamos personales con cuotas fijas en pesos. Montos generales informados: <strong>mínimo $30.000 y máximo $3.000.000</strong>. Plazos: <strong>6 a 15 meses</strong>.</p>
         <p>La disponibilidad para tu tipo de beneficio, el otorgamiento y las condiciones finales están sujetos a verificación del departamento de análisis de riesgo crediticio de la entidad. No se garantiza la aprobación ni el monto máximo.</p>
       </section>
@@ -25,7 +26,7 @@ export default function ArgenpesosLoanDetails() {
         <p className="text-small text-texto-secundario">Ejemplo proporcionado por Credizza. El total se calcula multiplicando las 12 cuotas por $72.001. La diferencia sobre el capital no es una tasa anual ni el CFT. Las tasas y condiciones específicas deben confirmarse con la entidad antes de contratar.</p>
       </section>
       <section className="space-y-2 text-small text-texto-secundario">
-        <p>Opción informada por Argenpesos. Credizza brinda orientación y acompañamiento; no otorga el préstamo. Información proporcionada a Credizza: 6 de octubre de 2026.</p>
+        <p>Credizza brinda orientación y acompañamiento; no otorga el préstamo.</p>
         <p><Link href="/terminos-y-condiciones" className="underline">Términos y condiciones</Link> · <Link href="/politicas-de-privacidad" className="underline">Política de privacidad</Link>.</p>
       </section>
     </div>
