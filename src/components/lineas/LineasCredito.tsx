@@ -14,7 +14,7 @@ const lineas = [
         title: "Jubilados y Pensionados",
         description:
             "Te acompañamos en cada paso para que accedas a tu préstamo de forma rápida, simple y sin moverte de tu casa.",
-        image: "/Jubilado.webp",
+        image: "/Jubilado-v2.webp",
         whatsapp:
             "https://wa.me/5491166669143?text=Hola%20quiero%20consultar%20por%20un%20prestamo%20para%20jubilados%20y%20pensionados%20Mi%20nombre%20es",
         height: "h-[220px] lg:h-full",
