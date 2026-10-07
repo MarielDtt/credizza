@@ -1,26 +1,76 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "../buttons";
 
+
+const handleClick = () => {
+  if (window.$crisp) {
+    window.$crisp.push(["do", "chat:show"]);
+    window.$crisp.push(["do", "chat:open"]);
+  }
+};
+
 export default function Hero() {
-  const openChat = () => {
-    if (window.$crisp) {
-      window.$crisp.push(["do", "chat:show"]);
-      window.$crisp.push(["do", "chat:open"]);
-    }
-  };
   return (
-    <section className="mx-auto grid max-w-7xl gap-6 px-4 lg:grid-cols-2 lg:items-center lg:px-8">
-      <Image src="/Credizza.webp" alt="Familia Credizza" width={851} height={315} className="aspect-[4/3] w-full rounded-lg object-cover object-left" priority />
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold lg:text-4xl">Encontrá una opción de préstamo para vos</h1>
-        <p className="text-lg">Te acompañamos en la consulta y solicitud. El monto, las cuotas y la aprobación dependen de la evaluación de la entidad otorgante.</p>
-        <Button text="Consultar por chat" ariaLabel="Abrir chat de atención" onClick={openChat} className="bg-boton-primario text-texto-botones text-button lg:hover:bg-hover-primario" />
-        <p className="text-base"><Link href="/prestamos#jubilados-anses" className="font-semibold underline">Ver ejemplo para jubilados y pensionados ANSES</Link></p>
-        <p className="text-sm">Atención online. Credizza brinda orientación y acompañamiento; no otorga los préstamos.</p>
+    <section className="relative w-full h-[380px] lg:h-[480px] lg:bg-background-seccion">
+
+      {/* IMAGEN DESKTOP FULL WIDTH */}
+      <Image
+        src="/Credizza.webp"
+        alt="familia credizza prestamos"
+        fill
+        className="hidden object-cover ml-4 rounded-lg lg:block"
+        priority
+      />
+
+      {/* TEXTO DESKTOP (SOBRE LA IMAGEN) */}
+      <div className="absolute inset-y-0 right-0 z-10 items-center hidden w-1/2 lg:flex">
+        <div className="pr-12 pl-36">
+          <div className="max-w-xl">
+            <h1 className="font-bold text-display">
+              Consultá opciones de préstamo
+            </h1>
+
+            <ul className="mt-4">
+              <li className="ml-2 text-heading2">• Cuotas fijas en pesos</li>
+              <li className="mt-2 ml-2 text-heading2">• Evaluación personalizada</li>
+              <li className="mt-2 ml-2 text-heading2">• Sujeto a aprobación</li>
+            </ul>
+
+            <Button
+              text="Iniciar Consulta"
+              ariaLabel="Abrir chat de atención"
+              onClick={handleClick}
+              className="mt-4 bg-boton-primario text-texto-botones text-button lg:hover:bg-hover-primario"
+            />
+          </div>
+        </div>
       </div>
+
+      {/* BLOQUE MOBILE */}
+      <div className="relative flex justify-center h-full px-4 pt-4 lg:hidden">
+        <div className="relative w-[360px]">
+          <Image
+            src="/Familia.webp"
+            alt="familia credizza"
+            width={360}
+            height={352}
+            className="rounded-lg w-[360px]"
+            priority
+          />
+
+          <div className="absolute bottom-[-8px] left-8">
+            <Button
+              text="Consultar YA"
+              ariaLabel="Abrir chat de atención"
+              className="bg-boton-primario text-texto-botones text-button"
+              onClick={handleClick}
+            />
+          </div>
+        </div>
+      </div>
+
     </section>
   );
 }
