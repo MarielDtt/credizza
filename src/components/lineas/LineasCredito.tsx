@@ -407,7 +407,7 @@ export default function LineasCredito() {
                                     </div>
                                 </div>
                                 {linea.id === 1 && jubiladosTab === "anses" && (
-                                    <div className="mt-6 rounded-2xl bg-background-secondary p-4 lg:p-6">
+                                    <div className="mt-6 w-full rounded-2xl bg-background-secondary p-4 lg:ml-auto lg:w-[58%] lg:p-6">
                                         <Accordion
                                             defaultExpanded={false}
                                             disableGutters
