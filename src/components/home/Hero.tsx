@@ -17,7 +17,7 @@ export default function Hero() {
 
       {/* IMAGEN DESKTOP FULL WIDTH */}
       <Image
-        src="/Credizza.webp"
+        src="/Credizza-v2.webp"
         alt="familia credizza prestamos"
         fill
         className="hidden object-cover ml-4 rounded-lg lg:block"
@@ -52,7 +52,7 @@ export default function Hero() {
       <div className="relative flex justify-center h-full px-4 pt-4 lg:hidden">
         <div className="relative w-[360px]">
           <Image
-            src="/Familia.webp"
+            src="/Familia-v2.webp"
             alt="familia credizza"
             width={360}
             height={352}
