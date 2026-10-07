@@ -409,6 +409,24 @@ export default function LineasCredito() {
                                 </div>
                                 {((linea.id === 1 && jubiladosTab === "anses") || linea.id === 2 || linea.id === 7) && (
                                     <div className="mt-6 w-full rounded-2xl bg-background-secondary px-4 py-1 lg:px-6">
+                                        <div className="space-y-2 border-b border-texto-principal/10 px-4 py-3 text-sm leading-relaxed text-texto-principal">
+                                            <p className="font-semibold">Una de las opciones disponibles · Sujeta a evaluación crediticia</p>
+                                            {linea.id === 1 ? (
+                                                <>
+                                                    <p>Para jubilados y pensionados beneficiarios de ANSES. El préstamo lo otorga una entidad privada; no es un préstamo otorgado por ANSES ni existe afiliación gubernamental.</p>
+                                                    <p><strong>Plazos de esta opción: 12 a 24 meses.</strong> Ejemplo: $1.000.000 en 24 cuotas de $81.600,02. <strong>Total a devolver: $1.958.400,48</strong>. Sin cuota social ni otros cargos adicionales informados. Primera cuota en diciembre de 2026.</p>
+                                                    <p><strong>Tasas máximas generales de la cooperativa:</strong> TEA sin IVA 178,66% · TNA sin IVA 106,92% · CFTNA con IVA 164,67%. Estos rangos generales no identifican las tasas específicas del ejemplo; deben confirmarse antes de contratar.</p>
+                                                    <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Cooperativa de Crédito, Consumo y Servicios Sociales La Plata Ltda. CUIT 30-69169976-8. Sede de la cooperativa: calle 46 N.º 547/9, La Plata. Este domicilio pertenece a la entidad otorgante, no a Credizza.</p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <p><strong>Plazos: 6 a 15 meses.</strong> Montos generales: $30.000 a $3.000.000. Opción de préstamo por CBU, sujeta a disponibilidad para tu beneficio y evaluación de la entidad.</p>
+                                                    <p>Ejemplo: $300.000 en 12 cuotas de $72.001. <strong>Total de las cuotas: $864.012</strong>. Confirmá con la entidad si existen otros cargos antes de contratar.</p>
+                                                    <p><strong>Tasas máximas generales:</strong> TEA 2.605,41% · TNA 378,81% · CFTNA 458,36%. Estos rangos generales no identifican las tasas específicas del ejemplo.</p>
+                                                    <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Argenpesos. Credizza brinda orientación y acompañamiento; no otorga el préstamo.</p>
+                                                </>
+                                            )}
+                                        </div>
                                         <Accordion
                                             defaultExpanded={false}
                                             disableGutters
