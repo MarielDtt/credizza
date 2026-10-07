@@ -407,7 +407,7 @@ export default function LineasCredito() {
                                     </div>
                                 </div>
                                 {linea.id === 1 && jubiladosTab === "anses" && (
-                                    <div className="mt-6 w-full rounded-2xl bg-background-secondary p-4 lg:ml-auto lg:w-[58%] lg:p-6">
+                                    <div className="mt-6 w-full rounded-2xl bg-background-secondary px-4 py-1 lg:px-6">
                                         <Accordion
                                             defaultExpanded={false}
                                             disableGutters
@@ -424,6 +424,12 @@ export default function LineasCredito() {
                                                 expandIcon={<ExpandMoreIcon />}
                                                 id="anses-condiciones-header"
                                                 aria-controls="anses-condiciones-content"
+                                                sx={{
+                                                    minHeight: 44,
+                                                    "&.Mui-expanded": { minHeight: 44 },
+                                                    "& .MuiAccordionSummary-content": { margin: "8px 0" },
+                                                    "& .MuiAccordionSummary-content.Mui-expanded": { margin: "8px 0" },
+                                                }}
                                             >
                                                 <span className="text-body text-texto-principal">
                                                     Ver cuotas y condiciones del préstamo ANSES
