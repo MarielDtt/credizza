@@ -11,7 +11,8 @@ export default function AnsesLoanDetails() {
   return (
     <div className="mt-6 space-y-6 border-t border-texto-principal/20 pt-6 text-texto-principal">
       <section className="space-y-4">
-        <p className="font-semibold">Jubilados y pensionados ANSES</p>
+        <p className="font-semibold">Jubilados y pensionados ANSES · Una de las opciones disponibles</p>
+        <p>Trabajamos con distintas entidades. Este ejemplo corresponde a una opción de Cooperativa La Plata; no representa todas las líneas de ANSES disponibles en Credizza.</p>
         <h3 className="text-2xl font-bold">Consultá por un préstamo de $1.000.000</h3>
         <p>Ejemplo de financiación en pesos. Monto neto a recibir en tu cuenta: <strong>$1.000.000</strong>. Plazos de esta línea: <strong>12 a 24 meses</strong>.</p>
         <p><strong>Primera cuota en diciembre de 2026.</strong> Las condiciones deben confirmarse al consultar y antes de contratar. Otorgamiento sujeto a evaluación crediticia.</p>
