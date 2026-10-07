@@ -4,6 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { Button } from "../buttons";
 import AnsesLoanDetails from "./AnsesLoanDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 
 const lineas = [
     {
@@ -405,13 +407,33 @@ export default function LineasCredito() {
                                     </div>
                                 </div>
                                 {linea.id === 1 && jubiladosTab === "anses" && (
-                                    <details className="group mt-6 rounded-lg border border-texto-principal/20 bg-background-default">
-                                        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg p-4 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden">
-                                            <span>Ver cuotas y condiciones del préstamo ANSES</span>
-                                            <span aria-hidden="true" className="text-xl transition-transform group-open:rotate-180">⌄</span>
-                                        </summary>
-                                        <div className="px-4 pb-4 sm:px-6 sm:pb-6"><AnsesLoanDetails /></div>
-                                    </details>
+                                    <div className="mt-6 rounded-2xl bg-background-secondary p-4 lg:p-6">
+                                        <Accordion
+                                            defaultExpanded={false}
+                                            disableGutters
+                                            elevation={0}
+                                            square
+                                            sx={{
+                                                backgroundColor: "transparent",
+                                                borderBottom: "1px solid #E5DDCF",
+                                                "&:before": { display: "none" },
+                                                "&:last-of-type": { borderBottom: "none" },
+                                            }}
+                                        >
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                id="anses-condiciones-header"
+                                                aria-controls="anses-condiciones-content"
+                                            >
+                                                <span className="text-body text-texto-principal">
+                                                    Ver cuotas y condiciones del préstamo ANSES
+                                                </span>
+                                            </AccordionSummary>
+                                            <AccordionDetails id="anses-condiciones-content">
+                                                <AnsesLoanDetails />
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    </div>
                                 )}
                             </div>
                         );
