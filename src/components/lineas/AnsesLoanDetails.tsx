@@ -9,20 +9,20 @@ const options = [
 
 export default function AnsesLoanDetails() {
   return (
-    <div className="mt-6 space-y-6 border-t border-texto-principal/20 pt-6 text-texto-principal">
+    <div className="mt-6 space-y-6 border-t border-texto-principal/20 pt-6 text-sm leading-relaxed text-texto-principal">
       <section className="space-y-4">
         <p className="font-semibold">Jubilados y pensionados ANSES · Una de las opciones disponibles</p>
         <p>Trabajamos con distintas entidades. Este ejemplo corresponde a una opción de Cooperativa La Plata; no representa todas las líneas de ANSES disponibles en Credizza.</p>
-        <h3 className="text-2xl font-bold">Consultá por un préstamo de $1.000.000</h3>
+        <h3 className="text-lg font-bold">Consultá por un préstamo de $1.000.000</h3>
         <p>Ejemplo de financiación en pesos. Monto neto a recibir en tu cuenta: <strong>$1.000.000</strong>. Plazos de esta línea: <strong>12 a 24 meses</strong>.</p>
         <p><strong>Primera cuota en diciembre de 2026.</strong> Las condiciones deben confirmarse al consultar y antes de contratar. Otorgamiento sujeto a evaluación crediticia.</p>
         <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Cooperativa de Crédito, Consumo y Servicios Sociales La Plata Ltda.</p>
       </section>
       <section className="space-y-3">
-        <h3 className="text-2xl font-semibold">Cuotas e importe total del ejemplo</h3>
+        <h3 className="text-base font-semibold">Cuotas e importe total del ejemplo</h3>
         <p>Sin cuota social ni otros cargos adicionales informados para este ejemplo. Sistema de amortización francés; cuotas mensuales, iguales y consecutivas.</p>
         <div className="overflow-x-auto rounded-lg border border-texto-principal/20">
-          <table className="w-full text-left text-sm sm:text-base">
+          <table className="w-full text-left text-xs sm:text-sm">
             <caption className="sr-only">Opciones para recibir un millón de pesos</caption>
             <thead className="bg-background-seccion"><tr><th scope="col" className="p-3">Plazo</th><th scope="col" className="p-3">Cuota mensual</th><th scope="col" className="p-3">Total a devolver</th><th scope="col" className="p-3">Costo sobre el capital</th></tr></thead>
             <tbody>{options.map(option => <tr key={option.months} className="border-t border-texto-principal/10"><th scope="row" className="whitespace-nowrap p-3">{option.months} cuotas</th><td className="whitespace-nowrap p-3">{option.payment}</td><td className="whitespace-nowrap p-3">{option.total}</td><td className="whitespace-nowrap p-3">{option.cost}</td></tr>)}</tbody>
@@ -31,9 +31,9 @@ export default function AnsesLoanDetails() {
         <p className="text-sm">Total calculado como cantidad de cuotas × cuota mensual. El costo sobre el capital es la diferencia entre ese total y $1.000.000; no es una tasa anual ni el CFT.</p>
       </section>
       <section className="space-y-3 rounded-lg border border-texto-principal/20 bg-background-seccion p-5">
-        <h3 className="text-2xl font-semibold">Tasas generales publicadas por la cooperativa</h3>
+        <h3 className="text-base font-semibold">Tasas generales publicadas por la cooperativa</h3>
         <p>Estos rangos corresponden al conjunto de líneas de la cooperativa. <strong>No identifican las tasas específicas del ejemplo anterior.</strong></p>
-        <p className="text-xl font-bold">TEA máxima general sin IVA: 178,66%</p>
+        <p className="text-base font-bold">TEA máxima general sin IVA: 178,66%</p>
         <ul className="list-disc space-y-2 pl-5">
           <li>TNA sin IVA: mínima 48,01% · máxima 106,92%.</li>
           <li>TEA sin IVA: mínima 60,14% · máxima 178,66%.</li>
