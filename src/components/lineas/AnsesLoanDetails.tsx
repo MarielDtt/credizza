@@ -16,7 +16,7 @@ export default function AnsesLoanDetails() {
         <h3 className="text-2xl font-bold">Consultá por un préstamo de $1.000.000</h3>
         <p>Ejemplo de financiación en pesos. Monto neto a recibir en tu cuenta: <strong>$1.000.000</strong>. Plazos de esta línea: <strong>12 a 24 meses</strong>.</p>
         <p><strong>Primera cuota en diciembre de 2026.</strong> Las condiciones deben confirmarse al consultar y antes de contratar. Otorgamiento sujeto a evaluación crediticia.</p>
-        <p className="text-sm">Credizza te orienta y acompaña en la solicitud. El préstamo lo otorga la Cooperativa de Crédito, Consumo y Servicios Sociales La Plata Ltda.</p>
+        <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Cooperativa de Crédito, Consumo y Servicios Sociales La Plata Ltda.</p>
       </section>
       <section className="space-y-3">
         <h3 className="text-2xl font-semibold">Cuotas e importe total del ejemplo</h3>
@@ -42,12 +42,7 @@ export default function AnsesLoanDetails() {
         <p>La TNA, la TEA y el CFT aplicables varían según la línea y el plazo. La entidad los informa al ingresar la solicitud y antes del otorgamiento. Pedí las tasas y condiciones específicas por escrito antes de aceptar.</p>
         <p className="text-sm">Plazos generales de la cooperativa: 3 a 24 meses. El ejemplo de esta página corresponde a la línea de 12 a 24 cuotas. Información suministrada por Credizza a partir del texto de la cooperativa; actualización: 6 de octubre de 2026.</p>
       </section>
-      <section className="space-y-3 text-sm leading-relaxed">
-        <h3 className="text-lg font-semibold">Entidad otorgante y atención</h3>
-        <p>Cooperativa de Crédito, Consumo y Servicios Sociales La Plata Ltda. CUIT 30-69169976-8. Matrícula INAES 19.901. Teléfono: <a className="underline" href="tel:08106660984">0810-666-0984</a>. Sede social de la cooperativa: calle 46 N.º 547/9, La Plata.</p>
-        <p>Credizza atiende online y no cuenta con un local de atención al público. La sede indicada pertenece a la cooperativa. Contacto Credizza: <a className="underline" href="mailto:credizza@gmail.com">credizza@gmail.com</a>.</p>
-        <p>No se garantiza la aprobación. Consultá las condiciones definitivas antes de contratar. <Link href="/terminos-y-condiciones" className="underline">Términos y condiciones</Link> · <Link href="/politicas-de-privacidad" className="underline">Política de privacidad</Link>.</p>
-      </section>
+      <p className="text-small text-texto-secundario">Credizza brinda orientación y acompañamiento; no otorga el préstamo. <Link href="/terminos-y-condiciones" className="underline">Términos y condiciones</Link> · <Link href="/politicas-de-privacidad" className="underline">Política de privacidad</Link>.</p>
     </div>
   );
 }
