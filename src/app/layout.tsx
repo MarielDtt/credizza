@@ -8,6 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import ButtonChat from "@/components/buttons/ButtonChat";
 import CrispWidget from "@/components/layout/CrispWidget";
+import SafetyNotice from "@/components/layout/SafetyNotice";
 
 
 export const viewport = {
@@ -74,6 +75,7 @@ export default function RootLayout({
 
         <CrispWidget />
         <ButtonChat />
+        <SafetyNotice />
       </body>
     </html>
   );
