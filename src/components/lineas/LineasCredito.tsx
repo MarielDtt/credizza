@@ -421,7 +421,7 @@ export default function LineasCredito() {
                                             ) : (
                                                 <>
                                                     <p><strong>Plazos: 6 a 15 meses.</strong> Montos generales: $30.000 a $3.000.000. Opción de préstamo por CBU, sujeta a disponibilidad para tu beneficio y evaluación de la entidad.</p>
-                                                    <p>Ejemplo: $300.000 en 12 cuotas de $72.001. <strong>Total de las cuotas: $864.012</strong>. Confirmá con la entidad si existen otros cargos antes de contratar.</p>
+                                                    <p>Ejemplo: $300.000 en 12 cuotas de $72.001. <strong>Total de las cuotas: $864.012</strong>. La cuota social y otros cargos dependen de la entidad y la línea; se informan en la propuesta antes de contratar. El total indicado corresponde a las cuotas del ejemplo y no confirma cargos adicionales.</p>
                                                     <p><strong>Tasas máximas generales:</strong> TEA 2.605,41% · TNA 378,81% · CFTNA 458,36%. Estos rangos generales no identifican las tasas específicas del ejemplo.</p>
                                                     <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Argenpesos. Credizza brinda orientación y acompañamiento; no otorga el préstamo.</p>
                                                 </>
