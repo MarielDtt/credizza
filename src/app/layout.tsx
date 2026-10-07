@@ -22,9 +22,9 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://credizza.com.ar"),
-  title: "Credizza | Sitio en construcción 🚧",
+  title: "Credizza | Orientación para solicitar préstamos",
   description:
-    "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
+    "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
   icons: { icon: "/favicon.ico" },
   alternates: {
     canonical: "https://credizza.com.ar/",
@@ -34,24 +34,24 @@ export const metadata: Metadata = {
     locale: "es_AR",
     url: "https://credizza.com.ar",
     siteName: "Credizza",
-    title: "Credizza | Sitio en construcción 🚧",
+    title: "Credizza | Orientación para solicitar préstamos",
     description:
-      "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
+      "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
     images: [
       {
-        url: "/og-construccion.webp",
-        width: 1200,
-        height: 630,
-        alt: "Credizza - Sitio en construcción",
+        url: "/Logo-Navbar.webp",
+        width: 64,
+        height: 64,
+        alt: "Credizza",
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Credizza | Sitio en construcción 🚧",
+    card: "summary",
+    title: "Credizza | Orientación para solicitar préstamos",
     description:
-      "Muy pronto lanzamos nuestra nueva web con toda la información sobre créditos simples, ágiles y seguros para jubilados y pensionados.",
-    images: ["/og-construccion.webp"],
+      "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
+    images: ["/Logo-Navbar.webp"],
   },
 };
 

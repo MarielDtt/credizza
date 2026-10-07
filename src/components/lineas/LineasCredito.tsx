@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "../buttons";
+import AnsesLoanDetails from "./AnsesLoanDetails";
 
 const lineas = [
     {
@@ -223,11 +224,18 @@ type VarianteKey = "anses" | "cbu";
 export default function LineasCredito() {
     const [jubiladosTab, setJubiladosTab] = useState<VarianteKey>("anses");
 
+    const openChat = () => {
+        if (window.$crisp) {
+            window.$crisp.push(["do", "chat:show"]);
+            window.$crisp.push(["do", "chat:open"]);
+        }
+    };
+
     return (
         <section className="w-full py-8 bg-background-default">
             <div className="max-w-[1200px] mx-auto px-4">
                 <h1 className="mt-6 text-center text-heading1 lg:text-display">
-                    Prestamos
+                    Préstamos
                 </h1>
 
                 <div className="flex flex-col gap-6">
@@ -241,6 +249,7 @@ export default function LineasCredito() {
                         return (
                             <div
                                 key={linea.id}
+                                id={linea.id === 1 ? "jubilados-anses" : undefined}
                                 className="p-4 rounded-lg bg-background-seccion lg:p-6"
                             >
                                 <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-6">
@@ -264,15 +273,9 @@ export default function LineasCredito() {
                                             <div className="absolute bottom-3 right-3 lg:hidden">
                                                 <Button
                                                     className="px-4 py-2 min-w-[200px] bg-boton-primario text-texto-botones whitespace-nowrap"
-                                                    text="Solicita tu Prestamo"
-                                                    ariaLabel={`Solicita tu Prestamo para ${linea.title}`}
-                                                    onClick={() =>
-                                                        window.open(
-                                                            linea.whatsapp,
-                                                            "_blank",
-                                                            "noopener,noreferrer"
-                                                        )
-                                                    }
+                                                    text="Consultar por chat"
+                                                    ariaLabel={`Abrir chat para consultar por ${linea.title}`}
+                                                    onClick={openChat}
                                                 />
                                             </div>
                                         </div>
@@ -290,7 +293,7 @@ export default function LineasCredito() {
                                             </p>
 
                                             {/* Desktop especial Jubilados */}
-                                            <div className="hidden mt-5 lg:block">
+                                            <div className="mt-5">
 
                                                 {/* CASO 1: Tiene variantes (Jubilados) */}
                                                 {linea.variantes && (
@@ -394,19 +397,14 @@ export default function LineasCredito() {
                                         <div className="hidden lg:flex lg:justify-start lg:mt-6">
                                             <Button
                                                 className="px-4 py-2 min-w-[220px] bg-boton-primario text-texto-botones whitespace-nowrap"
-                                                text="Solicita tu Prestamo"
-                                                ariaLabel={`Solicita tu Prestamo para ${linea.title}`}
-                                                onClick={() =>
-                                                    window.open(
-                                                        linea.whatsapp,
-                                                        "_blank",
-                                                        "noopener,noreferrer"
-                                                    )
-                                                }
+                                                text="Consultar por chat"
+                                                ariaLabel={`Abrir chat para consultar por ${linea.title}`}
+                                                onClick={openChat}
                                             />
                                         </div>
                                     </div>
                                 </div>
+                                {linea.id === 1 && jubiladosTab === "anses" && <AnsesLoanDetails />}
                             </div>
                         );
                     })}
