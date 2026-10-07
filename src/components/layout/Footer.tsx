@@ -81,17 +81,19 @@ const Footer = () => {
                 </Link>
             </div>
 
+            <div className="px-4 pb-4 text-sm text-texto-botones"><Link href="/prestamos#jubilados-anses" className="underline">Préstamos para jubilados: cuotas y condiciones</Link><p className="mt-2 text-xs leading-relaxed">Domicilio administrativo: Llavallol 4248, Ciudad Autónoma de Buenos Aires. Atención exclusivamente online, sin atención al público.</p></div>
+
             <div className='p-4 space-y-2 text-smallMobile text-sistema-uno lg:text-small'>
                 <p className='space-y-2 leading-relaxed'>
                     <span className='font-bold'>Credizza</span> no es una entidad financiera ni recibe depósitos. Nuestro trabajo es <span className='font-bold'>acompañar y asesorar</span> a jubilados y pensionados en el proceso de solicitar un crédito con entidades habilitadas.
                 </p>
 
                 <p className='space-y-2 leading-relaxed'>
-                    La aprobación, el monto, el plazo, la <span className='font-bold'>TNA</span> y el <span className='font-bold'>CFT</span> son definidos por la entidad otorgante y siempre se informan previamente, conforme a la normativa del BCRA. Las solicitudes están sujetas a verificación de identidad, historial y capacidad de pago. <span className='font-bold'>Credizza no garantiza la aprobación</span> ni se responsabiliza por las decisiones de terceros.
+                    La aprobación, el monto, el plazo, la <span className='font-bold'>TNA</span> y el <span className='font-bold'>CFT</span> son definidos por la entidad otorgante y siempre se informan previamente, según las condiciones de la entidad otorgante. Las solicitudes están sujetas a verificación de identidad, historial y capacidad de pago. <span className='font-bold'>Credizza no garantiza la aprobación</span> ni se responsabiliza por las decisiones de terceros.
                 </p>
 
                 <p className='space-y-2 leading-relaxed'>
-                    Al contactarnos por WhatsApp aceptás la <span className='font-bold'>Política de Privacidad</span> y autorizás el uso de tus datos para evaluar tu solicitud.
+                    Consultá nuestra <span className='font-bold'>Política de Privacidad</span> para conocer cómo se tratan tus datos al consultar por chat o por nuestros canales de contacto.
                 </p>
 
                 <p className='space-y-2 leading-relaxed'>
@@ -100,7 +102,7 @@ const Footer = () => {
                 </p>
 
                 <p className='space-y-2 text-sm italic leading-relaxed'>
-                    <span className='font-bold'>Última actualización:</span> 26/04/2026 – v1.1
+                    <span className='font-bold'>Última actualización:</span> 06/10/2026 – v1.2
                 </p>
 
                 <p className='space-y-2 font-bold leading-relaxed'>
@@ -120,9 +122,9 @@ const Footer = () => {
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    Estamos armando nuestro Instagram 🚧
+                    Visitá nuestro Instagram
                     <br />
-                    ¡Seguinos y acompañanos en el proceso!
+                    Seguinos para conocer nuestras novedades.
                 </Alert>
             </Snackbar>
         </footer>

@@ -3,6 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "../buttons";
+import AnsesLoanDetails from "./AnsesLoanDetails";
+import ArgenpesosLoanDetails from "./ArgenpesosLoanDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 
 const lineas = [
     {
@@ -10,7 +14,7 @@ const lineas = [
         title: "Jubilados y Pensionados",
         description:
             "Te acompañamos en cada paso para que accedas a tu préstamo de forma rápida, simple y sin moverte de tu casa.",
-        image: "/Jubilado.webp",
+        image: "/Jubilado-v2.webp",
         whatsapp:
             "https://wa.me/5491166669143?text=Hola%20quiero%20consultar%20por%20un%20prestamo%20para%20jubilados%20y%20pensionados%20Mi%20nombre%20es",
         height: "h-[220px] lg:h-full",
@@ -49,7 +53,7 @@ const lineas = [
         title: "Pensiones Graciables",
         description:
             "Si contás con pensión por madre de 7 hijos, PUAM o discapacidad, podés acceder a tu préstamo de forma simple, rápida y sin moverte de tu casa.",
-        image: "/Pension.webp",
+        image: "/Pension-v2.webp",
         whatsapp:
             "https://wa.me/5491166669143?text=Hola%20quiero%20consultar%20por%20un%20prestamo%20para%20pensiones%20graciables%20Mi%20nombre%20es",
         height: "h-[220px] lg:h-full",
@@ -223,11 +227,18 @@ type VarianteKey = "anses" | "cbu";
 export default function LineasCredito() {
     const [jubiladosTab, setJubiladosTab] = useState<VarianteKey>("anses");
 
+    const openChat = () => {
+        if (window.$crisp) {
+            window.$crisp.push(["do", "chat:show"]);
+            window.$crisp.push(["do", "chat:open"]);
+        }
+    };
+
     return (
         <section className="w-full py-8 bg-background-default">
             <div className="max-w-[1200px] mx-auto px-4">
                 <h1 className="mt-6 text-center text-heading1 lg:text-display">
-                    Prestamos
+                    Préstamos
                 </h1>
 
                 <div className="flex flex-col gap-6">
@@ -241,6 +252,7 @@ export default function LineasCredito() {
                         return (
                             <div
                                 key={linea.id}
+                                id={linea.id === 1 ? "jubilados-anses" : undefined}
                                 className="p-4 rounded-lg bg-background-seccion lg:p-6"
                             >
                                 <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-6">
@@ -264,15 +276,9 @@ export default function LineasCredito() {
                                             <div className="absolute bottom-3 right-3 lg:hidden">
                                                 <Button
                                                     className="px-4 py-2 min-w-[200px] bg-boton-primario text-texto-botones whitespace-nowrap"
-                                                    text="Solicita tu Prestamo"
-                                                    ariaLabel={`Solicita tu Prestamo para ${linea.title}`}
-                                                    onClick={() =>
-                                                        window.open(
-                                                            linea.whatsapp,
-                                                            "_blank",
-                                                            "noopener,noreferrer"
-                                                        )
-                                                    }
+                                                    text="Consultar por chat"
+                                                    ariaLabel={`Abrir chat para consultar por ${linea.title}`}
+                                                    onClick={openChat}
                                                 />
                                             </div>
                                         </div>
@@ -290,7 +296,7 @@ export default function LineasCredito() {
                                             </p>
 
                                             {/* Desktop especial Jubilados */}
-                                            <div className="hidden mt-5 lg:block">
+                                            <div className="mt-5">
 
                                                 {/* CASO 1: Tiene variantes (Jubilados) */}
                                                 {linea.variantes && (
@@ -394,19 +400,66 @@ export default function LineasCredito() {
                                         <div className="hidden lg:flex lg:justify-start lg:mt-6">
                                             <Button
                                                 className="px-4 py-2 min-w-[220px] bg-boton-primario text-texto-botones whitespace-nowrap"
-                                                text="Solicita tu Prestamo"
-                                                ariaLabel={`Solicita tu Prestamo para ${linea.title}`}
-                                                onClick={() =>
-                                                    window.open(
-                                                        linea.whatsapp,
-                                                        "_blank",
-                                                        "noopener,noreferrer"
-                                                    )
-                                                }
+                                                text="Consultar por chat"
+                                                ariaLabel={`Abrir chat para consultar por ${linea.title}`}
+                                                onClick={openChat}
                                             />
                                         </div>
                                     </div>
                                 </div>
+                                {((linea.id === 1 && jubiladosTab === "anses") || linea.id === 2 || linea.id === 7) && (
+                                    <div className="mt-6 w-full rounded-2xl bg-background-secondary px-4 py-1 lg:px-6">
+                                        <div className="space-y-2 border-b border-texto-principal/10 px-4 py-3 text-sm leading-relaxed text-texto-principal">
+                                            <p className="font-semibold">Una de las opciones disponibles · Sujeta a evaluación crediticia</p>
+                                            {linea.id === 1 ? (
+                                                <>
+                                                    <p>Para jubilados y pensionados beneficiarios de ANSES. El préstamo lo otorga una entidad privada; no es un préstamo otorgado por ANSES ni existe afiliación gubernamental.</p>
+                                                    <p><strong>Plazos de esta opción: 12 a 24 meses.</strong> Ejemplo: $1.000.000 en 24 cuotas de $81.600,02. <strong>Total a devolver: $1.958.400,48</strong>. Sin cuota social ni otros cargos adicionales informados. Primera cuota en diciembre de 2026.</p>
+                                                    <p><strong>Tasas máximas generales de la cooperativa:</strong> TEA sin IVA 178,66% · TNA sin IVA 106,92% · CFTNA con IVA 164,67%. Estos rangos generales no identifican las tasas específicas del ejemplo; deben confirmarse antes de contratar.</p>
+                                                    <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Cooperativa de Crédito, Consumo y Servicios Sociales La Plata Ltda. CUIT 30-69169976-8. Sede de la cooperativa: calle 46 N.º 547/9, La Plata. Este domicilio pertenece a la entidad otorgante, no a Credizza.</p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <p><strong>Plazos: 6 a 15 meses.</strong> Montos generales: $30.000 a $3.000.000. Opción de préstamo por CBU, sujeta a disponibilidad para tu beneficio y evaluación de la entidad.</p>
+                                                    <p>Ejemplo: $300.000 en 12 cuotas de $72.001. <strong>Total de las cuotas: $864.012</strong>. La cuota social y otros cargos dependen de la entidad y la línea; se informan en la propuesta antes de contratar. El total indicado corresponde a las cuotas del ejemplo y no confirma cargos adicionales.</p>
+                                                    <p><strong>Tasas máximas generales:</strong> TEA 2.605,41% · TNA 378,81% · CFTNA 458,36%. Estos rangos generales no identifican las tasas específicas del ejemplo.</p>
+                                                    <p className="text-xs leading-relaxed text-texto-secundario">Entidad otorgante: Argenpesos. Credizza brinda orientación y acompañamiento; no otorga el préstamo.</p>
+                                                </>
+                                            )}
+                                        </div>
+                                        <Accordion
+                                            defaultExpanded={false}
+                                            disableGutters
+                                            elevation={0}
+                                            square
+                                            sx={{
+                                                backgroundColor: "transparent",
+                                                borderBottom: "1px solid #E5DDCF",
+                                                "&:before": { display: "none" },
+                                                "&:last-of-type": { borderBottom: "none" },
+                                            }}
+                                        >
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                id={`condiciones-header-${linea.id}`}
+                                                aria-controls={`condiciones-content-${linea.id}`}
+                                                sx={{
+                                                    minHeight: 44,
+                                                    "&.Mui-expanded": { minHeight: 44 },
+                                                    "& .MuiAccordionSummary-content": { margin: "8px 0" },
+                                                    "& .MuiAccordionSummary-content.Mui-expanded": { margin: "8px 0" },
+                                                }}
+                                            >
+                                                <span className="text-body text-texto-principal">
+                                                    {linea.id === 1 ? "Ver una opción de préstamo ANSES: cuotas y condiciones" : "Ver una opción de préstamo por CBU"}
+                                                </span>
+                                            </AccordionSummary>
+                                            <AccordionDetails id={`condiciones-content-${linea.id}`}>
+                                                {linea.id === 1 ? <AnsesLoanDetails /> : <ArgenpesosLoanDetails />}
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    </div>
+                                )}
                             </div>
                         );
                     })}
