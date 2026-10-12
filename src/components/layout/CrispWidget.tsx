@@ -34,6 +34,25 @@ export default function CrispWidget() {
               }
             ]);
 
+            // Registra una conversión al enviar el primer mensaje de esta pestaña.
+            // No cuenta simplemente abrir el chat ni los mensajes del agente.
+            window.$crisp.push([
+              "on",
+              "message:sent",
+              function () {
+                try {
+                  if (window.sessionStorage.getItem("credizza_ads_chat_sent")) return;
+                  if (typeof window.gtag !== "function") return;
+                  window.gtag("event", "conversion", {
+                    send_to: "AW-18498890752/dwcuCIDUzZodEIDY-vRE"
+                  });
+                  window.sessionStorage.setItem("credizza_ads_chat_sent", "1");
+                } catch (error) {
+                  // El bloqueo de almacenamiento no debe afectar al chat.
+                }
+              }
+            ]);
+
             // Cuando se cierra el chat
             window.$crisp.push([
               "on",
