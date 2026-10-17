@@ -2,7 +2,7 @@ import Image from "next/image";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { Button } from "../buttons";
 import { Email } from "@mui/icons-material";
-import FacebookIcon from "@mui/icons-material/Facebook";
+import TikTokIcon from "../icons/TikTokIcon";
 import ContactForm from "../forms/ContactForm";
 
 
@@ -133,17 +133,17 @@ export default function Contact() {
           <div className="relative z-10 px-3 pt-8 pb-12 text-center">
             {/* Ícono */}
             <div className="flex justify-center mb-4">
-              <FacebookIcon sx={{ fontSize: 48 }} />
+              <TikTokIcon sx={{ fontSize: 48 }} />
             </div>
 
             {/* Título */}
             <h3 className="text-heading2">
-              Facebook
+              TikTok
             </h3>
 
             {/* Usuario */}
             <p className="my-4 text-body">
-              www.facebook.com/credizza
+              @credizza
             </p>
 
             {/* Botón */}
@@ -155,7 +155,7 @@ export default function Contact() {
                 onClick={() => {
                   setTimeout(() => {
                     window.open(
-                      "https://www.facebook.com/credizza",
+                      "https://www.tiktok.com/@credizza",
                       "_blank"
                     );
                   }, 120);
