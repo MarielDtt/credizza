@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
+import TikTokIcon from '../icons/TikTokIcon';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import SettingsPhoneRoundedIcon from '@mui/icons-material/SettingsPhoneRounded';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -50,8 +50,8 @@ const Footer = () => {
             <div className="w-full h-px bg-background-seccion"></div>
 
             <div className='flex justify-center p-4 space-x-6 sm:space-x-16'>
-                <Link href="https://facebook.com/credizza" aria-label="Facebook Credizza" target="_blank" rel="noopener noreferrer">
-                    <FacebookRoundedIcon fontSize='large' className='text-texto-botones sm:hover:text-background-seccion' />
+                <Link href="https://www.tiktok.com/@credizza" aria-label="TikTok Credizza" target="_blank" rel="noopener noreferrer">
+                    <TikTokIcon fontSize='large' className='text-texto-botones sm:hover:text-background-seccion' />
                 </Link>
 
                 <Link href="mailto:credizza@gmail.com" aria-label="Mail Credizza" target="_blank" rel="noopener noreferrer">

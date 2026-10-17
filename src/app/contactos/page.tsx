@@ -6,7 +6,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import FacebookIcon from "@mui/icons-material/Facebook";
+import TikTokIcon from "@/components/icons/TikTokIcon";
 import CloseIcon from "@mui/icons-material/Close";
 import ContactForm from "@/components/forms/ContactForm";
 import { Button } from "@/components/buttons";
@@ -38,7 +38,7 @@ const mediosContacto = [
     { title: "Mail", href: "mailto:credizza@gmail.com", icon: EmailOutlinedIcon },
     { title: "Teléfono", href: "tel:+541126289448", icon: PhoneOutlinedIcon },
     { title: "Whatsapp", href: "https://wa.me/541166669143", icon: WhatsAppIcon },
-    { title: "Facebook", href: "https://www.facebook.com/credizza", icon: FacebookIcon },
+    { title: "TikTok", href: "https://www.tiktok.com/@credizza", icon: TikTokIcon },
     { title: "Instagram", href: "https://www.instagram.com/credizza", icon: InstagramIcon },
 ];
 
@@ -183,7 +183,7 @@ const Contactos = () => {
                             <a
                                 key={title}
                                 href={href}
-                                target={["Facebook", "Whatsapp", "Instagram"].includes(title) ? "_blank" : "_self"}
+                                target={["TikTok", "Whatsapp", "Instagram"].includes(title) ? "_blank" : "_self"}
                                 rel="noreferrer"
                                 aria-label={title}
                                 className="flex w-[72px] flex-col items-center gap-2 text-center transition-transform duration-200 hover:scale-105 lg:w-auto lg:gap-3"
