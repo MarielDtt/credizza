@@ -98,7 +98,7 @@ export default function Contact() {
 
             {/* Correo */}
             <p className="my-4 text-body">
-              credizza@gmail.com
+              info@credizza.com.ar
             </p>
 
             {/* Botón */}
@@ -109,7 +109,7 @@ export default function Contact() {
                 className="bg-boton-primario text-texto-botones text-button lg:hover:bg-hover-primario"
                 onClick={() => {
                   setTimeout(() => {
-                    window.location.href = "mailto:credizza@gmail.com";
+                    window.location.href = "mailto:info@credizza.com.ar";
                   }, 120);
                 }}
               />

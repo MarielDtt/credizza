@@ -35,7 +35,7 @@ const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_TURNO_ID;
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
 const mediosContacto = [
-    { title: "Mail", href: "mailto:credizza@gmail.com", icon: EmailOutlinedIcon },
+    { title: "Mail", href: "mailto:info@credizza.com.ar", icon: EmailOutlinedIcon },
     { title: "Teléfono", href: "tel:+541126289448", icon: PhoneOutlinedIcon },
     { title: "Whatsapp", href: "https://wa.me/541166669143", icon: WhatsAppIcon },
     { title: "TikTok", href: "https://www.tiktok.com/@credizza", icon: TikTokIcon },

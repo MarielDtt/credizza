@@ -54,7 +54,7 @@ const Footer = () => {
                     <TikTokIcon fontSize='large' className='text-texto-botones sm:hover:text-background-seccion' />
                 </Link>
 
-                <Link href="mailto:credizza@gmail.com" aria-label="Mail Credizza" target="_blank" rel="noopener noreferrer">
+                <Link href="mailto:info@credizza.com.ar" aria-label="Mail Credizza" target="_blank" rel="noopener noreferrer">
                     <EmailRoundedIcon fontSize='large' className='text-texto-botones sm:hover:text-background-seccion' />
                 </Link>
 
@@ -97,7 +97,7 @@ const Footer = () => {
                 </p>
 
                 <p className='space-y-2 leading-relaxed'>
-                    Derechos Ley 25.326 (ARCO): podés solicitar acceso, rectificación o supresión escribiendo a credizza@gmail.com o WhatsApp +54 11 6210-8715.
+                    Derechos Ley 25.326 (ARCO): podés solicitar acceso, rectificación o supresión escribiendo a info@credizza.com.ar o WhatsApp +54 11 6210-8715.
                     Órgano de control: <span className='font-bold'>AAIP</span> – www.argentina.gob.ar/aaip
                 </p>
 
