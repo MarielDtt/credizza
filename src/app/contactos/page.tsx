@@ -173,7 +173,7 @@ const Contactos = () => {
     return (
         <>
             <section className="w-full px-4 bg-background-default py-14 lg:py-20">
-                <div className="flex w-full max-w-[1200px] flex-col ">
+                <div className="mx-auto flex w-full max-w-[1200px] flex-col">
                     <h1 className="text-center text-heading1 text-text-primary lg:text-display">
                         Medios de contacto
                     </h1>
@@ -204,7 +204,7 @@ const Contactos = () => {
                     </div>
 
                     <div className="w-full mt-12 contacto-page lg:mt-8">
-                        <div className="mx-2 form-contacto lg:w-full lg:mt-8 lg:ml-8">
+                        <div className="form-contacto w-full lg:mt-8">
                             <ContactForm />
                         </div>
                     </div>
