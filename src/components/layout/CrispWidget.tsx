@@ -6,7 +6,7 @@ export default function CrispWidget() {
   return (
     <Script id="crisp-chat" strategy="afterInteractive">
       {`
-        window.$crisp = [];
+        window.$crisp = window.$crisp || [];
         window.CRISP_WEBSITE_ID = "a5d583e4-c94f-4e90-95c0-e5c9d3486fb8";
 
         window.CRISP_RUNTIME_CONFIG = {
@@ -30,11 +30,11 @@ export default function CrispWidget() {
               "chat:opened",
               function () {
                 document.body.classList.add("crisp-open");
-                window.$crisp.push(["do", "chat:hide"]);
+
               }
             ]);
 
-            // Registra una conversión al enviar el primer mensaje de esta pestaña.
+            // Registra una conversiÃ³n al enviar el primer mensaje de esta pestaÃ±a.
             // No cuenta simplemente abrir el chat ni los mensajes del agente.
             window.$crisp.push([
               "on",
@@ -59,7 +59,7 @@ export default function CrispWidget() {
               "chat:closed",
               function () {
                 document.body.classList.remove("crisp-open");
-                window.$crisp.push(["do", "chat:hide"]);
+
               }
             ]);
           };

@@ -1,42 +1,26 @@
-'use client'
-import { Button } from "@/components/buttons/index";
-import { useRouter } from "next/navigation";
-
-const Politicas = () => {
-    const router = useRouter();
-
-    return (
-        <div className="mx-4 text-center sm:max-w-[82ch] sm:text-left sm:mx-auto sm:px-6">
-            <div className="">
-                <h1 className="mt-6  text-heading2">Políticas de Privacidad</h1>
-            </div>
-
-            <h2 className="mt-4 text-left text-bodyBoldMobile">1. Protección de tu información</h2>
-            <p className="text-justify text-body sm:text-left sm:leading-relaxed">
-                En Credizza nos tomamos muy en serio tu privacidad. La información personal que ingreses en el sitio será tratada con absoluta confidencialidad conforme a la Ley 25.326 de Protección de Datos Personales.</p>
-            <h2 className="mt-4 text-left text-bodyBoldMobile">2. Qué datos recolectamos</h2>
-            <p className="text-justify text-body sm:text-left sm:leading-relaxed">
-                Podemos solicitar algunos datos como tu nombre, teléfono o correo electrónico o la información que vos decidas compartir para poder contactarte y brindarte una mejor atención.</p>
-            <h2 className="mt-4 text-left text-bodyBoldMobile">3. Uso de la información</h2>
-            <p className="text-justify text-body sm:text-left sm:leading-relaxed">
-                Utilizamos tus datos únicamente para responder consultas, ofrecer asesoramiento personalizado y, si corresponde, acercar tu solicitud a entidades financieras habilitadas. No compartimos tu información con terceros sin tu consentimiento.</p>
-            <h2 className="mt-4 text-left text-bodyBoldMobile">4. Seguridad</h2>
-            <p className="text-justify text-body sm:text-left sm:leading-relaxed">
-                Aplicamos medidas de seguridad para proteger tus datos, tanto durante la transmisión como una vez recibidos.</p>
-            <h2 className="mt-4 text-left text-bodyBoldMobile">5. Tus derechos</h2>
-            <p className="text-justify text-body sm:text-left sm:leading-relaxed">
-                En cualquier momento podés solicitarnos acceder, corregir o eliminar tus datos personales. Solo tenés que escribirnos por WhatsApp o a través del formulario de contacto.</p>
-            <h2 className="mt-4 text-left text-bodyBoldMobile">6. Cambios en esta política</h2>
-            <p className="text-justify text-body sm:text-left sm:leading-relaxed">
-                Podemos actualizar esta política en el futuro. Te recomendamos revisarla periódicamente para estar al tanto de cualquier cambio.</p>
-            <p className="text-justify text-body sm:text-left sm:leading-relaxed">La fecha de última actualización estará siempre indicada al final de este documento.                </p>
-            <p className="text-xs italic text-justify text-body sm:text-left sm:leading-relaxed"> Última actualización: 28/09/2025 – v1.0</p>
-            <div className="my-8">
-                <Button text="Inicio" className="bg-boton-neutral text-texto-botones lg:hover:bg-boton-neutral/90" ariaLabel="Volver al inicio" onClick={() => router.push('/')}></Button>
-            </div>
-
-        </div>
-    )
+import Link from 'next/link';
+import {DOCUMENT_RETENTION_DAYS,PRIVACY_VERSION} from '@/lib/maria-privacy';
+export default function PrivacyPage(){
+ return <main className="mx-4 py-6 sm:mx-auto sm:max-w-[82ch] sm:px-6">
+  <h1 className="text-heading2">Política de privacidad</h1>
+  <p className="mt-3 text-sm">Actualizada el 21/11/2026 · Versión {PRIVACY_VERSION}</p>
+  <h2 className="mt-6 text-bodyBoldMobile">Quién es responsable</h2>
+  <p className="mt-2">Gabriel Miguelez, responsable de Credizza, con domicilio en Llavallol 4248, Ciudad Autónoma de Buenos Aires, Argentina, gestiona las consultas recibidas por esta web. Podés contactarnos en <a className="underline" href="mailto:info@credizza.com.ar">info@credizza.com.ar</a> o por nuestros canales de contacto.</p>
+  <h2 className="mt-6 text-bodyBoldMobile">Qué datos usamos y para qué</h2>
+  <p className="mt-2">Usamos los datos que nos proporcionás —nombre, DNI, sexo que figura en el documento, CUIL, actividad o beneficio, banco y teléfono— para responder tu consulta, verificar tu identidad y evaluar opciones de crédito. Cuando corresponde, consultamos información crediticia del BCRA y recibimos los documentos necesarios para analizar tu solicitud. Solo pedimos fecha de nacimiento o un contacto alternativo cuando una entidad lo necesita para continuar una gestión aceptada por vos. Antes de darnos el teléfono de otra persona, asegurate de contar con su autorización.</p>
+  <p className="mt-2">María es una asistente virtual y puede equivocarse. Podés solicitar que un operador revise tu caso. La precalificación no garantiza la aprobación ni la liquidación de un préstamo.</p>
+  <h2 className="mt-6 text-bodyBoldMobile">Tu autorización y el contacto por WhatsApp</h2>
+  <p className="mt-2">Antes de iniciar el chat te pedimos autorización para usar tus datos según esta política. Sin los datos necesarios o esa autorización no podemos realizar la precalificación. La autorización de contacto por WhatsApp se presenta por separado: podés continuar por el chat sin aceptarla. Si más adelante pedís expresamente que te contactemos por WhatsApp, registraremos esa elección. No utilizamos esa autorización para publicidad.</p>
+  <p className="mt-2">Podés retirar la autorización de contacto escribiendo «No me contacten por WhatsApp» en el chat o solicitándolo a info@credizza.com.ar. Esto no impide que sigamos respondiendo por el chat. Si una entidad requiere WhatsApp para firmar, un operador te explicará ese requisito antes de continuar.</p>
+  <h2 className="mt-6 text-bodyBoldMobile">Quiénes pueden recibir la información</h2>
+  <p className="mt-2">Acceden los operadores habilitados de Credizza. Cuando la gestión lo requiere, los datos y documentos necesarios pueden presentarse a las entidades que analicen el crédito solicitado. Utilizamos proveedores tecnológicos de alojamiento, almacenamiento, respaldos y asistencia virtual, incluidos Vercel, Supabase y servicios de Google. Parte del procesamiento puede realizarse fuera de Argentina. La autorización no habilita vender tus datos ni usarlos para campañas publicitarias ajenas a tu consulta.</p>
+  <h2 className="mt-6 text-bodyBoldMobile">Documentación y conservación</h2>
+  <p className="mt-2">Los recibos y movimientos de cuenta se usan para analizar y gestionar tu solicitud. Se conservan mientras la consulta esté abierta y hasta {DOCUMENT_RETENTION_DAYS} días después de su cierre. El plazo alcanza a los archivos originales, los PDF preparados y las copias de respaldo que los contengan. Las constancias básicas de gestión y de consentimiento se conservan separadamente durante el tiempo necesario para atender la gestión y tus pedidos sobre los datos; esta conservación no autoriza mantener indefinidamente los documentos adjuntos.</p>
+  <p className="mt-2">Enviá únicamente los archivos solicitados. No envíes claves, PIN, tokens, datos completos de tarjetas, historias clínicas ni información de salud que no sea necesaria para la consulta.</p>
+  <h2 className="mt-6 text-bodyBoldMobile">Seguridad y datos de este navegador</h2>
+  <p className="mt-2">Limitamos el acceso a las conversaciones y documentos mediante controles de sesión y permisos. Los documentos online son privados y los respaldos están cifrados. El chat guarda un borrador en este navegador y utiliza una cookie para vincularlo con tu consulta. Si usás un equipo compartido, evitá dejar una consulta abierta y no compartas archivos de otras personas.</p>
+  <h2 className="mt-6 text-bodyBoldMobile">Acceso, corrección, eliminación y consultas</h2>
+  <p className="mt-2">Podés pedir acceso a tus datos, su actualización, rectificación o supresión y retirar tu consentimiento escribiendo a <a className="underline" href="mailto:info@credizza.com.ar">info@credizza.com.ar</a> con el asunto «Datos personales». Te pediremos solo la información necesaria para verificar que la solicitud sea tuya. Si no estás de acuerdo con el tratamiento, también podés comunicarte con la <a className="underline" href="https://www.argentina.gob.ar/aaip/datospersonales/derechos" target="_blank" rel="noopener noreferrer">Agencia de Acceso a la Información Pública</a>.</p>
+  <p className="mt-6"><Link className="underline" href="/">Volver al inicio</Link></p>
+ </main>;
 }
-
-export default Politicas;

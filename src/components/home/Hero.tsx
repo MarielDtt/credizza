@@ -1,14 +1,12 @@
 "use client";
+import {openCredizzaChat} from '@/lib/open-chat';
 
 import Image from "next/image";
 import { Button } from "../buttons";
 
 
 const handleClick = () => {
-  if (window.$crisp) {
-    window.$crisp.push(["do", "chat:show"]);
-    window.$crisp.push(["do", "chat:open"]);
-  }
+  openCredizzaChat();
 };
 
 export default function Hero() {
@@ -29,18 +27,18 @@ export default function Hero() {
         <div className="pr-12 pl-36">
           <div className="max-w-xl">
             <h1 className="font-bold text-display">
-              Consultá opciones de préstamo
+              ConsultÃ¡ opciones de prÃ©stamo
             </h1>
 
             <ul className="mt-4">
-              <li className="ml-2 text-heading2">• Cuotas fijas en pesos</li>
-              <li className="mt-2 ml-2 text-heading2">• Evaluación personalizada</li>
-              <li className="mt-2 ml-2 text-heading2">• Sujeto a aprobación</li>
+              <li className="ml-2 text-heading2">â€¢ Cuotas fijas en pesos</li>
+              <li className="mt-2 ml-2 text-heading2">â€¢ EvaluaciÃ³n personalizada</li>
+              <li className="mt-2 ml-2 text-heading2">â€¢ Sujeto a aprobaciÃ³n</li>
             </ul>
 
             <Button
               text="Iniciar Consulta"
-              ariaLabel="Abrir chat de atención"
+              ariaLabel="Abrir chat de atenciÃ³n"
               onClick={handleClick}
               className="mt-4 bg-boton-primario text-texto-botones text-button lg:hover:bg-hover-primario"
             />
@@ -63,7 +61,7 @@ export default function Hero() {
           <div className="absolute bottom-[-8px] left-8">
             <Button
               text="Consultar YA"
-              ariaLabel="Abrir chat de atención"
+              ariaLabel="Abrir chat de atenciÃ³n"
               className="bg-boton-primario text-texto-botones text-button"
               onClick={handleClick}
             />
