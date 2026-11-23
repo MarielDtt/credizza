@@ -25,7 +25,7 @@ export default function HomeCarousel() {
     { src: '/Privados.webp', alt: 'Imagen de empleados privados' },
     { src: '/Estatales.webp', alt: 'Imagen de empleados estatales' },
     { src: '/YMas.webp', alt: 'Imagen con texto mas servicios de creditos' },
-    { src: '/Boton.webp', alt: 'Imagen con botÃ³n de contÃ¡ctanos' },
+    { src: '/Boton.webp', alt: 'Imagen con botón de contáctanos' },
   ];
 
   const handleCtaClick = () => {
@@ -86,7 +86,7 @@ export default function HomeCarousel() {
                     style={{ objectFit: 'cover' }}
                   />
 
-                  {/* BotÃ³n superpuesto SOLO en la Ãºltima slide */}
+                  {/* Botón superpuesto SOLO en la última slide */}
                   {isCtaSlide && (
                     <button
                       type="button"
@@ -142,7 +142,7 @@ export default function HomeCarousel() {
               lineHeight: '44px',
             }}
           >
-            â€¹
+            ‹
           </button>
 
           <button
@@ -166,7 +166,7 @@ export default function HomeCarousel() {
               animation: 'pulseArrow 1.8s ease-in-out infinite',
             }}
           >
-            â€º
+            ›
           </button>
 
           <style jsx>{`

@@ -27,18 +27,18 @@ export default function Hero() {
         <div className="pr-12 pl-36">
           <div className="max-w-xl">
             <h1 className="font-bold text-display">
-              ConsultÃ¡ opciones de prÃ©stamo
+              Consultá opciones de préstamo
             </h1>
 
             <ul className="mt-4">
-              <li className="ml-2 text-heading2">â€¢ Cuotas fijas en pesos</li>
-              <li className="mt-2 ml-2 text-heading2">â€¢ EvaluaciÃ³n personalizada</li>
-              <li className="mt-2 ml-2 text-heading2">â€¢ Sujeto a aprobaciÃ³n</li>
+              <li className="ml-2 text-heading2">• Cuotas fijas en pesos</li>
+              <li className="mt-2 ml-2 text-heading2">• Evaluación personalizada</li>
+              <li className="mt-2 ml-2 text-heading2">• Sujeto a aprobación</li>
             </ul>
 
             <Button
               text="Iniciar Consulta"
-              ariaLabel="Abrir chat de atenciÃ³n"
+              ariaLabel="Abrir chat de atención"
               onClick={handleClick}
               className="mt-4 bg-boton-primario text-texto-botones text-button lg:hover:bg-hover-primario"
             />
@@ -61,7 +61,7 @@ export default function Hero() {
           <div className="absolute bottom-[-8px] left-8">
             <Button
               text="Consultar YA"
-              ariaLabel="Abrir chat de atenciÃ³n"
+              ariaLabel="Abrir chat de atención"
               className="bg-boton-primario text-texto-botones text-button"
               onClick={handleClick}
             />

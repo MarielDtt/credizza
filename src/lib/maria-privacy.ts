@@ -1,8 +1,8 @@
 export const PRIVACY_VERSION='2026-11-21.1';
 export const DOCUMENT_RETENTION_DAYS=30;
-export const DATA_USE_TEXT='Autorizo a Credizza a usar mis datos para gestionar esta consulta, realizar la precalificaciÃ³n y, cuando corresponda, presentar mi solicitud a las entidades que analicen el crÃ©dito. LeÃ­ la PolÃ­tica de privacidad.';
+export const DATA_USE_TEXT='Autorizo a Credizza a usar mis datos para gestionar esta consulta, realizar la precalificación y, cuando corresponda, presentar mi solicitud a las entidades que analicen el crédito. Leí la Política de privacidad.';
 export const WHATSAPP_TEXT='Autorizo que me contacten por WhatsApp para continuar esta consulta. No incluye publicidad.';
-export const DOCUMENT_TEXT='Autorizo el uso de estos archivos para evaluar y gestionar mi solicitud. Se conservan mientras la consulta estÃ© abierta y hasta 30 dÃ­as despuÃ©s de su cierre.';
+export const DOCUMENT_TEXT='Autorizo el uso de estos archivos para evaluar y gestionar mi solicitud. Se conservan mientras la consulta esté abierta y hasta 30 días después de su cierre.';
 export function whatsAppWithdrawal(text:string){
  const value=text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
  if(!/(?:whats\s*app|wasap)/.test(value))return false;

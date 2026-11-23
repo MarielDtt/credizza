@@ -23,9 +23,9 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://credizza.com.ar"),
-  title: "Credizza | OrientaciÃ³n para solicitar prÃ©stamos",
+  title: "Credizza | Orientación para solicitar préstamos",
   description:
-    "ConsultÃ¡ opciones de prÃ©stamos y sus condiciones. AtenciÃ³n online y acompaÃ±amiento en la solicitud, sujeto a evaluaciÃ³n de la entidad otorgante.",
+    "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
   icons: { icon: "/favicon.ico" },
   alternates: {
     canonical: "https://credizza.com.ar/",
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
     locale: "es_AR",
     url: "https://credizza.com.ar",
     siteName: "Credizza",
-    title: "Credizza | OrientaciÃ³n para solicitar prÃ©stamos",
+    title: "Credizza | Orientación para solicitar préstamos",
     description:
-      "ConsultÃ¡ opciones de prÃ©stamos y sus condiciones. AtenciÃ³n online y acompaÃ±amiento en la solicitud, sujeto a evaluaciÃ³n de la entidad otorgante.",
+      "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
     images: [
       {
         url: "/Logo-Navbar.webp",
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Credizza | OrientaciÃ³n para solicitar prÃ©stamos",
+    title: "Credizza | Orientación para solicitar préstamos",
     description:
-      "ConsultÃ¡ opciones de prÃ©stamos y sus condiciones. AtenciÃ³n online y acompaÃ±amiento en la solicitud, sujeto a evaluaciÃ³n de la entidad otorgante.",
+      "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
     images: ["/Logo-Navbar.webp"],
   },
 };

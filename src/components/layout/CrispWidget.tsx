@@ -34,7 +34,7 @@ export default function CrispWidget() {
               }
             ]);
 
-            // Registra una conversiÃ³n al enviar el primer mensaje de esta pestaÃ±a.
+            // Registra una conversión al enviar el primer mensaje de esta pestaña.
             // No cuenta simplemente abrir el chat ni los mensajes del agente.
             window.$crisp.push([
               "on",
