@@ -7,8 +7,7 @@ import Footer from "@/components/layout/Footer";
 import { Poppins } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
-import ButtonChat from "@/components/buttons/ButtonChat";
-import CrispWidget from "@/components/layout/CrispWidget";
+import ChatWidget from "@/components/layout/ChatWidget";
 import SafetyNotice from "@/components/layout/SafetyNotice";
 
 
@@ -24,9 +23,9 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://credizza.com.ar"),
-  title: "Credizza | Orientación para solicitar préstamos",
+  title: "Credizza | OrientaciÃ³n para solicitar prÃ©stamos",
   description:
-    "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
+    "ConsultÃ¡ opciones de prÃ©stamos y sus condiciones. AtenciÃ³n online y acompaÃ±amiento en la solicitud, sujeto a evaluaciÃ³n de la entidad otorgante.",
   icons: { icon: "/favicon.ico" },
   alternates: {
     canonical: "https://credizza.com.ar/",
@@ -36,9 +35,9 @@ export const metadata: Metadata = {
     locale: "es_AR",
     url: "https://credizza.com.ar",
     siteName: "Credizza",
-    title: "Credizza | Orientación para solicitar préstamos",
+    title: "Credizza | OrientaciÃ³n para solicitar prÃ©stamos",
     description:
-      "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
+      "ConsultÃ¡ opciones de prÃ©stamos y sus condiciones. AtenciÃ³n online y acompaÃ±amiento en la solicitud, sujeto a evaluaciÃ³n de la entidad otorgante.",
     images: [
       {
         url: "/Logo-Navbar.webp",
@@ -50,9 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Credizza | Orientación para solicitar préstamos",
+    title: "Credizza | OrientaciÃ³n para solicitar prÃ©stamos",
     description:
-      "Consultá opciones de préstamos y sus condiciones. Atención online y acompañamiento en la solicitud, sujeto a evaluación de la entidad otorgante.",
+      "ConsultÃ¡ opciones de prÃ©stamos y sus condiciones. AtenciÃ³n online y acompaÃ±amiento en la solicitud, sujeto a evaluaciÃ³n de la entidad otorgante.",
     images: ["/Logo-Navbar.webp"],
   },
 };
@@ -84,9 +83,7 @@ export default function RootLayout({
             gtag('js', new Date());
             gtag('config', 'AW-18498890752');`}
         </Script>
-
-        <CrispWidget />
-        <ButtonChat />
+        <ChatWidget />
         <SafetyNotice />
       </body>
     </html>

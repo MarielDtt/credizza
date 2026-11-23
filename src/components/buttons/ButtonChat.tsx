@@ -1,4 +1,5 @@
 'use client';
+import {openCredizzaChat} from '@/lib/open-chat';
 
 declare global {
   interface Window {
@@ -8,10 +9,7 @@ declare global {
 
 export default function ButtonChat() {
   const handleOpenChat = () => {
-    if (!window.$crisp) return;
-
-    window.$crisp.push(["do", "chat:show"]);
-    window.$crisp.push(["do", "chat:open"]);
+    openCredizzaChat();
   };
 
   return (
