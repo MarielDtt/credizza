@@ -5,6 +5,9 @@ export function guardChannelChoice(text:string):'continue'|'callback'|''{
  const callbacks=[...value.matchAll(/\b(?:whats\s*app|llamen|contactame|contactenme|contacte[ns]?|manana|lunes)\b/g)];
  const lastContinue=continues.at(-1)?.index??-1,lastCallback=callbacks.at(-1)?.index??-1;
  if(lastContinue>=0||lastCallback>=0)return lastContinue>lastCallback?'continue':'callback';
+ // Pedir consultar cupo expresa intención de continuar; no es una nueva elección de canal.
+ const availability=/\b(?:ver|consultar|revisar|conocer|saber|evaluar)\s+(?:(?:mi|la|el|si tengo|cuanto tengo)\s+)?(?:disponibilidad|cupo|disponible|ofertas?)\b/.test(value);
+ if(availability&&!/\bno\s+(?:(?:quiero|deseo|puedo|vamos a)\s+)?(?:ver|consultar|revisar|conocer|saber|evaluar)\b/.test(value))return 'continue';
  return /^(?:si+|claro|correcto|asi es|exacto)(?:$|[\s,.!])/.test(value.trim())?'continue':'';
 }
 export function isTrustQuestion(text:string){

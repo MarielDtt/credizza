@@ -69,7 +69,10 @@ export function classifyKnownActivity(text:string):{activity:string;bank:string}
  if(/\b(?:pension (?:de |para )?madres|madres de (?:siete|7) hijos)\b|\b(?:beneficio|graciable|pnc)\s*\(?47\b/.test(value)||/^(?:cobro )?madres$/.test(value))return {activity:'Pensión de Madres (47)',bank};
  if(/\b(?:pnc|pension no contributiva)\b|\b(?:beneficio|graciable)\s*\(?40\b/.test(value))return {activity:'Pensión Graciable (40)',bank};
  if(/\bips\b/.test(value)&&/\b(?:buenos aires|bs as|bsas)\b/.test(value)&&(!/\b(?:trabajo|emplead[oa])\b/.test(value)||/\bjubilad[oa]\b/.test(value)))return {activity:'Jubilado IPS Buenos Aires',bank:'Provincia Bs.As'};
- if(/\bdocente\b/.test(value)&&/\b(?:provincia de buenos aires|provincia de bs as|provincia de bsas)\b/.test(value))return {activity:'Docente de Provincia de Buenos Aires',bank:'Provincia Bs.As'};
+ const teacher=/\bdocentes?\b/.test(value)&&!/\bno (?:soy|trabajo (?:de|como)) (?:docentes?)\b/.test(value);
+ const otherProvince=/\b(?:cordoba|misiones|rio negro|neuquen|santa fe|chaco|chubut|formosa|corrientes|entre rios|jujuy|la pampa|la rioja|mendoza|salta|san juan|san luis|santa cruz|santiago del estero|tierra del fuego|tucuman|catamarca)\b/.test(value);
+ const provinceBank=/\b(?:banco|bco\.?)\s+provinc(?:i|vi)a\b/.test(value)&&!/\bno (?:cobro|me pagan|me depositan)\b/.test(value);
+ if(teacher&&(/\b(?:provincia de buenos aires|provincia de bs as|provincia de bsas)\b/.test(value)||bank==='Provincia Bs.As'||provinceBank&&!otherProvince))return {activity:'Docente de Provincia de Buenos Aires',bank:'Provincia Bs.As'};
  const special=/\b(?:provincia|provincial|ips|caja|policia|docente|municipal|fuerzas|retirad|militar)\b/.test(value);
  if(/\bjubilad[oa]\b/.test(value)&&!special)return {activity:'Jubilado ANSES',bank};
  if(/\bpensionad[oa]\b|\b(?:tengo|cobro|recibo) (?:una |la )?pension\b/.test(value)&&!special)return {activity:'Pensionado ANSES',bank};
