@@ -1,4 +1,5 @@
 "use client";
+import {normalizeClientName,auhWithoutCreditHistory} from "@/lib/maria-client-format";
 import {onlyMonotributista,MONOTRIBUTO_NO_LINE,pncNegative} from '@/lib/maria-automatic-decisions';
 import {serviceWindow,documentationFollowUp,operatorReferral as buildOperatorReferral} from '@/lib/maria-hours';
 // @refresh reset
@@ -112,7 +113,7 @@ export default function MariaChat() {
     : "";
   const bank = normalize(answers[4] || fixedBank);
   const confirmedBcra = answers[3] === "si" && Boolean(bcra?.name);
-  const negativeReason=noLineReason||(!offers.length?pncNegative(answers[0]??"",answers[4]||fixedBank||suggestedBank,confirmedBcra?bcra:null):"");
+  const negativeReason=noLineReason||(auhWithoutCreditHistory(answers[0]??"",bcra)?"Por el momento no contamos con un producto disponible para tu beneficio. Gracias por consultar en Credizza.":"")||(!offers.length?pncNegative(answers[0]??"",answers[4]||fixedBank||suggestedBank,confirmedBcra?bcra:null):"");
   const waitingForOperator=needsOperator&&!negativeReason;
   const ended=offTopicCount>=3||noIncome||Boolean(negativeReason);
   const benefitWithDocuments = /^(?:puam \(46\)|pension graciable \(40\)|pension de madres \(47\))$/.test(activity);
@@ -135,7 +136,7 @@ export default function MariaChat() {
     record.current = entry;
 
     const fields = [
-      (!bcra?.simulated && bcra?.name) || visitorName, answers[2] ?? "", answers[1] || earlyDocument, bcra?.cuil ?? "",
+      normalizeClientName((!bcra?.simulated && bcra?.name) || visitorName), answers[2] ?? "", answers[1] || earlyDocument, bcra?.cuil ?? "",
       answers[0] ?? "", answers[3] === "si" && bcra?.entities.length ? String(Math.max(...bcra.entities.map((entity) => entity.situation))) : "", answers[4] || fixedBank || suggestedBank, answers[5] || earlyPhone,
       status,
       !contactConsent ? "Solo chat: no autorizó WhatsApp" : complete && callback ? "Pidió contacto por WhatsApp " + guard.next : cbuConsent === "yes" ? "Autorizó contacto por WhatsApp si precalifica por CBU" : cbuConsent === "no" ? "No autorizó contacto por WhatsApp" : acceptedOffer ? ["Oferta aceptada: " + acceptedOffer, signing?.birth && "Nacimiento: " + signing.birth, signing?.alternate && "Tel. alternativo: " + signing.alternate].filter(Boolean).join(" · ").slice(0, 150) : waitingForOffer ? (TEST_CHAT?"Prueba local · oferta por consultar":"Oferta por consultar") : waitingForDocuments ? (TEST_CHAT?"Prueba local · documentación solicitada":"Documentación solicitada")
@@ -674,8 +675,9 @@ export default function MariaChat() {
         if (!response.ok) throw new Error("Consulta no disponible");
         const data = await response.json();
         if(data.simulated!==false)throw new Error("Se requiere una consulta BCRA real");
-        setBcra(data);
+        setBcra({...data,name:normalizeClientName(data.name??"")});
         if (!data.name) nextAnswers.push("no");
+        if(auhWithoutCreditHistory(answers[0]??"",data)){setNoLineReason("Por el momento no contamos con un producto disponible para tu beneficio. Gracias por consultar en Credizza.");setNeedsOperator(false);setAnswers(nextAnswers);return;}
       } catch {
         bcraFailed = true;
         setBcraUnavailable(true);
@@ -697,7 +699,7 @@ export default function MariaChat() {
 
   let result = operatorReferral();
   if (waitingForDocuments) {
-    result = "Para evaluar tu cupo y saber si tenés disponible un nuevo crédito, enviá:\n\n• Último recibo de haberes.\n• Movimientos de cuenta donde se vea la última acreditación de haberes.";
+    result = "Para evaluar tu cupo y saber si tenés disponible un nuevo crédito, enviá:\n\n• Último recibo de haberes.\n• Movimientos de cuenta donde se vea la última acreditación de haberes." + (supportPhone ? `\n\nTambién podés enviar la documentación por WhatsApp al ${supportPhone}. Indicá tu DNI para identificar tu consulta.` : "");
   } else if (waitingForOffer) {
     result = guard.supervised ? "Aguardá un momento. Vamos a revisar si hay una oferta para vos." : operatorReferral();
   } else if (confirmedBcra) {
@@ -763,7 +765,7 @@ export default function MariaChat() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id: entry.id, status, messages, consent:consentPayload,
-        name: (!bcra?.simulated && bcra?.name) || visitorName,
+        name: normalizeClientName((!bcra?.simulated && bcra?.name) || visitorName),
         details: {
           activity: answers[0] ?? "",
           dni: answers[1] || earlyDocument,
@@ -926,7 +928,8 @@ export default function MariaChat() {
           </header>
           {TEST_CHAT&&<p className="bg-background-seccion px-4 py-2 text-xs text-texto-principal">Prueba local · Usá datos ficticios</p>}
           {!started ? (
-            <form onSubmit={startConversation} className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-background-secondary p-5">
+            <form onSubmit={startConversation} className="flex min-h-0 flex-1 flex-col bg-background-secondary">
+              <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4">
               <h3 className="text-lg font-semibold">Iniciá tu consulta</h3>
               <p className="text-sm leading-relaxed">Dejanos tu número de celular para acompañarte durante la gestión de tu préstamo.</p>
               <label className="text-sm font-medium">
@@ -941,7 +944,8 @@ export default function MariaChat() {
               <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={privacyConsent} onChange={event=>setPrivacyConsent(event.target.checked)} className="mt-1" required/><span>{DATA_USE_TEXT}</span></label>
               <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={contactConsent} onChange={event=>setContactConsent(event.target.checked)} className="mt-1"/><span>{WHATSAPP_TEXT} <small>(Opcional; podés seguir por este chat).</small></span></label>
               {contactError && <p role="alert" className="text-sm text-red-700">{contactError}</p>}
-              <button type="submit" className="rounded-lg bg-boton-primario px-4 py-3 font-semibold text-boton-neutral">Iniciar chat</button>
+              </div>
+              <div className="shrink-0 border-t border-background-seccion bg-background-secondary px-4 py-3"><button type="submit" className="w-full rounded-lg bg-boton-primario px-4 py-3 font-semibold text-boton-neutral">Iniciar chat</button></div>
             </form>
           ) : (<>
           <div ref={conversation} role="log" aria-label="Conversación" className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto [&>p]:shrink-0 bg-background-secondary p-4 text-sm leading-relaxed">

@@ -27,7 +27,7 @@ export function serviceWindow(date=new Date()){
 export function operatorReferral(date=new Date(),whatsapp=true){
  const window=serviceWindow(date);
  const channel=whatsapp?'Te contactaremos por WhatsApp o podés volver a este chat para ver la respuesta.':'Podés volver a este chat para ver la respuesta.';
- return window.supervised?'Dejé tu consulta pendiente para que la revise un operador. '+channel:
+ return window.supervised?'Aguardá un momento, por favor. A la brevedad te vamos a responder por este chat.':
   `Dejé tu consulta pendiente para revisión. Un operador la revisará ${window.next}, durante el horario de atención que comienza a las ${window.nextStart} hs. ${channel}`;
 
 }
