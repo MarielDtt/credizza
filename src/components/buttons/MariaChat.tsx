@@ -8,7 +8,7 @@ import {PRIVACY_VERSION,DATA_USE_TEXT,WHATSAPP_TEXT,DOCUMENT_TEXT,whatsAppWithdr
 
 import Image from "next/image";
 import {MARIA_INTERACTION_GUIDE_VERSION} from '@/lib/maria-interaction-guide';
-import {readIntroduction,bankKey,identifyBank,readMentionedBank,mentionedBanks,readConfirmation,offerDecision,afterDocumentsIntent} from '@/lib/maria-language';
+import {classifyKnownActivity,readIntroduction,bankKey,identifyBank,readMentionedBank,mentionedBanks,readConfirmation,offerDecision,afterDocumentsIntent} from '@/lib/maria-language';
 import {readContact,documentWasMoney} from "@/lib/maria-contact";
 import {guardChannelChoice,isTrustQuestion,TRUST_REPLY,isHealthDetailOnly,HEALTH_DETAIL_REPLY,hasCreditContext,explicitlyRequestsCallback} from "@/lib/maria-conversation";
 import AttachFileOutlined from "@mui/icons-material/AttachFileOutlined";
@@ -113,7 +113,7 @@ export default function MariaChat() {
     : "";
   const bank = normalize(answers[4] || fixedBank);
   const confirmedBcra = answers[3] === "si" && Boolean(bcra?.name);
-  const negativeReason=noLineReason||(auhWithoutCreditHistory(answers[0]??"",bcra)?"Por el momento no contamos con un producto disponible para tu beneficio. Gracias por consultar en Credizza.":"")||(!offers.length?pncNegative(answers[0]??"",answers[4]||fixedBank||suggestedBank,confirmedBcra?bcra:null):"");
+  const negativeReason=noLineReason||(activity==="auh"&&normalize(answers[4]||suggestedBank).replace(/\s/g,"")==="mercadopago"?"Por el momento no contamos con una línea de crédito para AUH con cobro por Mercado Pago. Gracias por consultar en Credizza.":"")||(auhWithoutCreditHistory(answers[0]??"",bcra)?"Por el momento no contamos con un producto disponible para tu beneficio. Gracias por consultar en Credizza.":"")||(!offers.length?pncNegative(answers[0]??"",answers[4]||fixedBank||suggestedBank,confirmedBcra?bcra:null):"");
   const waitingForOperator=needsOperator&&!negativeReason;
   const ended=offTopicCount>=3||noIncome||Boolean(negativeReason);
   const benefitWithDocuments = /^(?:puam \(46\)|pension graciable \(40\)|pension de madres \(47\))$/.test(activity);
@@ -277,7 +277,7 @@ export default function MariaChat() {
       if(followup==='unknown'){askForHelp(value);return;}
       recordReply(value);setInput("");setFeedback(followup==='thanks'?"De nada. Te avisaremos cuando tengamos novedades por el canal que autorizaste.":documentationFollowUp(answers[5]||earlyPhone||contactPhone,new Date(),contactConsent));return;
     }
-    if (isHealthDetailOnly(value)) {
+    if (isHealthDetailOnly(value) && !/\bgraciable\b/.test(normalize(activityClarification))) {
       recordReply(value);
       setInput("");
       const nextQuestion = !guard.regular && !guardChoice
@@ -520,14 +520,18 @@ export default function MariaChat() {
         setFeedback("");
       });
       try {
-        await record.current?.pending;
-        const response = await fetch("/api/maria-classify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id:record.current?.id, text: activityClarification ? activityClarification + ". Mi caja o beneficio es " + contact.activityText : contact.activityText }),
-        });
-        if (!response.ok) throw new Error("No se pudo clasificar");
-        const result = await response.json();
+        const activityText = activityClarification ? activityClarification + ". " + contact.activityText : contact.activityText;
+        let result = classifyKnownActivity(activityText);
+        if(!result){
+          await record.current?.pending;
+          const response = await fetch("/api/maria-classify", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id:record.current?.id, text: activityText.slice(0,300) }),
+          });
+          if (!response.ok) throw new Error("No se pudo clasificar");
+          result = await response.json();
+        }
+        if(!result)throw new Error("Clasificación vacía");
         if (result.activity === "SIN_EMPLEO") {
           setBenefitPending(true);
           setFeedback("Todas las líneas con las que trabajamos requieren un ingreso demostrable. Si cobra una jubilación o pensión, podemos analizar su caso aunque esté sin trabajo. ¿Cobra alguno de esos beneficios?");
@@ -557,12 +561,12 @@ export default function MariaChat() {
         }
         const bank = identifyBank(result.bank) || capturedBank;
         if (bank) setSuggestedBank(bank);
-        if (result.activity === "ACLARAR" && !activityClarification) {
-
-          setActivityClarification(contact.activityText);
-          setInput("");
-          return;
+        if (result.activity === "ACLARAR") {
+          setActivityClarification(activityText.slice(0,240));
+          setFeedback(result.question || "¿Cobrás por ANSES o por una caja provincial? Si es una caja, contame cuál.");
+          setInput("");return;
         }
+        setActivityClarification("");
         setBenefitPending(false);
         value = result.activity === "ACLARAR" ? "OTROS" : result.activity;
         if(value==="OTROS"&&onlyMonotributista(contact.activityText)){setNoLineReason(MONOTRIBUTO_NO_LINE);setNeedsOperator(false);setAnswers(["OTROS"]);setInput("");setFeedback("");return;}
@@ -703,13 +707,7 @@ export default function MariaChat() {
   } else if (waitingForOffer) {
     result = guard.supervised ? "Aguardá un momento. Vamos a revisar si hay una oferta para vos." : operatorReferral();
   } else if (confirmedBcra) {
-    if (/jubilad[oa].*cordoba/.test(activity) && /^(bancor|banco cordoba)$/.test(bank)) {
-      result = "Líneas posibles: MAITE y B MITRE.";
-    } else if (/jubilad[oa].*anses/.test(activity)) {
-      result = "Líneas posibles: Coop La Plata ANSES, Red Mutual ANSES y Mutual Garrahan.";
-    } else if (/pensionad[oa].*anses/.test(activity)) {
-      result = "Línea posible: Mutual Garrahan.";
-    }
+    result = operatorReferral();
   }
 
   const basePrompt = negativeReason ? negativeReason : documentsReady ? "" : !guard.regular && !guardChoice

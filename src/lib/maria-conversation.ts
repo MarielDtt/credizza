@@ -25,7 +25,7 @@ export function isHealthDetailOnly(text:string){
 }
 export const HEALTH_DETAIL_REPLY='Gracias por aclararlo. Para esta consulta no necesitás detallar tu situación de salud. Vamos a revisar las opciones según el beneficio que cobrás y los requisitos de cada línea.';
 export function hasCreditContext(text:string){
- return /\b(?:creditos?|prestamos?|precalificar|precalificacion|calificar|puam|pnc|pensio?n(?:ad[oa])?|jubilad[oa]|jubilacion|auh|asignacion|anses|ips|docente|policia|monotributista)\b/.test(normalized(text))||/\d(?:[.\s-]?\d){6,}/.test(text);
+ return /\b(?:creditos?|prestamos?|precalificar|precalificacion|calificar|puam|pnc|pensio?n(?:ad[oa])?|jubilad[oa]|jubilacion|auh|asignacion|anses|ips|docente|auxiliar|escuela|policia|monotributista)\b/.test(normalized(text))||/\d(?:[.\s-]?\d){6,}/.test(text);
 }
 export function explicitlyRequestsCallback(text:string){
  const value=normalized(text);

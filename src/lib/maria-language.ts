@@ -1,6 +1,6 @@
 const normalize=(text:string)=>text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const bankNames = [
-  "Galicia", "BNA", "Provincia Bs.As", "ICBC", "Citibank", "BBVA", "Bancor",
+  "Mercado Pago", "Galicia", "BNA", "Provincia Bs.As", "ICBC", "Citibank", "BBVA", "Bancor",
   "Supervielle", "Ciudad", "Patagonia", "Hipotecario", "San Juan", "Municipal de Rosario",
   "Santander", "Chubut", "Santa Cruz", "Banco de la Pampa", "Corrientes", "Neuquén",
   "Bank of China", "Credicoop", "Tierra del Fuego", "Macro", "Comafi", "Piano",
@@ -13,6 +13,7 @@ const knownBanks = new Map(bankNames.flatMap((bank) => {
   const key = bankKey(bank);
   return [[key, bank], [`banco ${key}`, bank]] as const;
 }));
+knownBanks.set("mercadopago", "Mercado Pago");
 knownBanks.set("banco cordoba", "Bancor");
 knownBanks.set("banco de cordoba", "Bancor");
 knownBanks.set("nacion", "BNA");
@@ -33,7 +34,7 @@ const escapeRE=(s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 export function mentionedBanks(text:string){
  const value=bankKey(text),found=new Set<string>();
  const direct=identifyBank(text);if(direct&&!['buenos aires','bs as','bsas'].includes(value))found.add(direct);
- const unambiguous=new Set(['nacion','bna','bapro','bancor','galicia','bbva','icbc','santander','piano','macro','credicoop','supervielle','comafi','columbia','patagonia']);
+ const unambiguous=new Set(['mercado pago','mercadopago','nacion','bna','bapro','bancor','galicia','bbva','icbc','santander','piano','macro','credicoop','supervielle','comafi','columbia','patagonia']);
  for(const [alias,bank] of [...knownBanks].sort(([a],[b])=>b.length-a.length)){
   const token=escapeRE(alias);
   const matches=[...value.matchAll(new RegExp(`(^|[^a-z0-9])(${token})(?=$|[^a-z0-9])`,'g'))];
@@ -62,9 +63,29 @@ export function offerDecision(text:string){
  const clearAcceptance=!hasDoubt&&(readConfirmation(text)==='si'||/\b(?:lo quiero|la quiero|quiero avanzar|quiero esa opcion|quiero contratar|me quedo con|acepto|avancemos|dale|hagamoslo|sigamos)\b/.test(reply));
  return {hasDoubt,clearAcceptance,clearDecline};
 }
-export function classifyKnownActivity(text:string):{activity:string;bank:string}|null{
+export function classifyKnownActivity(text:string):{activity:string;bank:string;question?:string}|null{
  const value=normalize(text).trim(),bank=readMentionedBank(text);
  if(/\bmi (?:mama|papa|madre|padre|esposo|esposa|hijo|hija)\b/.test(value)||/\bno (?:soy|cobro|recibo|tengo)\s+(?:(?:una?|la|el)\s+)?(?:jubil|pension|pnc|puam|auh|asignacion)/.test(value))return null;
+ const graciable=/\b(?:pension\s+graciable|graciable)\b/.test(value);
+ if(graciable&&!/\b(?:40|46|47)\b/.test(value)){
+  if(/\b(?:madres?|siete hijos|7 hijos)\b/.test(value))return {activity:'Pensión de Madres (47)',bank};
+  if(/\b(?:adult[oa] mayor|vejez|puam)\b/.test(value))return {activity:'PUAM (46)',bank};
+  if(/\b(?:discapacidad|invalidez)\b/.test(value))return {activity:'Pensión Graciable (40)',bank};
+  return {activity:'ACLARAR',bank,question:'¿Tenés una pensión de madre, por discapacidad o de adulto mayor?'};
+ }
+ const school=/\b(?:auxiliar(?:es)? (?:de (?:escuela|colegio)|escolar|educativ[oa])|docentes?)\b/.test(value);
+ if(school&&!/\bno (?:soy|trabajo (?:de|como)) (?:auxiliar|docente)\b/.test(value)){
+  const caba=/\b(?:caba|capital federal|ciudad (?:autonoma )?de buenos aires)\b/.test(value);
+  const province=!caba&&(/\b(?:provincia (?:de )?(?:buenos aires|bs as)|provincia bsas|provincia de bsas)\b/.test(value)||/\bprovincia\b/.test(value)&&!/\b(?:cordoba|santa fe|misiones|rio negro|chaco|corrientes|mendoza|tucuman|salta|jujuy|chubut|neuquen|entre rios|formosa|san juan|san luis|santa cruz|la pampa|la rioja|catamarca|tierra del fuego|santiago del estero)\b/.test(value));
+  const privateSector=/\bprivad[oa]\b/.test(value)&&!/\bno (?:es |soy |trabajo en (?:el )?)?privad[oa]\b/.test(value);
+  const publicSector=/\b(?:estatal|public[oa])\b/.test(value)&&!/\bno (?:es |soy |trabajo en (?:el )?)?(?:estatal|public[oa])\b/.test(value);
+  if(privateSector)return {activity:'Privado',bank};
+  if(caba&&publicSector)return {activity:'Docente CABA',bank};
+  if(province&&publicSector)return {activity:'Docente de Provincia de Buenos Aires',bank:bank||'Provincia Bs.As'};
+  // La mención explícita de docente con Banco Provincia ya estaba confirmada.
+  if(/\bdocentes?\b/.test(value)&&!caba&&(bank==='Provincia Bs.As'||/\bbanco provincia\b/.test(value)))return {activity:'Docente de Provincia de Buenos Aires',bank:'Provincia Bs.As'};
+  return {activity:'ACLARAR',bank,question:caba||province?'¿La escuela es estatal o privada?':publicSector?'¿Trabajás en CABA o en la provincia de Buenos Aires?':'¿Trabajás en CABA o en la provincia de Buenos Aires? ¿La escuela es estatal o privada?'};
+ }
  if(/\b(?:puam|pension universal para el adulto mayor)\b|\b(?:beneficio|graciable|pnc)\s*\(?46\b/.test(value))return {activity:'PUAM (46)',bank};
  if(/\b(?:pension (?:de |para )?madres|madres de (?:siete|7) hijos)\b|\b(?:beneficio|graciable|pnc)\s*\(?47\b/.test(value)||/^(?:cobro )?madres$/.test(value))return {activity:'Pensión de Madres (47)',bank};
  if(/\b(?:pnc|pension no contributiva)\b|\b(?:beneficio|graciable)\s*\(?40\b/.test(value))return {activity:'Pensión Graciable (40)',bank};
