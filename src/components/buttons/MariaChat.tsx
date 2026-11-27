@@ -875,8 +875,8 @@ export default function MariaChat() {
     // Una conversión por pestaña, sin contar aperturas ni pruebas locales.
     if (!TEST_CHAT) {
       try {
-        if (window.sessionStorage.getItem("credizza_ads_maria_started") !== "1" && typeof window.gtag === "function") {
-          window.gtag("event", "conversion", {
+        if (window.sessionStorage.getItem("credizza_ads_maria_started") !== "1" && typeof (window as Window & { gtag?: (...args: unknown[]) => void }).gtag === "function") {
+          (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.("event", "conversion", {
             send_to: "AW-18498890752/dwcuCIDUzZodEIDY-vRE",
           });
           window.sessionStorage.setItem("credizza_ads_maria_started", "1");
