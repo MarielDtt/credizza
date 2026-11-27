@@ -1,4 +1,6 @@
 "use client";
+import {summarizeMariaBcra,payerInArrears} from "@/lib/maria-bcra-summary";
+import {isThirdPartySignature,HOLDER_SIGNATURE_REPLY} from "@/lib/maria-conversation";
 import {normalizeClientName,auhWithoutCreditHistory} from "@/lib/maria-client-format";
 import {onlyMonotributista,MONOTRIBUTO_NO_LINE,pncNegative} from '@/lib/maria-automatic-decisions';
 import {serviceWindow,documentationFollowUp,operatorReferral as buildOperatorReferral} from '@/lib/maria-hours';
@@ -77,7 +79,7 @@ export default function MariaChat() {
   const [busy, setBusy] = useState(false);
   const [needsOperator, setNeedsOperator] = useState(false);
   const [guard, setGuard] = useState(() => serviceWindow());
-  useEffect(()=>{if(!open)return;const timer=setInterval(()=>setGuard(serviceWindow()),30000);return()=>clearInterval(timer);},[open]);
+  useEffect(()=>{if(!open)return;const controller=new AbortController();const refresh=()=>fetch('/api/maria-clock',{cache:'no-store',signal:controller.signal}).then(r=>r.ok?r.json():null).then(data=>{if(data&&typeof data.regular==='boolean'&&typeof data.supervised==='boolean'&&typeof data.hour==='number')setGuard(data);}).catch(()=>{});void refresh();const timer=setInterval(refresh,30000);return()=>{controller.abort();clearInterval(timer);};},[open]);
   const [guardChoice, setGuardChoice] = useState<"" | "continue" | "callback">("");
   const [bcraUnavailable, setBcraUnavailable] = useState(false);
   const [bcraRetry, setBcraRetry] = useState<"" | "checking" | "unavailable" | "returned">("");
@@ -85,6 +87,7 @@ export default function MariaChat() {
   const [cbuConsent, setCbuConsent] = useState<"" | "yes" | "no">("");
 
   const [gestionMessages, setGestionMessages] = useState<string[]>([]);
+  const [gestionMessageHash,setGestionMessageHash]=useState("");
   const [acceptedOffer, setAcceptedOffer] = useState("");
   const [supportPhone, setSupportPhone] = useState("");
   const supportNotice = `Ante cualquier consulta, podés escribirnos por este chat${supportPhone ? ` o por WhatsApp al ${supportPhone}` : ""}.`;
@@ -113,7 +116,7 @@ export default function MariaChat() {
     : "";
   const bank = normalize(answers[4] || fixedBank);
   const confirmedBcra = answers[3] === "si" && Boolean(bcra?.name);
-  const negativeReason=noLineReason||(activity==="auh"&&normalize(answers[4]||suggestedBank).replace(/\s/g,"")==="mercadopago"?"Por el momento no contamos con una línea de crédito para AUH con cobro por Mercado Pago. Gracias por consultar en Credizza.":"")||(auhWithoutCreditHistory(answers[0]??"",bcra)?"Por el momento no contamos con un producto disponible para tu beneficio. Gracias por consultar en Credizza.":"")||(!offers.length?pncNegative(answers[0]??"",answers[4]||fixedBank||suggestedBank,confirmedBcra?bcra:null):"");
+  const negativeReason=noLineReason||(confirmedBcra&&bcra&&payerInArrears(answers[4]||fixedBank||suggestedBank,bcra.entities)?"Por el momento no contamos con una línea disponible porque se registra mora con el banco donde cobrás. Gracias por consultar en Credizza.":"")||(activity==="auh"&&normalize(answers[4]||suggestedBank).replace(/\s/g,"")==="mercadopago"?"Por el momento no contamos con una línea de crédito para AUH con cobro por Mercado Pago. Gracias por consultar en Credizza.":"")||(auhWithoutCreditHistory(answers[0]??"",bcra)?"Por el momento no contamos con un producto disponible para tu beneficio. Gracias por consultar en Credizza.":"")||(!offers.length?pncNegative(answers[0]??"",answers[4]||fixedBank||suggestedBank,confirmedBcra?bcra:null):"");
   const waitingForOperator=needsOperator&&!negativeReason;
   const ended=offTopicCount>=3||noIncome||Boolean(negativeReason);
   const benefitWithDocuments = /^(?:puam \(46\)|pension graciable \(40\)|pension de madres \(47\))$/.test(activity);
@@ -131,13 +134,13 @@ export default function MariaChat() {
     : ended || complete ? "Para revisión" : "Incompleta";
 
   useEffect(() => {
-    if (!history.length || !privacyConsent) return;
+    if (!history.length || !privacyConsent || operatorChat) return;
     const entry = record.current ?? { id: crypto.randomUUID(), pending: Promise.resolve() };
     record.current = entry;
 
     const fields = [
       normalizeClientName((!bcra?.simulated && bcra?.name) || visitorName), answers[2] ?? "", answers[1] || earlyDocument, bcra?.cuil ?? "",
-      answers[0] ?? "", answers[3] === "si" && bcra?.entities.length ? String(Math.max(...bcra.entities.map((entity) => entity.situation))) : "", answers[4] || fixedBank || suggestedBank, answers[5] || earlyPhone,
+      answers[0] ?? "", answers[3] === "si" && bcra?.entities.length ? (summarizeMariaBcra(bcra.entities)?.label??"") : "", answers[4] || fixedBank || suggestedBank, answers[5] || earlyPhone,
       status,
       !contactConsent ? "Solo chat: no autorizó WhatsApp" : complete && callback ? "Pidió contacto por WhatsApp " + guard.next : cbuConsent === "yes" ? "Autorizó contacto por WhatsApp si precalifica por CBU" : cbuConsent === "no" ? "No autorizó contacto por WhatsApp" : acceptedOffer ? ["Oferta aceptada: " + acceptedOffer, signing?.birth && "Nacimiento: " + signing.birth, signing?.alternate && "Tel. alternativo: " + signing.alternate].filter(Boolean).join(" · ").slice(0, 150) : waitingForOffer ? (TEST_CHAT?"Prueba local · oferta por consultar":"Oferta por consultar") : waitingForDocuments ? (TEST_CHAT?"Prueba local · documentación solicitada":"Documentación solicitada")
         : answers[3] === "no" && !bcra?.name
@@ -149,7 +152,7 @@ export default function MariaChat() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: entry.id, fields, consent:consentPayload }),
     })).catch(() => undefined);
-  }, [history.length, answers, visitorName, earlyDocument, earlyPhone, suggestedBank, status, waitingForOffer, waitingForDocuments, bcra, acceptedOffer, signing, callback, complete, guard.next, cbuConsent, privacyConsent, contactConsent, consentEvent]);
+  }, [history.length, answers, visitorName, earlyDocument, earlyPhone, suggestedBank, status, waitingForOffer, waitingForDocuments, bcra, acceptedOffer, signing, callback, complete, guard.next, cbuConsent, privacyConsent, contactConsent, consentEvent, operatorChat]);
 
   useLayoutEffect(() => {
     const log = conversation.current;
@@ -169,7 +172,9 @@ export default function MariaChat() {
         const data = await response.json();
         if(!data.privacyConsent||data.privacyConsent.version!==PRIVACY_VERSION){setHistory(data.messages);setPrivacyConsent(false);setStarted(false);return;}
         if(data.privacyConsent.events?.some((e:{id:string})=>e.id===consentEvent)&&data.privacyConsent.whatsapp!==contactConsent)setContactConsent(data.privacyConsent.whatsapp);
-        setGestionMessages(data.gestionMessages ?? []);
+        setGestionMessages(data.taken?[]:data.gestionMessages ?? []);
+        setGestionMessageHash(data.taken?"":data.gestionMessageHash??"");
+        if(data.serverWindow)setGuard(data.serverWindow);
         if(data.documentsReady)setDocumentsReady(true);
         setGestionStatus(data.gestionStatus ?? "");
         setSupportPhone(data.supportPhone ?? "");
@@ -181,6 +186,16 @@ export default function MariaChat() {
           setHistory(data.messages);
           setOperatorChat(null);
           setNeedsOperator(false);
+          const resumed=data.resumeDetails??{};
+          if(resumed.bank)setSuggestedBank(resumed.bank);
+          if(resumed.dni)setEarlyDocument(resumed.dni);
+          if(resumed.phone)setEarlyPhone(resumed.phone);
+          const knownResume=classifyKnownActivity(resumed.activity??"");
+          if(knownResume&&!['ACLARAR','OTROS','SIN_DATO'].includes(knownResume.activity)){
+            const restored=[knownResume.activity];
+            if(/^\d{8}$/.test(resumed.dni??"")){restored.push(resumed.dni);if(/^[FM]$/.test(resumed.sex??""))restored.push(resumed.sex);}
+            setAnswers(restored);setBcra(null);setBcraUnavailable(false);setBcraRetry("");
+          }
           const lastOperator = [...data.messages].reverse().find((message: { from: string; text: string }) => message.from === "operator");
           const operatorQuestion = normalize(lastOperator?.text ?? "");
           const lastOperatorIndex = data.messages.map((message: { from: string }) => message.from).lastIndexOf("operator");
@@ -388,6 +403,7 @@ export default function MariaChat() {
       setInput("");
       return;
     }
+    if ((canReplyToOffer || signing) && isThirdPartySignature(value)) {recordReply(value);setInput("");setFeedback(HOLDER_SIGNATURE_REPLY);return;}
     if (canReplyToOffer) {
       let salesSelection = "";
       const {clearAcceptance,clearDecline} = offerDecision(value);
@@ -544,11 +560,7 @@ export default function MariaChat() {
           return;
         }
         if (result.activity === "SIN_DATO") {
-          if (!name && /\bprestamos?\b/.test(normalize(contact.activityText))) {
-            setAskingName(true);
-            setFeedback("Sí, podemos analizar tu caso. ¿Cómo te llamás?");
-            return;
-          }
+
 
           setInput("");
           if (introduction.name || /^(?:hola|buen(?: dia|as(?: tardes| noches)?)|gracias)[.! ]*$/.test(normalize(contact.activityText)) ||
@@ -574,7 +586,7 @@ export default function MariaChat() {
         if (value !== "OTROS") {
           const text = value === "PUAM (46)"
             ? "Sí, tenemos líneas para PUAM. Primero vamos a precalificarte para consultar si tenés un monto disponible."
-            : "Podemos evaluar tu caso. Tenemos opciones disponibles para tu perfil. Primero hacemos una precalificación.";
+            : `Vamos a revisar si hay opciones para ${value === "Jubilado ANSES" ? "jubilaciones ANSES" : value === "Pensión de Madres (47)" ? "pensiones de madres" : value === "Pensión Graciable (40)" ? "pensiones no contributivas" : value === "Pensionado ANSES" ? "pensiones por viudez" : value.toLocaleLowerCase("es-AR")}. Primero hacemos una precalificación; todavía no es una oferta confirmada.`;
           setHistory((messages) => [...messages, { from: "maria", text: asksTrust ? TRUST_REPLY + "\n\n" + text : text }]);
         }
       } catch {
@@ -762,7 +774,7 @@ export default function MariaChat() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        id: entry.id, status, messages, consent:consentPayload,
+        id: entry.id, status, messages, consent:consentPayload, receivedGestionHash:open&&!operatorChat&&visibleGestionMessages.length?gestionMessageHash:undefined,
         name: normalizeClientName((!bcra?.simulated && bcra?.name) || visitorName),
         details: {
           activity: answers[0] ?? "",
@@ -776,7 +788,7 @@ export default function MariaChat() {
       }),
     })).catch(() => undefined);
   }, [history, prompt, feedback, status, answers, activityClarification, visitorName, askingName,
-    earlyDocument, earlyPhone, suggestedBank, bankProvincePending, dniAttempts, offTopicCount, benefitPending, noIncome, bcra, needsOperator, acceptedOffer, signing, guardChoice, bcraUnavailable, cbuConsent, confirmedBcra, operatorChat, privacyConsent, contactConsent, consentEvent]);
+    earlyDocument, earlyPhone, suggestedBank, bankProvincePending, dniAttempts, offTopicCount, benefitPending, noIncome, bcra, needsOperator, acceptedOffer, signing, guardChoice, bcraUnavailable, cbuConsent, confirmedBcra, operatorChat, privacyConsent, contactConsent, consentEvent, gestionMessageHash, open]);
   useEffect(() => {
     const entry=record.current;
     if(!open||!started||!history.length||!entry)return;
@@ -961,7 +973,7 @@ export default function MariaChat() {
             {prompt && !feedback && !busy && !operatorChat && (!complete || !gestionMessages.length || (ansesFallback && noAnsesOffer && !cbuConsent)) && <p className="max-w-[90%] self-start rounded-2xl rounded-tl-sm bg-boton-primario/15 px-4 py-3 shadow-sm whitespace-pre-wrap">{prompt}</p>}
 
             {!operatorChat && !(ansesFallback && noAnsesOffer) && visibleGestionMessages.filter((text) => !history.some((item) => item.from === "maria" && item.text === text)).map((message) => <p key={message} className="max-w-[90%] self-start whitespace-pre-wrap rounded-2xl bg-boton-primario/15 px-4 py-3">{message}</p>)}
-            {feedback && <p role="status" className="self-start rounded-2xl bg-white px-4 py-3 text-texto-principal">{feedback}</p>}
+            {feedback && !operatorChat && <p role="status" className="self-start rounded-2xl bg-white px-4 py-3 text-texto-principal">{feedback}</p>}
           </div>
           {operatorChat && <p className="px-4 py-2 text-xs">Te está atendiendo un operador de Credizza.</p>}
           {busy && !operatorChat && <p role="status" className="shrink-0 bg-background-seccion px-4 py-2 text-xs text-texto-principal">María está escribiendo…</p>}

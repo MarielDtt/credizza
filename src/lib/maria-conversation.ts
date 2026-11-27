@@ -31,3 +31,8 @@ export function explicitlyRequestsCallback(text:string){
  const value=normalized(text);
  return /\b(?:llamen|contactame|contactenme|contacte[ns]?|manana|lunes)\b/.test(value)||/\b(?:prefiero|mejor|escribanme|escribime)\b.*\bwhats\s*app\b/.test(value);
 }
+export function isThirdPartySignature(text:string){
+ const value=normalized(text);
+ return /\bfirm\w*\b/.test(value)&&/\b(?:hij[oa]|apoderad[oa]|familiar|espos[oa]|otra persona|tercero|titular)\b/.test(value);
+}
+export const HOLDER_SIGNATURE_REPLY='No, solo puede firmar el tomador del préstamo, aunque otra persona sea su apoderada.';

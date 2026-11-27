@@ -18,6 +18,7 @@ knownBanks.set("banco cordoba", "Bancor");
 knownBanks.set("banco de cordoba", "Bancor");
 knownBanks.set("nacion", "BNA");
 knownBanks.set("banco nacion", "BNA");
+knownBanks.set("banco provincia", "Provincia Bs.As");
 knownBanks.set("bapro", "Provincia Bs.As");
 knownBanks.set("banco provincia buenos aires", "Provincia Bs.As");
 knownBanks.set("banco provincia de buenos aires", "Provincia Bs.As");
@@ -34,7 +35,7 @@ const escapeRE=(s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 export function mentionedBanks(text:string){
  const value=bankKey(text),found=new Set<string>();
  const direct=identifyBank(text);if(direct&&!['buenos aires','bs as','bsas'].includes(value))found.add(direct);
- const unambiguous=new Set(['mercado pago','mercadopago','nacion','bna','bapro','bancor','galicia','bbva','icbc','santander','piano','macro','credicoop','supervielle','comafi','columbia','patagonia']);
+ const unambiguous=new Set(['banco provincia','mercado pago','mercadopago','nacion','bna','bapro','bancor','galicia','bbva','icbc','santander','piano','macro','credicoop','supervielle','comafi','columbia','patagonia']);
  for(const [alias,bank] of [...knownBanks].sort(([a],[b])=>b.length-a.length)){
   const token=escapeRE(alias);
   const matches=[...value.matchAll(new RegExp(`(^|[^a-z0-9])(${token})(?=$|[^a-z0-9])`,'g'))];
@@ -59,7 +60,7 @@ export function offerDecision(text:string){
  const reply=normalize(text).trim();
  const clearDecline=/^(?:no(?: gracias)?|no quiero(?: avanzar)?|no me interesa|no acepto)[.! ]*$/.test(reply);
  const doubtText=reply.replace(/\bno hay (?:ningun )?problema\b/g,'conforme');
- const hasDoubt=/\bno\b/.test(doubtText)||/\b(?:pero|aunque|todavia|aun no|si me|si la|si el|si puedo|si acepto|si avanzo|tal vez|quizas|depende|no entiendo|no se|no estoy|me parece|muy alta|muy caro|no puedo|no me alcanza|cuanto|cuando|como funciona|quiero saber|antes de|cuota (?:me queda |es )?alta)\b/.test(doubtText);
+ const hasDoubt=/\b(?:puede|pueden|puedo|firmar|firma|hija|hijo|apoderad[oa]|familiar|titular)\b/.test(reply)||/[?¿]/.test(reply)||/\bno\b/.test(doubtText)||/\b(?:pero|aunque|todavia|aun no|si me|si la|si el|si puedo|si acepto|si avanzo|tal vez|quizas|depende|no entiendo|no se|no estoy|me parece|muy alta|muy caro|no puedo|no me alcanza|cuanto|cuando|como funciona|quiero saber|antes de|cuota (?:me queda |es )?alta)\b/.test(doubtText);
  const clearAcceptance=!hasDoubt&&(readConfirmation(text)==='si'||/\b(?:lo quiero|la quiero|quiero avanzar|quiero esa opcion|quiero contratar|me quedo con|acepto|avancemos|dale|hagamoslo|sigamos)\b/.test(reply));
  return {hasDoubt,clearAcceptance,clearDecline};
 }
@@ -87,20 +88,26 @@ export function classifyKnownActivity(text:string):{activity:string;bank:string;
   return {activity:'ACLARAR',bank,question:caba||province?'¿La escuela es estatal o privada?':publicSector?'¿Trabajás en CABA o en la provincia de Buenos Aires?':'¿Trabajás en CABA o en la provincia de Buenos Aires? ¿La escuela es estatal o privada?'};
  }
  if(/\b(?:puam|pension universal para el adulto mayor)\b|\b(?:beneficio|graciable|pnc)\s*\(?46\b/.test(value))return {activity:'PUAM (46)',bank};
- if(/\b(?:pension (?:de |para )?madres|madres de (?:siete|7) hijos)\b|\b(?:beneficio|graciable|pnc)\s*\(?47\b/.test(value)||/^(?:cobro )?madres$/.test(value))return {activity:'Pensión de Madres (47)',bank};
+ if(/\b(?:pension (?:de |para )?madres? (?:de )?(?:siete|7) hijos|pension (?:de |para )?madres|madres de (?:siete|7) hijos)\b|\b(?:beneficio|graciable|pnc)\s*\(?47\b/.test(value)||/^(?:cobro )?madres$/.test(value))return {activity:'Pensión de Madres (47)',bank};
  if(/\b(?:pnc|pension no contributiva)\b|\b(?:beneficio|graciable)\s*\(?40\b/.test(value))return {activity:'Pensión Graciable (40)',bank};
  if(/\bips\b/.test(value)&&/\b(?:buenos aires|bs as|bsas)\b/.test(value)&&(!/\b(?:trabajo|emplead[oa])\b/.test(value)||/\bjubilad[oa]\b/.test(value)))return {activity:'Jubilado IPS Buenos Aires',bank:'Provincia Bs.As'};
  const teacher=/\bdocentes?\b/.test(value)&&!/\bno (?:soy|trabajo (?:de|como)) (?:docentes?)\b/.test(value);
  const otherProvince=/\b(?:cordoba|misiones|rio negro|neuquen|santa fe|chaco|chubut|formosa|corrientes|entre rios|jujuy|la pampa|la rioja|mendoza|salta|san juan|san luis|santa cruz|santiago del estero|tierra del fuego|tucuman|catamarca)\b/.test(value);
  const provinceBank=/\b(?:banco|bco\.?)\s+provinc(?:i|vi)a\b/.test(value)&&!/\bno (?:cobro|me pagan|me depositan)\b/.test(value);
  if(teacher&&(/\b(?:provincia de buenos aires|provincia de bs as|provincia de bsas)\b/.test(value)||bank==='Provincia Bs.As'||provinceBank&&!otherProvince))return {activity:'Docente de Provincia de Buenos Aires',bank:'Provincia Bs.As'};
- const special=/\b(?:provincia|provincial|ips|caja|policia|docente|municipal|fuerzas|retirad|militar)\b/.test(value);
+ const activityValue=value.replace(/\b(?:banco|bco\.?)\s+provincia(?:\s+(?:de )?(?:buenos aires|bs as|bsas))?/g,'');
+ const special=/\b(?:provincia|provincial|ips|caja|policia|docente|municipal|fuerzas|retirad|militar)\b/.test(activityValue);
+ if(/\bjubilad[oa]\s+provincial\b/.test(value))return {activity:'Jubilado provincial',bank};
+ if(/\bpolicia\b/.test(value)&&/\b(?:provincia|buenos aires|bs as)\b/.test(value))return {activity:'Policía de Provincia de Buenos Aires',bank};
  if(/\bjubilad[oa]\b/.test(value)&&!special)return {activity:'Jubilado ANSES',bank};
+ if(/\b(?:viudez|viud[oa]|fallecimiento)\b/.test(value)&&/\bpension/.test(value))return {activity:'Pensionado ANSES',bank};
+ if(/\bpensionad[oa]\b|\bpension(?: de anses)?\b/.test(value)&&!/\b(?:no contributiva|graciable|madres?|puam|viudez|viud[oa]|fallecimiento|40|46|47)\b/.test(value))return {activity:'ACLARAR',bank,question:'¿Qué tipo de pensión cobrás: por viudez, no contributiva (PNC), de madres o de adulto mayor (PUAM)?'};
  if(/\bpensionad[oa]\b|\b(?:tengo|cobro|recibo) (?:una |la )?pension\b/.test(value)&&!special)return {activity:'Pensionado ANSES',bank};
  if(/\bauh\b|\b(?:cobro|recibo|tengo) (?:una |la )?asignacion(?: universal por hijo| por hijo)?\b/.test(value))return {activity:'AUH',bank};
  if(/\bmonotributista\b/.test(value))return {activity:'OTROS',bank};
  if(/\b(?:desocupad[oa]|sin trabajo|no tengo trabajo|no trabajo|sin ingresos)\b/.test(value))return {activity:'SIN_EMPLEO',bank};
  if(/\b(?:receta de cocina|receta para cocinar|trigonometria)\b/.test(value))return {activity:'FUERA_DE_TEMA',bank:''};
+ if(/\b(?:prestamos?|creditos?)\b/.test(value)&&/\b(?:hola|quiero|quisiera|puedo|pedir|ver|necesit\w*|saber|solicitar)\b/.test(value))return {activity:'SIN_DATO',bank};
  if(/^(?:hola|buen dia|buenos dias|buenas(?: tardes| noches)?|gracias|quiero (?:un )?(?:prestamo|credito)|(?:puedo|quiero) (?:sacar|pedir) (?:un )?prestamo)[¿?!. ]*$/.test(value))return {activity:'SIN_DATO',bank:''};
  return null;
 }

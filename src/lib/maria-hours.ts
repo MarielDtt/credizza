@@ -12,9 +12,9 @@ function holidays(year:number){
  return days;
 }
 export function serviceWindow(date=new Date()){
- const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Argentina/Buenos_Aires',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(date);
+ const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Argentina/Buenos_Aires',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23',hour12:false}).formatToParts(date);
  const part=(name:string)=>Number(parts.find(p=>p.type===name)?.value);
- const today=new Date(Date.UTC(part('year'),part('month')-1,part('day'))),hour=part('hour'),minute=part('minute');
+ const today=new Date(Date.UTC(part('year'),part('month')-1,part('day'))),hour=part('hour')%24,minute=part('minute');
  const openDay=(day:Date)=>day.getUTCDay()!==0&&!holidays(day.getUTCFullYear()).has(key(day))&&!extraClosures.has(key(day));
  const start=(day:Date)=>day.getUTCDay()===6?10:9;
  const regular=openDay(today)&&hour>=start(today)&&hour<(today.getUTCDay()===6?14:17);
@@ -28,7 +28,7 @@ export function operatorReferral(date=new Date(),whatsapp=true){
  const window=serviceWindow(date);
  const channel=whatsapp?'Te contactaremos por WhatsApp o podés volver a este chat para ver la respuesta.':'Podés volver a este chat para ver la respuesta.';
  return window.supervised?'Aguardá un momento, por favor. A la brevedad te vamos a responder por este chat.':
-  `Dejé tu consulta pendiente para revisión. Un operador la revisará ${window.next}, durante el horario de atención que comienza a las ${window.nextStart} hs. ${channel}`;
+  `Dejé tu consulta pendiente para revisión. Un operador la revisará ${window.next.replace(" en horario de atención","")}, a partir de las ${window.nextStart} hs. ${channel}`;
 
 }
 export function documentationFollowUp(phone:string,date=new Date(),whatsapp=true){
