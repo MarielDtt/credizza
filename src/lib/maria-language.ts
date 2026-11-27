@@ -87,6 +87,8 @@ export function classifyKnownActivity(text:string):{activity:string;bank:string;
   if(/\bdocentes?\b/.test(value)&&!caba&&(bank==='Provincia Bs.As'||/\bbanco provincia\b/.test(value)))return {activity:'Docente de Provincia de Buenos Aires',bank:'Provincia Bs.As'};
   return {activity:'ACLARAR',bank,question:caba||province?'¿La escuela es estatal o privada?':publicSector?'¿Trabajás en CABA o en la provincia de Buenos Aires?':'¿Trabajás en CABA o en la provincia de Buenos Aires? ¿La escuela es estatal o privada?'};
  }
+ if(/\bpension\b/.test(value)&&/\bmadres?\b/.test(value))return {activity:'Pensión de Madres (47)',bank};
+ if(/\bpension\b/.test(value)&&/\badulto mayor\b/.test(value))return {activity:'PUAM (46)',bank};
  if(/\b(?:puam|pension universal para el adulto mayor)\b|\b(?:beneficio|graciable|pnc)\s*\(?46\b/.test(value))return {activity:'PUAM (46)',bank};
  if(/\b(?:pension (?:de |para )?madres? (?:de )?(?:siete|7) hijos|pension (?:de |para )?madres|madres de (?:siete|7) hijos)\b|\b(?:beneficio|graciable|pnc)\s*\(?47\b/.test(value)||/^(?:cobro )?madres$/.test(value))return {activity:'Pensión de Madres (47)',bank};
  if(/\b(?:pnc|pension no contributiva)\b|\b(?:beneficio|graciable)\s*\(?40\b/.test(value))return {activity:'Pensión Graciable (40)',bank};
