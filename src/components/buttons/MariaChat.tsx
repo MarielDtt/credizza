@@ -871,6 +871,20 @@ export default function MariaChat() {
     setHistory(previous=>[...previous,{from:"visitor",text:"Celular de contacto: "+phone+". Autorizo el uso de mis datos según la Política de privacidad v"+PRIVACY_VERSION+". "+(contactConsent?"Autorizo el contacto por WhatsApp por esta consulta.":"Prefiero continuar por este chat; no autorizo contacto por WhatsApp.")}]);
     setContactError("");
     setStarted(true);
+    // Google Ads: consulta iniciada tras validar teléfono y consentimiento.
+    // Una conversión por pestaña, sin contar aperturas ni pruebas locales.
+    if (!TEST_CHAT) {
+      try {
+        if (window.sessionStorage.getItem("credizza_ads_maria_started") !== "1" && typeof window.gtag === "function") {
+          window.gtag("event", "conversion", {
+            send_to: "AW-18498890752/dwcuCIDUzZodEIDY-vRE",
+          });
+          window.sessionStorage.setItem("credizza_ads_maria_started", "1");
+        }
+      } catch {
+        // El seguimiento no debe interrumpir la consulta.
+      }
+    }
   }
 
   function openConversation() {
